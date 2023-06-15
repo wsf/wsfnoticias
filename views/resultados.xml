@@ -23,16 +23,21 @@
             <form>
                 <sheet>
                     <group>
-                        <field name="medio"/>
-                        <field name="fecha_hora"/>
-                        <field name="titulo"/>
-                        <field name="link"/>
-                        <field name="copete"/>
-                        <field name="texto"/>
-                        <field name="tipo"/>
-                        <field name="geo"/>
-                        <field name="localidad"/>
-                        <field name="departamento"/>
+                        <group>
+                            <field name="medio"/>
+                            <field name="link"/>
+                            <field name="titulo"/>
+                            <field name="fecha_hora"/>
+                            <field name="copete"/>
+                            <field name="texto"/>
+                        </group>
+                        <group>
+                            <field name="tipo"/>
+                            <field name="localidad"/>
+                            <field name="departamento"/>
+                            <field name="latitud"/>
+                            <field name="longitud"/>
+                        </group>
                     </group>
                 </sheet>
             </form>
@@ -53,7 +58,6 @@
                 <field name="copete"/>
                 <field name="texto"/>
                 <field name="tipo"/>
-                <field name="geo"/>
                 <field name="localidad"/>
                 <field name="departamento"/>
             </tree>
