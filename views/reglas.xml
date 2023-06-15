@@ -1,0 +1,58 @@
+<odoo>
+
+    <record id='wsf_noticias_reglas_action' model='ir.actions.act_window'>
+        <field name="name">Reglas</field>
+        <field name="res_model">wsf_noticias_reglas</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="wsf_noticias_root"
+              name="Noticias"
+              action="wsf_noticias_medios_action"/>
+
+    <menuitem id="wsf_noticias_reglas_root"
+              parent="wsf_noticias_root"
+              name="Reglas"
+              action="wsf_noticias_reglas_action"/>
+
+    <!-- Form View -->
+    <record id="wsf_noticias_reglas_form" model="ir.ui.view">
+        <field name="name">Formulario de Reglas</field>
+        <field name="model">wsf_noticias_reglas</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="nombre_regla"/>
+                        <field name="terminos_or"/>
+                        <field name="terminos_and"/>
+                        <field name="terminos_not"/>
+                        <field name="estado"/>
+                        <field name="fecha_desde"/>
+                        <field name="fecha_hasta"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- end form -->
+
+    <!-- Tree View -->
+    <record id="wsf_noticias_reglas_tree" model="ir.ui.view">
+        <field name="name">Reglas</field>
+        <field name="model">wsf_noticias_reglas</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="nombre_regla"/>
+                <field name="terminos_or"/>
+                <field name="terminos_and"/>
+                <field name="terminos_not"/>
+                <field name="estado"/>
+                <field name="fecha_desde"/>
+                <field name="fecha_hasta"/>
+            </tree>
+        </field>
+    </record>
+    <!--fin tree-->
+
+</odoo>

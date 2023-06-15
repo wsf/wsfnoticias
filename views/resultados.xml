@@ -1,0 +1,64 @@
+<odoo>
+
+    <record id='wsf_noticias_resultados_action' model='ir.actions.act_window'>
+        <field name="name">Resultados</field>
+        <field name="res_model">wsf_noticias_resultados</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="wsf_noticias_root"
+              name="Noticias"
+              action="wsf_noticias_medios_action"/>
+
+    <menuitem id="wsf_noticias_resultados_root"
+              parent="wsf_noticias_root"
+              name="Resultados"
+              action="wsf_noticias_resultados_action"/>
+
+    <!-- Form View -->
+    <record id="wsf_noticias_resultados_form" model="ir.ui.view">
+        <field name="name">Formulario de Resultados</field>
+        <field name="model">wsf_noticias_resultados</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="medio"/>
+                        <field name="fecha_hora"/>
+                        <field name="titulo"/>
+                        <field name="link"/>
+                        <field name="copete"/>
+                        <field name="texto"/>
+                        <field name="tipo"/>
+                        <field name="geo"/>
+                        <field name="localidad"/>
+                        <field name="departamento"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- end form -->
+
+    <!-- Tree View -->
+    <record id="wsf_noticias_resultados_tree" model="ir.ui.view">
+        <field name="name">Resultados</field>
+        <field name="model">wsf_noticias_resultados</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="medio"/>
+                <field name="fecha_hora"/>
+                <field name="titulo"/>
+                <field name="link"/>
+                <field name="copete"/>
+                <field name="texto"/>
+                <field name="tipo"/>
+                <field name="geo"/>
+                <field name="localidad"/>
+                <field name="departamento"/>
+            </tree>
+        </field>
+    </record>
+    <!--fin tree-->
+
+</odoo>

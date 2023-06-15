@@ -11,9 +11,12 @@
     'website': 'https://www.facebook.com/wsfnet',
     'license': 'AGPL-3',
 
-    'depends': [],
+    'depends': ['base','contacts'],
 
     'data': [
+        'views/medios.xml',
+        'views/resultados.xml',
+        'views/reglas.xml',
 
     ],
     'demo': [],
