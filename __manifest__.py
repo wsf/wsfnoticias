@@ -14,6 +14,7 @@
     'depends': ['base','contacts'],
 
     'data': [
+        'data/cron.xml',
         'views/medios.xml',
         'views/resultados.xml',
         'views/reglas.xml',
