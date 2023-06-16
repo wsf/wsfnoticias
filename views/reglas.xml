@@ -8,7 +8,7 @@
 
     <menuitem id="wsf_noticias_root"
               name="Noticias"
-              action="wsf_noticias_medios_action"/>
+              action="wsf_noticias_resultados_action"/>
 
     <menuitem id="wsf_noticias_reglas_root"
               parent="wsf_noticias_root"
@@ -23,11 +23,11 @@
             <form>
                 <sheet>
                     <group>
-                        <field name="medio"/>
+<!--                        <field name="medio"/>-->
                         <field name="nombre_regla"/>
-                        <field name="terminos_or"/>
-                        <field name="terminos_and"/>
-                        <field name="terminos_not"/>
+                        <field name="terminos_or" widget="many2many_tags"/>
+                        <field name="terminos_and" widget="many2many_tags"/>
+                        <field name="terminos_not" widget="many2many_tags"/>
                         <field name="estado"/>
                         <field name="fecha_desde"/>
                         <field name="fecha_hasta"/>
@@ -44,7 +44,7 @@
         <field name="model">wsf_noticias_reglas</field>
         <field name="arch" type="xml">
             <tree>
-                <field name="medio"/>
+<!--                <field name="medio"/>-->
                 <field name="nombre_regla"/>
                 <field name="terminos_or"/>
                 <field name="terminos_and"/>

@@ -8,7 +8,7 @@
 
     <menuitem id="wsf_noticias_root"
               name="Noticias"
-              action="wsf_noticias_medios_action"/>
+              action="wsf_noticias_resultados_action"/>
 
     <menuitem id="wsf_noticias_medios_root"
               parent="wsf_noticias_root"
@@ -27,6 +27,7 @@
                         <field name="pagina_web"/>
                         <field name="pagina_rss"/>
                         <field name="limite"/>
+                        <field name="regla"/>
                         <field name="importancia"/>
                         <field name="pauta"/>
                         <field name="estado"/>
@@ -61,5 +62,35 @@
         </field>
     </record>
     <!--fin tree-->
+
+     <!-- inicio search -->
+    <record id="wsf_noticias_medios_search" model="ir.ui.view">
+        <field name="name">Medios</field>
+        <field name="model">wsf_noticias_medios</field>
+        <field name="arch" type="xml">
+            <search>
+                <filter string="Medio On" name="estado" domain="[('estado','=','on')]"/>
+                <filter string="Medio Off" name="estado" domain="[('estado','=','off')]"/>
+
+                <!-- Group By -->
+                <group expand="1" string="Group By">
+                    <filter string="Medio" name="medio" context="{'group_by':'medio'}"/>
+                    <filter string="Importancia" name="importancia" context="{'group_by':'importancia'}"/>
+                    <filter string="Estado" name="estado" context="{'group_by':'estado'}"/>
+                </group>
+
+                <field name="medio"/>
+                <field name="pagina_web"/>
+                <field name="pagina_rss"/>
+                <field name="importancia"/>
+                <field name="pauta"/>
+                <field name="estado"/>
+                <field name="puntuacion"/>
+                <field name="comentario"/>
+                <field name="latitud"/>
+                <field name="longitud"/>
+            </search>
+        </field>
+    </record>
 
 </odoo>

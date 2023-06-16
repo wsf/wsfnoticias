@@ -14,9 +14,10 @@ class Medios(models.Model):
     limite = fields.Integer('Limite')
     pagina_web = fields.Char('Pagina Web:')
     pagina_rss = fields.Char('Pagina rss:')
+    regla = fields.Many2one('wsf_noticias_reglas')
     importancia = fields.Selection([('bajo', 'Bajo'), ('medio', 'Medio'), ('alto', 'Alto')])
     pauta = fields.Float('Pauta')
-    estado = fields.Selection([('on', 'ON'), ('off', 'OFF')])
+    estado = fields.Selection([('on', 'ON'), ('off', 'OFF')], required=True)
     puntuacion = fields.Char('Puntuacion')
     comentario = fields.Text('Comentario')
     latitud = fields.Char('Latitud')
@@ -47,7 +48,9 @@ class Medios(models.Model):
                     "link": rec.pagina_web
                 }
             }
-
+            lista_termninos = []
+            for t in rec.regla.terminos_and:
+                lista_termninos.append(t.name)
             # Iterar por cada pagina de noticias
 
             contador = 1
@@ -68,7 +71,8 @@ class Medios(models.Model):
                             if contador > limite:
                                 break
                             article = {}
-                            article['link'] = entrada.link
+
+                            # article['keywords'] = entrada
                             try:
                                 contenido = Article(entrada.link)
                                 contenido.download()
@@ -86,13 +90,14 @@ class Medios(models.Model):
                                     pass
                                 else:
                                     article['medio'] = rec.medio.id
+                                    article['copete'] = contenido.meta_description  ##
                                     article['texto'] = contenido.text
+                                    article['link'] = contenido.url
                                     fecha = contenido.publish_date.strftime('%Y/%m/%d %H:%M:%S')
                                     article['fecha_hora'] = datetime.strptime(fecha, '%Y/%m/%d %H:%M:%S')
-                                    article['copete'] = contenido.summary
+
                                     all_records_resultados.create(article)
                                     contador = contador + 1
-
 
                             except Exception as e:
                                 print(e)
@@ -120,26 +125,30 @@ class Medios(models.Model):
 
                             # noticia concreta
                             article = {}
-
                             article['titulo'] = contenido.title
 
-                            try:
-                                encontrado = self.env['wsf_noticias_resultados'].search(
-                                    [('titulo', '=', article['titulo'])])
-                                if encontrado:
-                                    pass
-                                else:
-                                    article['medio'] = rec.medio.id
-                                    article['texto'] = contenido.text
-                                    article['link'] = contenido.url
-                                    fecha2 = contenido.publish_date.strftime('%Y/%m/%d %H:%M:%S')
-                                    article['fecha_hora'] = datetime.strptime(fecha2, '%Y/%m/%d %H:%M:%S')
-                                    article['copete'] = contenido.summary
-                                    all_records_resultados.create(article)
-                                    contador = contador + 1
+                            if lista_termninos:
+                                # if lista_termninos[0] in contenido.text and lista_termninos[1] in contenido.text:
+                                if lista_termninos[0] in contenido.text:
+                                    try:
+                                        encontrado = self.env['wsf_noticias_resultados'].search(
+                                            [('titulo', '=', article['titulo'])])
+                                        if encontrado:
+                                            pass
+                                        else:
+                                            article['medio'] = rec.medio.id
+                                            article['copete'] = contenido.meta_description ##
+                                            article['texto'] = contenido.text
+                                            article['link'] = contenido.url
+                                            fecha2 = contenido.publish_date.strftime('%Y/%m/%d %H:%M:%S')
+                                            article['fecha_hora'] = datetime.strptime(fecha2, '%Y/%m/%d %H:%M:%S')
+                                            article['regla'] = rec.regla.id
 
-                            except Exception as e:
-                                print(e)
+                                            all_records_resultados.create(article)
+                                            contador = contador + 1
+
+                                    except Exception as e:
+                                        print(e)
 
                     contador = 1
             else:
