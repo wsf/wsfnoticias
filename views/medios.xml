@@ -26,6 +26,7 @@
                         <field name="medio"/>
                         <field name="pagina_web"/>
                         <field name="pagina_rss"/>
+                        <field name="limite"/>
                         <field name="importancia"/>
                         <field name="pauta"/>
                         <field name="estado"/>

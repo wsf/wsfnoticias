@@ -23,6 +23,7 @@
             <form>
                 <sheet>
                     <group>
+                        <field name="medio"/>
                         <field name="nombre_regla"/>
                         <field name="terminos_or"/>
                         <field name="terminos_and"/>
@@ -43,6 +44,7 @@
         <field name="model">wsf_noticias_reglas</field>
         <field name="arch" type="xml">
             <tree>
+                <field name="medio"/>
                 <field name="nombre_regla"/>
                 <field name="terminos_or"/>
                 <field name="terminos_and"/>
