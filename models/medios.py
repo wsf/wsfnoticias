@@ -4,6 +4,7 @@ import json
 import newspaper
 from newspaper import Article
 from datetime import *
+import random
 
 class Medios(models.Model):
     _name = "wsf_noticias_medios"
@@ -133,7 +134,7 @@ class Medios(models.Model):
 
 
                             url_medio = valor['link']
-                            hoja = newspaper.build(url_medio, memoize_articles=False)
+                            hoja = newspaper.build(url_medio, memoize_articles=True)
 
                             newsPaper = {
                                 "medio": pagina,
@@ -199,6 +200,8 @@ class Medios(models.Model):
 
                                                 article['regla'] = rec.regla.id
                                                 article['titulo'] = contenido.title
+                                                article['tipo'] = random.choice(['postiva','negativa','neutra','neutra'])
+
 
                                                 print(contenido.title)
 
