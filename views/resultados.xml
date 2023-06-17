@@ -53,6 +53,9 @@
         <field name="model">wsf_noticias_resultados</field>
         <field name="arch" type="xml">
             <tree>
+
+
+
                 <field name="medio"/>
                 <field name="fecha_hora"/>
                 <field name="titulo"/>
