@@ -2,4 +2,4 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_wsf_noticias_medios,access.wsf_noticias_medios,model_wsf_noticias_medios,,1,1,1,1
 access_wsf_noticias_reglas,access.wsf_noticias_reglas,model_wsf_noticias_reglas,,1,1,1,1
 access_wsf_noticias_resultados,access.wsf_noticias_resultados,model_wsf_noticias_resultados,,1,1,1,1
-
+access_wsf_noticias_terminos,access.wsf_noticias_terminos,model_wsf_noticias_terminos,,1,1,1,1
