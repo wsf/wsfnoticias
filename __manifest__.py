@@ -18,6 +18,7 @@
         'data/cron.xml',
         'views/medios.xml',
         'views/reglas.xml',
+        'security/ir.model.access.csv'
 
     ],
     'demo': [],
