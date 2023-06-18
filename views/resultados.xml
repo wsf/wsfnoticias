@@ -3,7 +3,7 @@
     <record id='wsf_noticias_resultados_action' model='ir.actions.act_window'>
         <field name="name">Resultados</field>
         <field name="res_model">wsf_noticias_resultados</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form,graph,pivot</field>
     </record>
 
     <menuitem id="wsf_noticias_root"
@@ -27,7 +27,7 @@
                             <field name="medio"/>
                             <field name="link"/>
                             <field name="titulo"/>
-                            <field name="fecha_hora"/>
+                            <field name="fecha_hora" string="Publicado"/>
                             <field name="copete"/>
                         </group>
                         <group>
@@ -37,9 +37,12 @@
                             <field name="departamento"/>
                             <field name="latitud"/>
                             <field name="longitud"/>
+                            <field name="fecha_registro"/>
                         </group>
                         <h5>Texto</h5>
                         <field name="texto" style="max-width: 100%; width: 100%; max-height: 30em; height: 30em; overflow:auto"/>
+                        <field name="hora" widget="float_time" invisible="1"/>
+                        <field name="dias" invisible="1"/>
                     </group>
                 </sheet>
             </form>
@@ -54,18 +57,26 @@
         <field name="arch" type="xml">
             <tree>
 
-
+                <header>
+                    <button name="set_defender" string="Defender" class="btn btn-danger ml4" type="object"/>
+                    <button name="set_contraatacar" string="Contraatacar" class="btn btn-success ml4" type="object"/>
+                    <button name="set_atacar" string="Atacar" class="btn btn-primary ml4" type="object"/>
+                    <button name="set_diluir" string="Diluir" class="btn btn-warning ml4"  type="object"/>
+                </header>
+                <field name="fecha_registro" string="Fecha de Registro"/>
 
                 <field name="medio"/>
-                <field name="fecha_hora"/>
+                <field name="fecha_hora" string="Publicado"/>
                 <field name="titulo"/>
                 <field name="link"/>
                 <field name="copete"/>
                 <field name="texto" invisible="1"/>
-                <field name="tipo"/>
+                <field name="tipo" widget="badge" decoration-danger ="tipo =='negativa'" decoration-success ="tipo =='positiva'"  decoration-warning="tipo =='neutra'"/>
                 <field name="regla"/>
                 <field name="localidad"/>
                 <field name="departamento"/>
+                <field name="hora" invisible="1"/>
+                <field name="dias" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -79,9 +90,18 @@
                 <filter string="Positivas" name="tipo" domain="[('tipo','=','positiva')]"/>
                 <filter string="Negativas" name="tipo" domain="[('tipo','=','negativa')]"/>
                 <filter string="Neutra" name="tipo" domain="[('tipo','=','neutra')]"/>
+<!--                <filter string="Días" name="dias" domain="[('dias','=',datetime.now())]"/>-->
+                <filter string="Dia" name="fecha_hora" domain="[('fecha_hora','&lt;',time.strftime('%%Y-%%m-%%d 23:59:59')),('fecha_hora','>=',(datetime.date.today()).strftime('%%Y-%%m-%%d 00:00:00'))]"/>
+                <filter string="Semana" name="fecha_hora" domain="[('fecha_hora','&lt;',time.strftime('%%Y-%%m-%%d 23:59:59')),('fecha_hora','>=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d 00:00:00'))]"/>
+
+
                 <!-- Group By -->
                 <group expand="1" string="Group By">
+                    <filter string="Días" name="dias" context="{'group_by':'dias'}"/>
+                    <filter string="Hora" name="hora" context="{'group_by':'hora'}"/>
+<!--                    <filter string="Dias - Hora" name="dias_hora" context="{'group_by':'dias_hora'}"/>-->
                     <filter string="Medio" name="medio" context="{'group_by':'medio'}"/>
+
                     <filter string="Tipo" name="tipo" context="{'group_by':'tipo'}"/>
                     <filter string="Regla" name="regla" context="{'group_by':'regla'}"/>
                     <filter string="Localidad" name="localidad" context="{'group_by':'localidad'}"/>
@@ -98,4 +118,32 @@
             </search>
         </field>
     </record>
+
+<!--    &lt;!&ndash; Vista graph resultados &ndash;&gt;-->
+<!--    <record id="wsf_noticias_resultados_graph" model="ir.ui.view">-->
+<!--        <field name="name">wsf_noticias_resultados_graph</field>-->
+<!--        <field name="model">wsf_noticias_resultados</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <graph string="Analisis">-->
+<!--&lt;!&ndash;                <field name="fecha_hora" interval="day"/>&ndash;&gt;-->
+<!--                <field name="fecha_hora"/>-->
+<!--                <field name="medio" type="measure"/>-->
+<!--            </graph>-->
+<!--        </field>-->
+<!--    </record>-->
+
+<!--    &lt;!&ndash; vista pivot resultados &ndash;&gt;-->
+<!--    <record id="wsf_noticias_resultados_pivot" model="ir.ui.view">-->
+<!--        <field name="name">wsf_noticias_resultados_pivot</field>-->
+<!--        <field name="model">wsf_noticias_resultados</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <pivot string="Analisis">-->
+<!--                <field name="fecha_hora" type="row"/>-->
+<!--                <field name="dias" type="row"/>-->
+<!--                <field name="titulo" type="measure"/>-->
+<!--                <field name="medio" type="row"/>-->
+<!--            </pivot>-->
+<!--        </field>-->
+<!--   </record>-->
+
 </odoo>
