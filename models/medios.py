@@ -6,6 +6,15 @@ from newspaper import Article
 from datetime import *
 import random
 from .tools.tools import filtra_url, aplica_regla
+import os
+
+def _log(dato):
+    nombre = os.path.dirname(__file__) + '/medio.log'
+    log = open(nombre, 'a')
+    dato = "- Log: " + str(datetime.now()) + " ---> " + dato
+    log.write(dato + '\n')
+    log.close()
+
 
 class Medios(models.Model):
     _name = "wsf_noticias_medios"
@@ -63,6 +72,10 @@ class Medios(models.Model):
         all_records_resultados = self.env['wsf_noticias_resultados'].search([])
 
         for rec in all_records:
+            if not (rec.estado == 'on' and rec.importancia == importancia):
+                break
+
+            _log(f"Tomando la página {rec.pagina_web}")
 
             try:
                 limite = rec.limite
@@ -123,13 +136,17 @@ class Medios(models.Model):
                                     reglas = self.env['wsf_noticias_reglas'].search([])
                                     lista_reglas = aplica_regla(contenido.title, contenido.text,
                                                                 contenido.meta_description, reglas)
-                                    if not lista_reglas:
+
+                                    if lista_reglas == 'set()':  # si me devuelve set() es porque no aplicó regla
                                         break
 
                                     encontrado = self.env['wsf_noticias_resultados'].search(
                                         [('titulo', '=', article['titulo'])])
+
+
                                     if encontrado:
-                                        pass
+                                        _log(f"*** Noticia ya guadada {str(encontrado)}")
+                                        break
                                     else:
                                         article['medio'] = rec.medio.id
                                         article['copete'] = contenido.meta_description  ##
@@ -139,17 +156,18 @@ class Medios(models.Model):
                                         article['fecha_hora'] = datetime.strptime(fecha, '%Y/%m/%d %H:%M:%S')
                                         article['departamento'] = lista_reglas
 
+                                        _log(f"Guardando {str(article)}")
                                         all_records_resultados.create(article)
                                         contador = contador + 1
 
                                 except Exception as e:
                                     print(e)
 
-                        else:
+                        if 'link' in valor and valor['link'] != False:
 
 
                             url_medio = valor['link']
-                            hoja = newspaper.build(url_medio, memoize_articles=True)
+                            hoja = newspaper.build(url_medio, memoize_articles=False)
 
                             newsPaper = {
                                 "medio": pagina,
@@ -190,6 +208,7 @@ class Medios(models.Model):
                                     print(contenido.text)
 
                                     if encontrado:
+                                        _log(f"*** Noticia ya guadada {str(encontrado)}")
                                         break
                                     else:
                                         article['medio'] = rec.medio.id
@@ -211,17 +230,16 @@ class Medios(models.Model):
                                             fecha2 = contenido.publish_date.strftime('%Y/%m/%d %H:%M:%S')
                                             article['fecha_hora'] = datetime.strptime(fecha2,
                                                                                       '%Y/%m/%d %H:%M:%S')
-                                        except:
+                                        except Exception as e:
                                             pass
+
 
                                         article['regla'] = rec.regla.id
                                         article['titulo'] = contenido.title
                                         article['tipo'] = random.choice(['postiva','negativa','neutra','neutra'])
 
 
-
-                                        print(f"**** Guardando: \n {contenido.title} \n {str(contador)} --- {contenido.medio.name}\n******************")
-
+                                        _log(f"****** Guardando {str(article)}")
                                         all_records_resultados.create(article)
                                         contador = contador + 1
 
