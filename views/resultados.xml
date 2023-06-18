@@ -142,5 +142,6 @@
 <!--                <field name="medio" type="row"/>-->
 <!--            </pivot>-->
 <!--        </field>-->
-<!--    </record>-->
+<!--   </record>-->
+
 </odoo>
