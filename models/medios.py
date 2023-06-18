@@ -5,6 +5,7 @@ import newspaper
 from newspaper import Article
 from datetime import *
 import random
+from .tools.tools import filtra_url, aplica_regla
 
 class Medios(models.Model):
     _name = "wsf_noticias_medios"
@@ -58,6 +59,7 @@ class Medios(models.Model):
             filtro_importancia = []
 
         all_records = self.env['wsf_noticias_medios'].search(filtro_importancia,order='medio asc')
+
         all_records_resultados = self.env['wsf_noticias_resultados'].search([])
 
         for rec in all_records:
@@ -77,9 +79,14 @@ class Medios(models.Model):
                     }
                 }
                 lista_termninos = []
+
+                # las reglas se aplican para todos. No para un medio particular
+                """
                 for t in rec.regla.terminos_and:
                     lista_termninos.append(t.name)
+                """
                 # Iterar por cada pagina de noticias
+
 
                 contador = 1
                 if rec.estado == 'on':
@@ -145,71 +152,72 @@ class Medios(models.Model):
 
                             # hoja.articles -> obtiene una lista con todos los artículos del portal que está visitando (escrapeando)
                             for contenido in hoja.articles:  # recorre cada uno de los artículos
+
                                 if contador > limite:
                                     break
                                 try:
                                     contenido.download()
                                     contenido.parse()
+
                                 except Exception as e:
                                     print(e)
                                     continue
+
+                                reglas = self.env['wsf_noticias_reglas'].search([])
+
+                                lista_reglas =  aplica_regla(contenido.title,contenido.text,contenido.meta_description, reglas)
+
+                                if not lista_reglas:
+                                    break
+
 
                                 # noticia concreta
                                 article = {}
                                 article['titulo'] = contenido.title
 
-                                if lista_termninos or True:
-                                    # if lista_termninos[0] in contenido.text and lista_termninos[1] in contenido.text:
-                                    # if lista_termninos[0] in contenido.text or True:
-                                    if True:
+                                try:
+                                    encontrado = self.env['wsf_noticias_resultados'].search(
+                                        [('titulo', '=', article['titulo'])])
+
+                                    print(contenido.text)
+
+                                    if encontrado:
+                                        break
+                                    else:
+                                        article['medio'] = rec.medio.id
+                                        article['copete'] = contenido.meta_description ##
+                                        article['texto'] = contenido.text
+
                                         try:
-                                            encontrado = self.env['wsf_noticias_resultados'].search(
-                                                [('titulo', '=', article['titulo'])])
+                                            article['link'] = contenido.url
 
-                                            print(contenido.text)
+                                        except:
+                                            pass
 
-                                            if encontrado:
-                                                pass
-                                            else:
-                                                article['medio'] = rec.medio.id
-                                                article['copete'] = contenido.meta_description ##
-                                                article['texto'] = contenido.text
+                                        url_medio2 = url_medio.replace("https","http")
+                                        condi = filtra_url(article['link'],url_medio2,url_medio)
 
-                                                try:
-                                                    article['link'] = contenido.url
+                                        if not condi:
+                                            break
+                                        try:
+                                            fecha2 = contenido.publish_date.strftime('%Y/%m/%d %H:%M:%S')
+                                            article['fecha_hora'] = datetime.strptime(fecha2,
+                                                                                      '%Y/%m/%d %H:%M:%S')
+                                        except:
+                                            pass
 
-                                                except:
-                                                    pass
-
-                                                # se asegura que que el link comience con la url de la página
-                                                # es para que no se vaya a otro dominio
-                                                url_medio2 = url_medio.replace("https","http")
-                                                condi = article['link'][0:len(url_medio2)+1].replace("http://","").replace("https://","") == url_medio.replace("http://","").replace("https://","")
-                                                condi2 = "/rss" in article['link'] or "/feed" in article['link']
-
-                                                if not condi and not condi2:
-                                                    break
-
-                                                try:
-                                                    fecha2 = contenido.publish_date.strftime('%Y/%m/%d %H:%M:%S')
-                                                    article['fecha_hora'] = datetime.strptime(fecha2,
-                                                                                              '%Y/%m/%d %H:%M:%S')
-                                                except:
-                                                    pass
+                                        article['regla'] = rec.regla.id
+                                        article['titulo'] = contenido.title
+                                        article['tipo'] = random.choice(['postiva','negativa','neutra','neutra'])
 
 
-                                                article['regla'] = rec.regla.id
-                                                article['titulo'] = contenido.title
-                                                article['tipo'] = random.choice(['postiva','negativa','neutra','neutra'])
+                                        print("**** Guardando: \n" +  contenido.title + "\n " + str(contador) + "\n******************")
 
+                                        all_records_resultados.create(article)
+                                        contador = contador + 1
 
-                                                print(contenido.title)
-
-                                                all_records_resultados.create(article)
-                                                contador = contador + 1
-
-                                        except Exception as e:
-                                            print(e)
+                                except Exception as e:
+                                    print(e)
 
                         contador = 1
                 else:
