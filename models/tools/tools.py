@@ -1,5 +1,5 @@
 def aplica_regla(titulo, cuerpo, copete,reglas):
-    regla_nombre = ""
+    regla_nombre = set()
 
 
     for r in reglas:
@@ -14,9 +14,9 @@ def aplica_regla(titulo, cuerpo, copete,reglas):
             condi = condi_copete or condi_titulo or condi_cuerpo
 
             if condi:
-                regla_nombre += r.nombre_regla
+                regla_nombre.add(r.nombre_regla)
 
-    return regla_nombre
+    return str(regla_nombre)
 
 
 def filtra_url(article_link, url_medio2, url_medio):

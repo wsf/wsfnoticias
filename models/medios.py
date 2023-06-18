@@ -119,6 +119,13 @@ class Medios(models.Model):
                                 article['titulo'] = contenido.title
 
                                 try:
+
+                                    reglas = self.env['wsf_noticias_reglas'].search([])
+                                    lista_reglas = aplica_regla(contenido.title, contenido.text,
+                                                                contenido.meta_description, reglas)
+                                    if not lista_reglas:
+                                        break
+
                                     encontrado = self.env['wsf_noticias_resultados'].search(
                                         [('titulo', '=', article['titulo'])])
                                     if encontrado:
@@ -130,6 +137,7 @@ class Medios(models.Model):
                                         article['link'] = contenido.url
                                         fecha = contenido.publish_date.strftime('%Y/%m/%d %H:%M:%S')
                                         article['fecha_hora'] = datetime.strptime(fecha, '%Y/%m/%d %H:%M:%S')
+                                        article['departamento'] = lista_reglas
 
                                         all_records_resultados.create(article)
                                         contador = contador + 1
@@ -164,7 +172,6 @@ class Medios(models.Model):
                                     continue
 
                                 reglas = self.env['wsf_noticias_reglas'].search([])
-
                                 lista_reglas =  aplica_regla(contenido.title,contenido.text,contenido.meta_description, reglas)
 
                                 if not lista_reglas:
@@ -174,6 +181,7 @@ class Medios(models.Model):
                                 # noticia concreta
                                 article = {}
                                 article['titulo'] = contenido.title
+                                article['departamento'] = lista_reglas
 
                                 try:
                                     encontrado = self.env['wsf_noticias_resultados'].search(
@@ -211,7 +219,8 @@ class Medios(models.Model):
                                         article['tipo'] = random.choice(['postiva','negativa','neutra','neutra'])
 
 
-                                        print("**** Guardando: \n" +  contenido.title + "\n " + str(contador) + "\n******************")
+
+                                        print(f"**** Guardando: \n {contenido.title} \n {str(contador)} --- {contenido.medio.name}\n******************")
 
                                         all_records_resultados.create(article)
                                         contador = contador + 1

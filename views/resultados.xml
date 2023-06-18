@@ -55,7 +55,7 @@
         <field name="name">Resultados</field>
         <field name="model">wsf_noticias_resultados</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree multi_edit="1">
 
                 <header>
                     <button name="set_defender" string="Defender" class="btn btn-danger ml4" type="object"/>
