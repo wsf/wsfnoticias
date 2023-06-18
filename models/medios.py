@@ -5,6 +5,7 @@ import newspaper
 from newspaper import Article
 from datetime import *
 
+
 class Medios(models.Model):
     _name = "wsf_noticias_medios"
     _description = "modelo para ingresar las páginas"
@@ -47,9 +48,6 @@ class Medios(models.Model):
                     "link": rec.pagina_web
                 }
             }
-
-            # Iterar por cada pagina de noticias
-
             contador = 1
             if rec.estado == 'on':
                 for pagina, valor in paginas.items():
@@ -93,12 +91,9 @@ class Medios(models.Model):
                                     all_records_resultados.create(article)
                                     contador = contador + 1
 
-
                             except Exception as e:
                                 print(e)
-
                     else:
-
                         hoja = newspaper.build(valor['link'], memoize_articles=False)
                         newsPaper = {
                             "medio": pagina,
