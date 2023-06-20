@@ -23,6 +23,9 @@ class Resultados(models.Model):
     fecha_registro = fields.Datetime('Fecha registro',compute='compute_fecha_registro', store=True)
     dias = fields.Date('Día', compute='compute_day', store=True)
     hora = fields.Float('Hora', compute='compute_hour', store=True)
+    regla2 = fields.Char('Reglas Aplicadas')
+    valorar =  fields.Char('Valorar')
+
     # dias_hora = fields.Char('Dias_Hora', compute='dias_hora_agrupacion',store=True)
 
 

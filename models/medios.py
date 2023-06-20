@@ -9,6 +9,10 @@ from .tools.tools import filtra_url, aplica_regla
 import os
 
 def _log(dato):
+
+    return
+
+
     nombre = os.path.dirname(__file__) + '/medio.log'
     log = open(nombre, 'a')
     dato = "- Log: " + str(datetime.now()) + " ---> " + dato
@@ -154,7 +158,7 @@ class Medios(models.Model):
                                         article['link'] = contenido.url
                                         fecha = contenido.publish_date.strftime('%Y/%m/%d %H:%M:%S')
                                         article['fecha_hora'] = datetime.strptime(fecha, '%Y/%m/%d %H:%M:%S')
-                                        article['departamento'] = lista_reglas
+                                        article['regla2'] = lista_reglas
 
                                         _log(f"Guardando {str(article)}")
                                         all_records_resultados.create(article)
@@ -192,14 +196,13 @@ class Medios(models.Model):
                                 reglas = self.env['wsf_noticias_reglas'].search([])
                                 lista_reglas =  aplica_regla(contenido.title,contenido.text,contenido.meta_description, reglas)
 
-                                if not lista_reglas:
+                                if lista_reglas == 'set()':  # si me devuelve set() es porque no aplicó regla
                                     break
-
 
                                 # noticia concreta
                                 article = {}
                                 article['titulo'] = contenido.title
-                                article['departamento'] = lista_reglas
+                                article['regla2'] = lista_reglas
 
                                 try:
                                     encontrado = self.env['wsf_noticias_resultados'].search(
@@ -236,7 +239,7 @@ class Medios(models.Model):
 
                                         article['regla'] = rec.regla.id
                                         article['titulo'] = contenido.title
-                                        article['tipo'] = random.choice(['postiva','negativa','neutra','neutra'])
+                                        article['tipo'] = random.choice(['positiva','negativa','neutra','neutra'])
 
 
                                         _log(f"****** Guardando {str(article)}")
