@@ -3,22 +3,6 @@ from datetime import *
 import pytz
 IST = pytz.timezone('America/Argentina/Buenos_Aires')
 
-class Norep(models.Model):
-    _name = "wsf_noticias_norep"
-    _description = "guarda registro para no repetir"
-    _order = "fecha_registro desc"
-    fecha_registro = fields.Datetime('Fecha registro',compute='compute_fecha_registro', store=True)
-    link = fields.Char()
-    titulo = fields.Char()
-
-
-    @api.depends('link')
-    def compute_fecha_registro(self):
-        for rec in self:
-            fecha = datetime.now(IST).strftime('%Y/%m/%d %H:%M:%S')
-            rec.fecha_registro = datetime.strptime(fecha, '%Y/%m/%d %H:%M:%S')
-
-
 class Resultados(models.Model):
     _name = "wsf_noticias_resultados"
     _description = "modelo para guardar los resultados"
@@ -41,9 +25,6 @@ class Resultados(models.Model):
     hora = fields.Float('Hora', compute='compute_hour', store=True)
     regla2 = fields.Char('Reglas Aplicadas')
     valorar =  fields.Char('Valorar')
-    nube = fields.Char('Nube')
-    clasificacion = fields.Char('Clasificacion')
-    entidades = fields.Char('Entidades')
 
     # dias_hora = fields.Char('Dias_Hora', compute='dias_hora_agrupacion',store=True)
 
@@ -69,29 +50,21 @@ class Resultados(models.Model):
             rec.fecha_registro = datetime.strptime(fecha, '%Y/%m/%d %H:%M:%S')
 
 
-    def set_verificada(self):
-        for rec in self:
-            rec.valorar = "Verificada"
-
-    def set_marcar(self):
-        for rec in self:
-            rec.valorar = "valorar"
-
     def set_defender(self):
         for rec in self:
-            rec.valorar = "defender"
+            pass
 
     def set_contraatacar(self):
         for rec in self:
-            rec.valorar = "contraatacar"
+            pass
 
     def set_atacar(self):
         for rec in self:
-            rec.valorar = "atacar"
+            pass
 
     def set_diluir(self):
         for rec in self:
-            rec.valorar = "diluir"
+            pass
 
     # @api.depends('fecha_hora')
     # def dias_hora_agrupacion(self):

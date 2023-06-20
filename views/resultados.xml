@@ -30,7 +30,6 @@
                             <field name="fecha_hora" string="Publicado"/>
                             <field name="copete"/>
                             <field name="valorar"/>
-                            <field name="nube"/>
                         </group>
                         <group>
                             <field name="regla"/>
@@ -60,35 +59,25 @@
             <tree multi_edit="1">
 
                 <header>
+                    <button name="set_marcar" string="Marcar p/ Valorar" />
 
-                    <button name="set_verificada" string="Verificada" class="btn btn-success ml4" type="object"/>
-
-                    <button name="set_marcar" string="Marcar p/ Valorar" class="btn btn-danger ml4" type="object"/>
-
-                    <!--
                     <button name="set_defender" string="Defender" class="btn btn-danger ml4" type="object"/>
                     <button name="set_contraatacar" string="Contraatacar" class="btn btn-success ml4" type="object"/>
                     <button name="set_atacar" string="Atacar" class="btn btn-primary ml4" type="object"/>
                     <button name="set_diluir" string="Diluir" class="btn btn-warning ml4"  type="object"/>
-                    -->
-
-
                 </header>
-                <field name="valorar" widget="badge" decoration-danger ="valorar =='valorar'" decoration-success ="valorar =='Verificada'"  decoration-warning="valorar =='diluir'"/>
-                <field name="nube" invisible="1"/>
+                <field name="valorar"/>
                 <field name="fecha_registro" string="Fecha de Registro"/>
                 <field name="medio"/>
                 <field name="fecha_hora" string="Publicado"/>
                 <field name="titulo"/>
-                <field name="link" widget="url"/>
+                <field name="link"/>
                 <field name="copete"/>
                 <field name="texto" invisible="1"/>
                 <field name="tipo" widget="badge" decoration-danger ="tipo =='negativa'" decoration-success ="tipo =='positiva'"  decoration-warning="tipo =='neutra'"/>
-                <field name="regla2"  string="Reglas Aplicadas"/>
-                <field name="departamento"/>
-                <field name="localidad" invisible="1"/>
-                <field name="entidades"/>
-                <field name="clasificacion"/>
+                <field name="regla2"  string="Reglas Alicadas"/>
+                <field name="localidad"/>
+                <field name="departamento" invisible="1"/>
                 <field name="hora" invisible="1"/>
                 <field name="dias" invisible="1"/>
             </tree>
@@ -133,19 +122,18 @@
         </field>
     </record>
 
-
- <record id="wsf_noticias_resultados_graph" model="ir.ui.view">
- <field name="name">wsf_noticias_resultados_graph</field>
- <field name="model">wsf_noticias_resultados</field>
-
- <field name="arch" type="xml">
- <graph string="Analisis">
- <field name="fecha_hora" interval="day"/>
- <field name="fecha_hora"/>
- <field name="medio" type="measure"/>
-</graph>
-</field>
-</record>
+<!--    &lt;!&ndash; Vista graph resultados &ndash;&gt;-->
+<!--    <record id="wsf_noticias_resultados_graph" model="ir.ui.view">-->
+<!--        <field name="name">wsf_noticias_resultados_graph</field>-->
+<!--        <field name="model">wsf_noticias_resultados</field>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <graph string="Analisis">-->
+<!--&lt;!&ndash;                <field name="fecha_hora" interval="day"/>&ndash;&gt;-->
+<!--                <field name="fecha_hora"/>-->
+<!--                <field name="medio" type="measure"/>-->
+<!--            </graph>-->
+<!--        </field>-->
+<!--    </record>-->
 
 <!--    &lt;!&ndash; vista pivot resultados &ndash;&gt;-->
 <!--    <record id="wsf_noticias_resultados_pivot" model="ir.ui.view">-->
