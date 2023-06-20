@@ -8,8 +8,11 @@ import random
 from .tools.tools import filtra_url, aplica_regla
 import os
 
-
 def _log(dato):
+
+    return
+
+
     nombre = os.path.dirname(__file__) + '/medio.log'
     log = open(nombre, 'a')
     dato = "- Log: " + str(datetime.now()) + " ---> " + dato
@@ -53,8 +56,9 @@ class Medios(models.Model):
     def scrap_importancia_todos(self):
         self.scrap_noticias('todos')
 
-    # @api.model
+    #@api.model
     def scrap_noticias(self, importancia="todos"):
+
 
         filtro_importancia = []
 
@@ -67,7 +71,7 @@ class Medios(models.Model):
         else:
             filtro_importancia = []
 
-        all_records = self.env['wsf_noticias_medios'].search(filtro_importancia, order='medio asc')
+        all_records = self.env['wsf_noticias_medios'].search(filtro_importancia,order='medio asc')
 
         all_records_resultados = self.env['wsf_noticias_resultados'].search([])
 
@@ -100,16 +104,13 @@ class Medios(models.Model):
                 """
                 # Iterar por cada pagina de noticias
 
+
                 contador = 1
                 if rec.estado == 'on':
                     for pagina, valor in paginas.items():
                         # Checar si hay un link rss en el json para darle prioridad
                         if 'rss' in valor and valor['rss'] != False:
-                            try:
-                                v = fp.parse(valor['rss'])
-                            except Exception as e:
-                                print(e)
-                                pass
+                            v = fp.parse(valor['rss'])
                             print("Descargando articulos de: ",
                                   pagina)  # Se crea un diccionario con la palabra reservada newspaper jalando los datos de nuestro json
                             newsPaper = {
@@ -141,11 +142,11 @@ class Medios(models.Model):
                                                                 contenido.meta_description, reglas)
 
                                     if lista_reglas == 'set()':  # si me devuelve set() es porque no aplicó regla
-                                        _log(f"No tomo la pagina mediante RSS-->{str(rec.pagina_rss)}")
                                         break
 
                                     encontrado = self.env['wsf_noticias_resultados'].search(
                                         [('titulo', '=', article['titulo'])])
+
 
                                     if encontrado:
                                         _log(f"*** Noticia ya guadada {str(encontrado)}")
@@ -157,7 +158,7 @@ class Medios(models.Model):
                                         article['link'] = contenido.url
                                         fecha = contenido.publish_date.strftime('%Y/%m/%d %H:%M:%S')
                                         article['fecha_hora'] = datetime.strptime(fecha, '%Y/%m/%d %H:%M:%S')
-                                        article['departamento'] = lista_reglas
+                                        article['regla2'] = lista_reglas
 
                                         _log(f"Guardando {str(article)}")
                                         all_records_resultados.create(article)
@@ -168,11 +169,9 @@ class Medios(models.Model):
 
                         if 'link' in valor and valor['link'] != False:
 
+
                             url_medio = valor['link']
-                            try:
-                                hoja = newspaper.build(url_medio, memoize_articles=False)
-                            except Exception as e:
-                                print(e)
+                            hoja = newspaper.build(url_medio, memoize_articles=False)
 
                             newsPaper = {
                                 "medio": pagina,
@@ -195,17 +194,15 @@ class Medios(models.Model):
                                     continue
 
                                 reglas = self.env['wsf_noticias_reglas'].search([])
-                                lista_reglas = aplica_regla(contenido.title, contenido.text, contenido.meta_description,
-                                                            reglas)
+                                lista_reglas =  aplica_regla(contenido.title,contenido.text,contenido.meta_description, reglas)
 
-                                if lista_reglas == 'set()':
-                                    _log(f"No tomo la pagina mediante LINK noticia: {str(contador)}--->{str(rec.pagina_web)}")
+                                if lista_reglas == 'set()':  # si me devuelve set() es porque no aplicó regla
                                     break
 
                                 # noticia concreta
                                 article = {}
                                 article['titulo'] = contenido.title
-                                article['departamento'] = lista_reglas
+                                article['regla2'] = lista_reglas
 
                                 try:
                                     encontrado = self.env['wsf_noticias_resultados'].search(
@@ -218,7 +215,7 @@ class Medios(models.Model):
                                         break
                                     else:
                                         article['medio'] = rec.medio.id
-                                        article['copete'] = contenido.meta_description  ##
+                                        article['copete'] = contenido.meta_description ##
                                         article['texto'] = contenido.text
 
                                         try:
@@ -227,8 +224,8 @@ class Medios(models.Model):
                                         except:
                                             pass
 
-                                        url_medio2 = url_medio.replace("https", "http")
-                                        condi = filtra_url(article['link'], url_medio2, url_medio)
+                                        url_medio2 = url_medio.replace("https","http")
+                                        condi = filtra_url(article['link'],url_medio2,url_medio)
 
                                         if not condi:
                                             break
@@ -239,9 +236,11 @@ class Medios(models.Model):
                                         except Exception as e:
                                             pass
 
+
                                         article['regla'] = rec.regla.id
                                         article['titulo'] = contenido.title
-                                        article['tipo'] = random.choice(['postiva', 'negativa', 'neutra', 'neutra'])
+                                        article['tipo'] = random.choice(['positiva','negativa','neutra','neutra'])
+
 
                                         _log(f"****** Guardando {str(article)}")
                                         all_records_resultados.create(article)
