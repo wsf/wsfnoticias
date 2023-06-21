@@ -45,19 +45,23 @@ class Medios(models.Model):
             result.append((rec.id, '%s' % (rec.medio.display_name)))
         return result
 
+    @api.model
     def scrap_importancia_baja(self):
         self.scrap_noticias('baja')
 
+    @api.model
     def scrap_importancia_alta(self):
         self.scrap_noticias('alta')
 
+    @api.model
     def scrap_importancia_media(self):
         self.scrap_noticias('media')
 
+    @api.model
     def scrap_importancia_todos(self):
         self.scrap_noticias('todos')
 
-    #@api.model
+    @api.model
     def scrap_noticias(self, importancia="todos"):
 
 
