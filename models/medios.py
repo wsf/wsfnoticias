@@ -7,6 +7,7 @@ from datetime import *
 import random
 from .tools.tools import filtra_url, aplica_regla
 import os
+import datetime
 
 def _log(dato):
 
@@ -156,8 +157,31 @@ class Medios(models.Model):
                                         article['copete'] = contenido.meta_description  ##
                                         article['texto'] = contenido.text
                                         article['link'] = contenido.url
-                                        fecha = contenido.publish_date.strftime('%Y/%m/%d %H:%M:%S')
-                                        article['fecha_hora'] = datetime.strptime(fecha, '%Y/%m/%d %H:%M:%S')
+                                        article['tipo'] = random.choice(['positiva','negativa','neutra','neutra'])
+
+
+                                        try:
+
+                                            fecha2 = contenido.publish_date.strftime('%Y/%m/%d %H:%M:%S')
+                                            article['fecha_hora'] = datetime.datetime.strptime(fecha2,'%Y/%m/%d %H:%M:%S')
+
+                                            # sila fecha del artículo es antigua (3 dias) lo descarta
+                                            fecha_art = contenido.publish_date
+
+                                            fecha_hoy = datetime.datetime.now() - datetime.timedelta(days=3)
+
+                                            # si la fecha del articulo tiene mas de 3 días no lo tomo
+                                            if not fecha_art.strftime('%Y/%m/%d') >=  fecha_hoy.strftime('%Y/%m/%d'):
+                                                break
+
+                                        except Exception as e:
+                                            try:
+                                                article['fecha_hora'] = datetime.datetime.strptime(fecha2,'%Y/%m/%d %H:%M:%S')
+                                            except:
+                                                pass
+                                            print(str(e))
+                                            pass
+
                                         article['regla2'] = lista_reglas
 
                                         _log(f"Guardando {str(article)}")
@@ -231,9 +255,24 @@ class Medios(models.Model):
                                             break
                                         try:
                                             fecha2 = contenido.publish_date.strftime('%Y/%m/%d %H:%M:%S')
-                                            article['fecha_hora'] = datetime.strptime(fecha2,
+                                            article['fecha_hora'] = datetime.datetime.strptime(fecha2,
                                                                                       '%Y/%m/%d %H:%M:%S')
+
+                                            # sila fecha del artículo es antigua (3 dias) lo descarta
+                                            fecha_art = contenido.publish_date
+
+                                            fecha_hoy = datetime.datetime.now() - datetime.timedelta(days=3)
+
+                                            # si la fecha del articulo tiene mas de 3 días no lo tomo
+                                            if not fecha_art.strftime('%Y/%m/%d') >=  fecha_hoy.strftime('%Y/%m/%d'):
+                                                break
+
                                         except Exception as e:
+                                            try:
+                                                article['fecha_hora'] = datetime.datetime.strptime(fecha2,'%Y/%m/%d %H:%M:%S')
+                                            except:
+                                                pass
+                                            print(str(e))
                                             pass
 
 
