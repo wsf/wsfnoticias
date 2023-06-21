@@ -1,3 +1,5 @@
+import textblob
+
 def aplica_regla(titulo, cuerpo, copete,reglas):
     regla_nombre = set()
     lista_condicionales = []
@@ -94,3 +96,9 @@ def filtra_url(article_link, url_medio2, url_medio):
     condi  =  condi and not condi2
 
     return condi
+
+def sentimiento(texto):
+    blob = textblob.TextBlob(texto)
+    blob = blob.translate("es")
+    sentiment = blob.sentiment
+    return sentiment

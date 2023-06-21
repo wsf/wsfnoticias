@@ -278,6 +278,7 @@ class Medios(models.Model):
 
                                         article['regla'] = rec.regla.id
                                         article['titulo'] = contenido.title
+
                                         article['tipo'] = random.choice(['positiva','negativa','neutra','neutra'])
 
 
