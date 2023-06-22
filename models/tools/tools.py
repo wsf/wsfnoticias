@@ -121,7 +121,7 @@ def nube(text):
     words = set(text.split())
 
     # Eliminar las palabras vacías de la lista de palabras únicas
-    stopwords = {'a', 'y', 'o', 'el', 'la', 'ante', 'cabo', 'con', 'contra', 'de', 'desde', 'para', 'por', 'según',
+    stopwords = {'art','se','on','us','me','ve','le','da','ver','a', 'y', 'o', 'el', 'la', 'ante', 'cabo', 'con', 'contra', 'de', 'desde', 'para', 'por', 'según',
                  'que','al','el','los','las','ellos','así','es','un','una','como','donde','esta','en','se','lo','ni','del','ese','de','si','no','estos','estas',
                  'hay','tuvo','poco','mucho','hace','es','los','las','tener','aquí',
                  'el', 'la', 'los', 'las', 'un', 'una', 'unos', 'unas',
