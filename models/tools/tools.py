@@ -153,7 +153,7 @@ def nube(text):
                  'ir', 'venir', 'hacer', 'decir', 'ver', 'sentir', 'pensar', 'creer', 'conocer', 'entender', 'querer',
                  'poder', 'deber',
                  'bailar', 'cantar', 'tocar', 'cocinar', 'leer', 'escribir', 'correr', 'nadar', 'jugar', 'mirar',
-                 'escuchar'
+                 'escuchar','vi','te','le','me','mi','da','ex','uno','dos','tres'
                  }
 
     words = words - stopwords
