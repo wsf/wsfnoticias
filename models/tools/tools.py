@@ -140,7 +140,20 @@ def nube(text):
                  'mucho', 'poco', 'más', 'menos', 'suficiente',
                  'ser', 'estar', 'haber', 'tener',
                  'poder', 'deber', 'querer', 'saber',
-                 'parecer', 'resultar', 'permanecer', 'continuar'
+                 'parecer', 'resultar', 'permanecer', 'continuar',
+                 'siempre', 'nunca', 'raramente', 'frecuentemente',
+                 'sí', 'ciertamente', 'claro que sí',
+                 'no', 'tampoco', 'jamás',
+                 'quizás', 'tal vez', 'probablemente',
+                 'rápidamente', 'lentamente', 'cuidadosamente',
+                 'demasiado', 'bastante', 'suficientemente',
+                 'arriba', 'abajo', 'cerca', 'lejos',
+                 'que', 'quien', 'cuyo', 'cuyos', 'cuya', 'cuyas', 'donde', 'cuando', 'como',
+                 'si', 'como', 'porque', 'aunque', 'mientras', 'cuando', 'donde', 'quien',
+                 'ir', 'venir', 'hacer', 'decir', 'ver', 'sentir', 'pensar', 'creer', 'conocer', 'entender', 'querer',
+                 'poder', 'deber',
+                 'bailar', 'cantar', 'tocar', 'cocinar', 'leer', 'escribir', 'correr', 'nadar', 'jugar', 'mirar',
+                 'escuchar'
                  }
 
     words = words - stopwords
