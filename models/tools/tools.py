@@ -132,5 +132,8 @@ def nube(text):
         count = text.count(word)
         word_count[word] = count
 
+    # ordernarlo:
+    sorted_dict = dict(sorted(word_count.items(), key=lambda x: x[1], reverse=True))
+
     # Devolver el diccionario con el recuento de palabras
-    return str(word_count)
+    return str(sorted_dict)
