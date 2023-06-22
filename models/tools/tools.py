@@ -1,3 +1,4 @@
+import textblob
 
 def aplica_regla(titulo, cuerpo, copete,reglas):
     regla_nombre = set()
@@ -96,3 +97,18 @@ def filtra_url(article_link, url_medio2, url_medio):
 
     return condi
 
+
+
+def sentimiento(texto):
+    blob = textblob.TextBlob(texto)
+    blob = blob.translate("es")
+
+    r = blob.sentiment.polarity
+    if r < 0:
+        sentiment = "negativa"
+    elif r > 0:
+        sentiment = "positiva"
+    else:
+        sentiment = "neutra"
+
+    return sentiment
