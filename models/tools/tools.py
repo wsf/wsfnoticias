@@ -122,7 +122,26 @@ def nube(text):
 
     # Eliminar las palabras vacías de la lista de palabras únicas
     stopwords = {'a', 'y', 'o', 'el', 'la', 'ante', 'cabo', 'con', 'contra', 'de', 'desde', 'para', 'por', 'según',
-                 'que','al','el','los','las','ellos','así','es','un','una','como','donde','esta','en','se','lo','ni','del','ese','de','si','no','estos','estas'}
+                 'que','al','el','los','las','ellos','así','es','un','una','como','donde','esta','en','se','lo','ni','del','ese','de','si','no','estos','estas',
+                 'hay','tuvo','poco','mucho','hace','es','los','las','tener','aquí',
+                 'el', 'la', 'los', 'las', 'un', 'una', 'unos', 'unas',
+                 'yo', 'tú', 'él', 'ella', 'usted', 'nosotros', 'vosotros', 'ellos', 'ellas', 'ustedes',
+                 'mi', 'tu', 'su', 'nuestro', 'vuestro', 'su',
+                 'este', 'ese', 'aquel', 'esta', 'esa', 'aquella', 'esto', 'eso', 'aquello',
+                 'alguien', 'nadie', 'algo', 'nada', 'alguno', 'ninguno', 'cualquiera', 'otro', 'varios', 'ambos',
+                 'mismo', 'tantos', 'demás',
+                 'a', 'ante', 'bajo', 'con', 'contra', 'de', 'desde', 'en', 'entre', 'hacia', 'hasta', 'para', 'por',
+                 'según', 'sin', 'sobre', 'tras',
+                 'y', 'e', 'ni', 'pero', 'sino', 'o', 'u', 'bien', 'ya', 'todavía', 'no obstante', 'sin embargo',
+                 'porque', 'pues', 'así que', 'por lo tanto', 'luego', 'entonces',
+                 'bien', 'mal', 'así', 'así así', 'regularmente', 'mejor', 'peor',
+                 'ahora', 'antes', 'después', 'pronto', 'tarde', 'temprano',
+                 'aquí', 'allí', 'cerca', 'lejos', 'encima', 'debajo', 'delante', 'detrás',
+                 'mucho', 'poco', 'más', 'menos', 'suficiente',
+                 'ser', 'estar', 'haber', 'tener',
+                 'poder', 'deber', 'querer', 'saber',
+                 'parecer', 'resultar', 'permanecer', 'continuar'
+                 }
 
     words = words - stopwords
 
