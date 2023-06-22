@@ -3,3 +3,5 @@ access_wsf_noticias_medios,access.wsf_noticias_medios,model_wsf_noticias_medios,
 access_wsf_noticias_reglas,access.wsf_noticias_reglas,model_wsf_noticias_reglas,,1,1,1,1
 access_wsf_noticias_resultados,access.wsf_noticias_resultados,model_wsf_noticias_resultados,,1,1,1,1
 access_wsf_noticias_terminos,access.wsf_noticias_terminos,model_wsf_noticias_terminos,,1,1,1,1
+access_wsf_noticias_laboratorio,access.wsf_noticias_laboratorio,model_wsf_noticias_laboratorio,,1,1,1,1
+
