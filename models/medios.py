@@ -10,10 +10,10 @@ import os
 import datetime
 
 def _log(dato):
-
+    return
     nombre = os.path.dirname(__file__) + '/medio.log'
     log = open(nombre, 'a')
-    dato = "- Log: " + str(datetime.now()) + " ---> " + dato
+    dato = "- Log: " + str(datetime.datetime.now()) + " ---> " + dato
     log.write(dato + '\n')
     log.close()
 
