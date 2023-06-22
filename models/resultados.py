@@ -25,6 +25,7 @@ class Resultados(models.Model):
     hora = fields.Float('Hora', compute='compute_hour', store=True)
     regla2 = fields.Char('Reglas Aplicadas')
     valorar =  fields.Char('Valorar')
+    nube = fields.Char('Nube')
 
     # dias_hora = fields.Char('Dias_Hora', compute='dias_hora_agrupacion',store=True)
 

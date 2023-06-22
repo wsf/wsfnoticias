@@ -86,7 +86,6 @@ def aplica_regla(titulo, cuerpo, copete,reglas):
 
     return str(regla_nombre)
 
-
 def filtra_url(article_link, url_medio2, url_medio):
     condi = True
     condi1 = article_link[0:len(url_medio2) + 1].replace("http://", "").replace("https://", "") == url_medio.replace(
@@ -96,8 +95,6 @@ def filtra_url(article_link, url_medio2, url_medio):
     condi  =  condi and not condi2
 
     return condi
-
-
 
 def sentimiento(texto):
     blob = textblob.TextBlob(texto)
@@ -112,3 +109,28 @@ def sentimiento(texto):
         sentiment = "neutra"
 
     return sentiment
+
+import string
+
+def nube(text):
+    # Convertir el texto a minúsculas y eliminar los caracteres no alfabéticos
+    text = text.lower()
+    text = text.translate(str.maketrans('', '', string.punctuation))
+
+    # Dividir el texto en palabras y generar una lista de palabras únicas
+    words = set(text.split())
+
+    # Eliminar las palabras vacías de la lista de palabras únicas
+    stopwords = {'a', 'y', 'o', 'el', 'la', 'ante', 'cabo', 'con', 'contra', 'de', 'desde', 'para', 'por', 'según',
+                 'que','al','el','los','las','ellos','así','es','un','una','como','donde','esta'}
+
+    words = words - stopwords
+
+    # Contar el número de veces que aparece cada palabra en el texto
+    word_count = {}
+    for word in words:
+        count = text.count(word)
+        word_count[word] = count
+
+    # Devolver el diccionario con el recuento de palabras
+    return str(word_count)
