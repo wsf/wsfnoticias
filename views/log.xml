@@ -1,0 +1,48 @@
+<odoo>
+
+    <record id='wsf_noticias_log_action' model='ir.actions.act_window'>
+        <field name="name">Log</field>
+        <field name="res_model">wsf_noticias_log</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+
+    <menuitem id="wsf_noticias_log_root"
+              parent="wsf_noticias_root"
+              name="Logs"
+              action="wsf_noticias_log_action"/>
+
+    <!-- Form View -->
+    <record id="wsf_noticias_log_form" model="ir.ui.view">
+        <field name="name">Log</field>
+        <field name="model">wsf_noticias_log</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+<!--                        <field name="medio"/>-->
+                        <field name="text_file"/>
+                        <field name="html_field" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- end form -->
+
+    <!-- Tree View -->
+    <record id="wsf_noticias_reglas_tree" model="ir.ui.view">
+        <field name="name">Logs</field>
+        <field name="model">wsf_noticias_log</field>
+        <field name="arch" type="xml">
+            <tree>
+<!--                <field name="medio"/>-->
+                <field name="text_file"/>
+                <field name="html_field"/>
+            </tree>
+        </field>
+    </record>
+    <!--fin tree-->
+
+</odoo>

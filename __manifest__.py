@@ -19,6 +19,7 @@
         'views/medios.xml',
         'views/reglas.xml',
         'views/laboratorio.xml',
+        'views/log.xml',
         'security/ir.model.access.csv'
 
     ],
