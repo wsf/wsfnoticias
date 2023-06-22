@@ -5,7 +5,7 @@ import newspaper
 from newspaper import Article
 from datetime import *
 import random
-from .tools.tools import filtra_url, aplica_regla
+from .tools.tools import filtra_url, aplica_regla, sentimiento
 import os
 import datetime
 
@@ -161,7 +161,8 @@ class Medios(models.Model):
                                         article['copete'] = contenido.meta_description  ##
                                         article['texto'] = contenido.text
                                         article['link'] = contenido.url
-                                        article['tipo'] = random.choice(['positiva','negativa','neutra','neutra'])
+                                        #article['tipo'] = random.choice(['positiva','negativa','neutra','neutra'])
+                                        article['tipo'] = sentimiento(contenido.title)
 
 
                                         try:
@@ -283,7 +284,8 @@ class Medios(models.Model):
                                         article['regla'] = rec.regla.id
                                         article['titulo'] = contenido.title
 
-                                        article['tipo'] = random.choice(['positiva','negativa','neutra','neutra'])
+                                        #article['tipo'] = random.choice(['positiva','negativa','neutra','neutra'])
+                                        article['tipo'] = sentimiento(contenido.title)
 
 
                                         _log(f"****** Guardando {str(article)}")
