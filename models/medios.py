@@ -5,7 +5,7 @@ import newspaper
 from newspaper import Article
 from datetime import *
 import random
-from .tools.tools import filtra_url, aplica_regla, sentimiento
+from .tools.tools import filtra_url, aplica_regla, sentimiento, nube
 import os
 import datetime
 
@@ -164,6 +164,12 @@ class Medios(models.Model):
                                         #article['tipo'] = random.choice(['positiva','negativa','neutra','neutra'])
                                         article['tipo'] = sentimiento(contenido.title)
 
+                                        try:
+                                            article['nube'] = nube(contenido.text )
+                                        except:
+                                            pass
+
+
 
                                         try:
 
@@ -286,6 +292,11 @@ class Medios(models.Model):
 
                                         #article['tipo'] = random.choice(['positiva','negativa','neutra','neutra'])
                                         article['tipo'] = sentimiento(contenido.title)
+
+                                        try:
+                                            article['nube'] = nube(contenido.text )
+                                        except:
+                                             pass
 
 
                                         _log(f"****** Guardando {str(article)}")

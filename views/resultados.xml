@@ -30,6 +30,7 @@
                             <field name="fecha_hora" string="Publicado"/>
                             <field name="copete"/>
                             <field name="valorar"/>
+                            <field name="nube"/>
                         </group>
                         <group>
                             <field name="regla"/>
@@ -67,6 +68,7 @@
                     <button name="set_diluir" string="Diluir" class="btn btn-warning ml4"  type="object"/>
                 </header>
                 <field name="valorar"/>
+                <field name="nube"/>
                 <field name="fecha_registro" string="Fecha de Registro"/>
                 <field name="medio"/>
                 <field name="fecha_hora" string="Publicado"/>
