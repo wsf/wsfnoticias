@@ -12,6 +12,7 @@ import datetime
 def _log(dato):
     
     
+    return
     nombre = os.path.dirname(__file__) + '/medio.log'
     log = open(nombre, 'a')
     dato = "- Log: " + str(datetime.datetime.now()) + " ---> " + dato
