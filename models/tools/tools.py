@@ -162,7 +162,8 @@ def nube(text):
     word_count = {}
     for word in words:
         count = text.count(word)
-        word_count[word] = count
+        if len(word) > 3:
+            word_count[word] = count
 
     # ordernarlo:
     sorted_dict = dict(sorted(word_count.items(), key=lambda x: x[1], reverse=True))
