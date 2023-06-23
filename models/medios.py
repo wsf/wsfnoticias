@@ -260,6 +260,7 @@ class Medios(models.Model):
                                     print(e)
 
 
+                                self.prueba += f" \n -- Bajando artículo:  {contenido.url} \n"
 
                                 reglas = self.env['wsf_noticias_reglas'].search([('estado','=','on')])
 
