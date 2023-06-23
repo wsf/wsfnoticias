@@ -3,6 +3,7 @@ import textblob
 def aplica_regla(titulo, cuerpo, copete,reglas):
     regla_nombre = set()
     lista_condicionales = []
+    log = ""
 
     # reglas
     for r in reglas:
@@ -26,10 +27,12 @@ def aplica_regla(titulo, cuerpo, copete,reglas):
 
             if condi:
                 #regla_nombre.add(r.nombre_regla)
+                log += f"\n -- entra por regla or, por el termino {t.name.upper()}"
                 cumple_or = True
 
         # si no hay terminos en or ->
         if not terminos:
+            log += f"\n -- no hay or"
             cumple_or = True
 
 
@@ -47,14 +50,17 @@ def aplica_regla(titulo, cuerpo, copete,reglas):
 
             if not condi:
                 # cualquiera que no cumpla el and
+                log += f"\n -- no cumple en adn  {t.name.upper()}"
                 cumple_and = False
                 break
 
         if cumple_and and terminos:
             #regla_nombre.add(r.nombre_regla)
+            log += f"\n -- cumple en and  {t.name.upper()}"
             cumple_and = True
 
         if not terminos:
+            log += f"\n -- no hay and"
             cumple_and = True
 
         # terminos not  -------------------------------------------
@@ -71,20 +77,24 @@ def aplica_regla(titulo, cuerpo, copete,reglas):
 
             if condi:
                 #regla_nombre.add(r.nombre_regla)
+                log += f"\n -- cumple con not  {t.name.upper()}"
                 cumple_not = True
 
         if not terminos:
+            log += f"\n -- no hay not"
             cumple_not = True
 
 
         # Verifico que se cumplan todos los tipo de condicionales
         if cumple_and and cumple_not and cumple_or:
+            log += f"\n -- filtra !!!    {t.name.upper()}"
             regla_nombre.add(r.nombre_regla)
         else:
+            log += f"\n -- no filtra *** "
             regla_nombre = set()
 
 
-    return str(regla_nombre)
+    return (str(regla_nombre),log)
 
 def filtra_url(article_link, url_medio2, url_medio):
     condi = True
