@@ -201,7 +201,7 @@ class Medios(models.Model):
                                             fecha_hoy = datetime.datetime.now() - datetime.timedelta(days=3)
 
                                             # si la fecha del articulo tiene mas de 3 días no lo tomo
-                                            if not fecha_art.strftime('%Y/%m/%d') >=  fecha_hoy.strftime('%Y/%m/%d'):
+                                            if not fecha_art.strftime('%Y/%m/%d') >=  fecha_hoy.strftime('%Y/%m/%d') and tipo != "prueba":
                                                 break
 
                                         except Exception as e:
@@ -312,7 +312,7 @@ class Medios(models.Model):
                                             fecha_hoy = datetime.datetime.now() - datetime.timedelta(days=3)
 
                                             # si la fecha del articulo tiene mas de 3 días no lo tomo
-                                            if not fecha_art.strftime('%Y/%m/%d') >=  fecha_hoy.strftime('%Y/%m/%d'):
+                                            if not fecha_art.strftime('%Y/%m/%d') >=  fecha_hoy.strftime('%Y/%m/%d') and tipo != "prueba":
                                                 break
 
                                         except Exception as e:
