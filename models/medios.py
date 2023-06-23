@@ -10,7 +10,7 @@ import os
 import datetime
 
 def _log(dato):
-    return
+    
     nombre = os.path.dirname(__file__) + '/medio.log'
     log = open(nombre, 'a')
     dato = "- Log: " + str(datetime.datetime.now()) + " ---> " + dato
@@ -132,6 +132,8 @@ class Medios(models.Model):
                                     contenido.download()
                                     contenido.parse()
                                 except Exception as e:
+                                    _log(f"Exception:  {str(e)}")
+
                                     print(e)
                                     continue
 
@@ -163,9 +165,8 @@ class Medios(models.Model):
 
                                         try:
                                             article['nube'] = nube(contenido.text )
-                                        except:
-                                            pass
-
+                                        except Exception as e:
+                                            _log(f"Exception:  {str(e)}")
 
 
                                         try:
@@ -185,7 +186,8 @@ class Medios(models.Model):
                                         except Exception as e:
                                             try:
                                                 article['fecha_hora'] = datetime.datetime.strptime(fecha2,'%Y/%m/%d %H:%M:%S')
-                                            except:
+                                            except Exception as e:
+                                                _log(f"Exception:  {str(e)}")
                                                 pass
                                             print(str(e))
                                             pass
@@ -197,6 +199,7 @@ class Medios(models.Model):
                                         contador = contador + 1
 
                                 except Exception as e:
+                                    _log(f"Exception:  {str(e)}")
                                     print(e)
 
                         if 'link' in valor and valor['link'] != False:
@@ -222,6 +225,7 @@ class Medios(models.Model):
                                     contenido.parse()
 
                                 except Exception as e:
+                                    _log(f"Exception:  {str(e)}")
                                     print(e)
                                     continue
 
@@ -253,7 +257,8 @@ class Medios(models.Model):
                                         try:
                                             article['link'] = contenido.url
 
-                                        except:
+                                        except Exception as e:
+                                            _log(f"Exception 261:  {str(e)}")
                                             pass
 
                                         url_medio2 = url_medio.replace("https","http")
@@ -278,7 +283,8 @@ class Medios(models.Model):
                                         except Exception as e:
                                             try:
                                                 article['fecha_hora'] = datetime.datetime.strptime(fecha2,'%Y/%m/%d %H:%M:%S')
-                                            except:
+                                            except Exception as e:
+                                                _log(f"Exception 287:  {str(e)}")
                                                 pass
                                             print(str(e))
                                             pass
@@ -292,8 +298,8 @@ class Medios(models.Model):
 
                                         try:
                                             article['nube'] = nube(contenido.text )
-                                        except:
-                                             pass
+                                        except Exception as e:
+                                            _log(f"Exception 302:  {str(e)}")
 
 
                                         _log(f"****** Guardando {str(article)}")
@@ -301,6 +307,7 @@ class Medios(models.Model):
                                         contador = contador + 1
 
                                 except Exception as e:
+                                    _log(f"Exception 310:  {str(e)}")
                                     print(e)
 
                         contador = 1
