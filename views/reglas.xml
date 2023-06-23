@@ -39,7 +39,7 @@
     <!-- end form -->
 
     <!-- Tree View -->
-    <record id="wsf_noticias_reglas_tree" model="ir.ui.view">
+    <record id="wsf_noticias_reglas_tree2" model="ir.ui.view">
         <field name="name">Reglas</field>
         <field name="model">wsf_noticias_reglas</field>
         <field name="arch" type="xml">
