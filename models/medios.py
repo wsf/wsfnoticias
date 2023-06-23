@@ -173,7 +173,7 @@ class Medios(models.Model):
                                         [('titulo', '=', article['titulo'])])
 
 
-                                    if encontrado:
+                                    if encontrado and tipo != "prueba":
                                         _log(f"*** Noticia ya guadada {str(encontrado)}")
                                         break
                                     else:
@@ -203,6 +203,7 @@ class Medios(models.Model):
                                             # si la fecha del articulo tiene mas de 3 días no lo tomo
                                             if not fecha_art.strftime('%Y/%m/%d') >=  fecha_hoy.strftime('%Y/%m/%d') and tipo != "prueba":
                                                 break
+                                            self.prueba +=" *206 "
 
                                         except Exception as e:
                                             try:
@@ -260,11 +261,13 @@ class Medios(models.Model):
                                     print(e)
 
 
-                                self.prueba += f" \n -- Bajando artículo:  {str(contenido)} \n"
+                                self.prueba += f" \n -- Bajando artículo:  {str(contenido.url)} "
 
                                 reglas = self.env['wsf_noticias_reglas'].search([('estado','=','on')])
 
                                 r =  aplica_regla(contenido.title,contenido.text,contenido.meta_description, reglas)
+
+                                self.prueba +=" *269 "
 
                                 lista_reglas = r[0]
 
@@ -278,13 +281,15 @@ class Medios(models.Model):
                                 article['titulo'] = contenido.title
                                 article['regla2'] = lista_reglas
 
+                                self.prueba +=" *283 "
+
                                 try:
                                     encontrado = self.env['wsf_noticias_resultados'].search(
                                         [('titulo', '=', article['titulo'])])
 
                                     print(contenido.text)
 
-                                    if encontrado:
+                                    if encontrado and tipo !="prueba":
                                         _log(f"*** Noticia ya guadada {str(encontrado)}")
                                         break
                                     else:
@@ -302,6 +307,8 @@ class Medios(models.Model):
                                         url_medio2 = url_medio.replace("https","http")
                                         condi = filtra_url(article['link'],url_medio2,url_medio)
 
+                                        self.prueba +=" *310 "
+
                                         if not condi:
                                             break
                                         try:
@@ -317,6 +324,7 @@ class Medios(models.Model):
                                             # si la fecha del articulo tiene mas de 3 días no lo tomo
                                             if not fecha_art.strftime('%Y/%m/%d') >=  fecha_hoy.strftime('%Y/%m/%d') and tipo != "prueba":
                                                 break
+                                            self.prueba +=" *327 "
 
                                         except Exception as e:
                                             try:
@@ -337,6 +345,7 @@ class Medios(models.Model):
                                         try:
                                             article['nube'] = nube(contenido.text )
                                         except Exception as e:
+                                            self.prueba +=" *348 "
                                             _log(f"Exception 302:  {str(e)}")
 
                                         if tipo == "prueba":
