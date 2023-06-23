@@ -242,7 +242,7 @@ class Medios(models.Model):
                             }
                             contador = 1
 
-                            self.prueba += f" \n Cantidad de artículos. {len(hoja.articles)} \n"
+                            self.prueba += f"Cantidad de artículos candidatos:  {len(hoja.articles)} \n"
 
                             # hoja.articles -> obtiene una lista con todos los artículos del portal que está visitando (escrapeando)
                             for contenido in hoja.articles:  # recorre cada uno de los artículos
@@ -261,7 +261,7 @@ class Medios(models.Model):
                                     print(e)
 
 
-                                self.prueba += f" \n -- Bajando artículo:  {str(contenido.url)} "
+                                self.prueba += f" \n -- Bajando artículo:  {str(contenido.url)} \n"
 
                                 reglas = self.env['wsf_noticias_reglas'].search([('estado','=','on')])
 
