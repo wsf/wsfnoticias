@@ -51,21 +51,25 @@ class Resultados(models.Model):
             rec.fecha_registro = datetime.strptime(fecha, '%Y/%m/%d %H:%M:%S')
 
 
+    def set_marcar(self):
+        for rec in self:
+            rec.valorar = "valorar"
+
     def set_defender(self):
         for rec in self:
-            pass
+            rec.valorar = "defender"
 
     def set_contraatacar(self):
         for rec in self:
-            pass
+            rec.valorar = "contraatacar"
 
     def set_atacar(self):
         for rec in self:
-            pass
+            rec.valorar = "atacar"
 
     def set_diluir(self):
         for rec in self:
-            pass
+            rec.valorar = "diluir"
 
     # @api.depends('fecha_hora')
     # def dias_hora_agrupacion(self):
