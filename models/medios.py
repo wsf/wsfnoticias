@@ -241,6 +241,8 @@ class Medios(models.Model):
                             }
                             contador = 1
 
+                            self.prueba += f" \n Cantidad de artículos. {len(hoja.articles)} \n"
+
                             # hoja.articles -> obtiene una lista con todos los artículos del portal que está visitando (escrapeando)
                             for contenido in hoja.articles:  # recorre cada uno de los artículos
 
