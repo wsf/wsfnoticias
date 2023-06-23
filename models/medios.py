@@ -141,7 +141,7 @@ class Medios(models.Model):
 
                                 try:
 
-                                    reglas = self.env['wsf_noticias_reglas'].search([])
+                                    reglas = self.env['wsf_noticias_reglas'].search([('estado','=','on')])
                                     lista_reglas = aplica_regla(contenido.title, contenido.text,
                                                                 contenido.meta_description, reglas)
 
@@ -229,7 +229,8 @@ class Medios(models.Model):
                                     print(e)
                                     continue
 
-                                reglas = self.env['wsf_noticias_reglas'].search([])
+
+                                reglas = self.env['wsf_noticias_reglas'].search([('estado','=','on')])
                                 lista_reglas =  aplica_regla(contenido.title,contenido.text,contenido.meta_description, reglas)
 
                                 if lista_reglas == 'set()':  # si me devuelve set() es porque no aplicó regla
