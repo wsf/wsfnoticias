@@ -12,6 +12,8 @@ class Reglas(models.Model):
     estado = fields.Selection([('on', 'ON'), ('off', 'OFF')])
     fecha_desde = fields.Date('Fecha Desde:')
     fecha_hasta = fields.Date('Fecha Hasta:')
+    mails = fields.Text("Mails para avisar")
+    telegram  = fields.Text("URL Bot telegram")
 
     def name_get(self):
         result = []
