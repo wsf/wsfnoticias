@@ -5,17 +5,17 @@ import newspaper
 from newspaper import Article
 from datetime import *
 import random
-from .tools.tools import filtra_url, aplica_regla
+from .tools.tools import filtra_url, aplica_regla, sentimiento, nube
 import os
+import datetime
 
 def _log(dato):
-
+    
+    
     return
-
-
     nombre = os.path.dirname(__file__) + '/medio.log'
     log = open(nombre, 'a')
-    dato = "- Log: " + str(datetime.now()) + " ---> " + dato
+    dato = "- Log: " + str(datetime.datetime.now()) + " ---> " + dato
     log.write(dato + '\n')
     log.close()
 
@@ -37,6 +37,10 @@ class Medios(models.Model):
     comentario = fields.Text('Comentario')
     latitud = fields.Char('Latitud')
     longitud = fields.Char('Longitud')
+    prueba = fields.Text('Prueba')
+    reglas = fields.Text('Reglas')
+    resultado1 = fields.Html(default='<h1> Labo1 </h1')
+    resultado2 = fields.Html(default='<h1> Labo2 </h1')
 
     def name_get(self):
         result = []
@@ -44,20 +48,27 @@ class Medios(models.Model):
             result.append((rec.id, '%s' % (rec.medio.display_name)))
         return result
 
+    def scrap_prueba(self):
+        self.scrap_noticias("todos","prueba",self.pagina_web)
+
+    @api.model
     def scrap_importancia_baja(self):
         self.scrap_noticias('baja')
 
+    @api.model
     def scrap_importancia_alta(self):
         self.scrap_noticias('alta')
 
+    @api.model
     def scrap_importancia_media(self):
         self.scrap_noticias('media')
 
+    @api.model
     def scrap_importancia_todos(self):
         self.scrap_noticias('todos')
 
-    #@api.model
-    def scrap_noticias(self, importancia="todos"):
+    @api.model
+    def scrap_noticias(self, importancia="todos", tipo="", pagina=""):
 
 
         filtro_importancia = []
@@ -76,8 +87,16 @@ class Medios(models.Model):
         all_records_resultados = self.env['wsf_noticias_resultados'].search([])
 
         for rec in all_records:
-            if not (rec.estado == 'on' and rec.importancia == importancia):
-                break
+
+            if tipo == "prueba":
+                if  rec.pagina_web != pagina:
+                    continue
+                else:
+                    self.prueba = "Comenzando a tomar información del portal a las: " + datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S') + "\n\n"
+                    self.reglas = "Comenzando a visualizar las reglas: " + datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S') + "\n\n"
+            else:
+                if not (rec.estado == 'on' and rec.importancia == importancia):
+                    break
 
             _log(f"Tomando la página {rec.pagina_web}")
 
@@ -120,6 +139,9 @@ class Medios(models.Model):
                             }
                             for entrada in v.entries:
 
+                                if tipo=="prueba":
+                                    limite = 50
+
                                 if contador > limite:
                                     break
                                 article = {}
@@ -130,6 +152,8 @@ class Medios(models.Model):
                                     contenido.download()
                                     contenido.parse()
                                 except Exception as e:
+                                    _log(f"Exception:  {str(e)}")
+
                                     print(e)
                                     continue
 
@@ -137,18 +161,23 @@ class Medios(models.Model):
 
                                 try:
 
-                                    reglas = self.env['wsf_noticias_reglas'].search([])
-                                    lista_reglas = aplica_regla(contenido.title, contenido.text,
+                                    reglas = self.env['wsf_noticias_reglas'].search([('estado','=','on')])
+                                    r = aplica_regla(contenido.title, contenido.text,
                                                                 contenido.meta_description, reglas)
+                                    lista_reglas = r[0]
 
-                                    if lista_reglas == 'set()':  # si me devuelve set() es porque no aplicó regla
+                                    _log(f" Aplicando regla \n  {r[1]}")
+
+                                    self.reglas += r[1]
+
+                                    if lista_reglas == 'set()' and tipo != "prueba":  # si me devuelve set() es porque no aplicó regla
                                         break
 
                                     encontrado = self.env['wsf_noticias_resultados'].search(
                                         [('titulo', '=', article['titulo'])])
 
 
-                                    if encontrado:
+                                    if encontrado and tipo != "prueba":
                                         _log(f"*** Noticia ya guadada {str(encontrado)}")
                                         break
                                     else:
@@ -156,15 +185,52 @@ class Medios(models.Model):
                                         article['copete'] = contenido.meta_description  ##
                                         article['texto'] = contenido.text
                                         article['link'] = contenido.url
-                                        fecha = contenido.publish_date.strftime('%Y/%m/%d %H:%M:%S')
-                                        article['fecha_hora'] = datetime.strptime(fecha, '%Y/%m/%d %H:%M:%S')
+                                        #article['tipo'] = random.choice(['positiva','negativa','neutra','neutra'])
+                                        article['tipo'] = sentimiento(contenido.title)
+
+                                        try:
+                                            article['nube'] = nube(contenido.text )
+                                        except Exception as e:
+                                            _log(f"Exception:  {str(e)}")
+
+
+                                        try:
+
+                                            fecha2 = contenido.publish_date.strftime('%Y/%m/%d %H:%M:%S')
+                                            article['fecha_hora'] = datetime.datetime.strptime(fecha2,'%Y/%m/%d %H:%M:%S')
+
+                                            # sila fecha del artículo es antigua (3 dias) lo descarta
+                                            fecha_art = contenido.publish_date
+
+                                            fecha_hoy = datetime.datetime.now() - datetime.timedelta(days=3)
+
+                                            # si la fecha del articulo tiene mas de 3 días no lo tomo
+                                            if not fecha_art.strftime('%Y/%m/%d') >=  fecha_hoy.strftime('%Y/%m/%d') and tipo != "prueba":
+                                                break
+                                            self.prueba +=" *206 "
+
+                                        except Exception as e:
+                                            try:
+                                                article['fecha_hora'] = datetime.datetime.strptime(fecha2,'%Y/%m/%d %H:%M:%S')
+                                            except Exception as e:
+                                                _log(f"Exception: 208  {str(e)}")
+                                                pass
+                                            print(str(e))
+                                            pass
+
                                         article['regla2'] = lista_reglas
 
-                                        _log(f"Guardando {str(article)}")
-                                        all_records_resultados.create(article)
+                                        if tipo == "prueba":
+                                            self.prueba += str(article) + f"\n\n  ------- Nuevo Artículo {contador}------ \n\n"
+
+
+                                        else:
+                                            _log(f"Guardando {str(article)}")
+                                            all_records_resultados.create(article)
                                         contador = contador + 1
 
                                 except Exception as e:
+                                    _log(f"Exception:  {str(e)}")
                                     print(e)
 
                         if 'link' in valor and valor['link'] != False:
@@ -180,9 +246,13 @@ class Medios(models.Model):
                             }
                             contador = 1
 
+                            self.prueba += f"Cantidad de artículos candidatos:  {len(hoja.articles)} \n"
+
                             # hoja.articles -> obtiene una lista con todos los artículos del portal que está visitando (escrapeando)
                             for contenido in hoja.articles:  # recorre cada uno de los artículos
 
+                                if tipo  == "prueba":
+                                    limite = 50
                                 if contador > limite:
                                     break
                                 try:
@@ -190,13 +260,26 @@ class Medios(models.Model):
                                     contenido.parse()
 
                                 except Exception as e:
-                                    print(e)
+                                    _log(f"Exception:  {str(e)}")
                                     continue
+                                    print(e)
 
-                                reglas = self.env['wsf_noticias_reglas'].search([])
-                                lista_reglas =  aplica_regla(contenido.title,contenido.text,contenido.meta_description, reglas)
 
-                                if lista_reglas == 'set()':  # si me devuelve set() es porque no aplicó regla
+                                self.prueba += f" \n -- Bajando artículo:  {str(contenido.url)} \n"
+
+                                reglas = self.env['wsf_noticias_reglas'].search([('estado','=','on')])
+
+                                r =  aplica_regla(contenido.title,contenido.text,contenido.meta_description, reglas)
+
+                                self.prueba +=" *269 "
+
+                                lista_reglas = r[0]
+
+                                self.reglas += r[1]
+
+                                _log(f" Aplicando regla \n  {r[1]}")
+
+                                if lista_reglas == 'set()' and tipo != "prueba":  # si me devuelve set() es porque no aplicó regla
                                     break
 
                                 # noticia concreta
@@ -204,13 +287,15 @@ class Medios(models.Model):
                                 article['titulo'] = contenido.title
                                 article['regla2'] = lista_reglas
 
+                                self.prueba +=" *283 "
+
                                 try:
                                     encontrado = self.env['wsf_noticias_resultados'].search(
                                         [('titulo', '=', article['titulo'])])
 
                                     print(contenido.text)
 
-                                    if encontrado:
+                                    if encontrado and tipo !="prueba":
                                         _log(f"*** Noticia ya guadada {str(encontrado)}")
                                         break
                                     else:
@@ -221,32 +306,66 @@ class Medios(models.Model):
                                         try:
                                             article['link'] = contenido.url
 
-                                        except:
+                                        except Exception as e:
+                                            _log(f"Exception 261:  {str(e)}")
                                             pass
 
                                         url_medio2 = url_medio.replace("https","http")
                                         condi = filtra_url(article['link'],url_medio2,url_medio)
 
+                                        self.prueba +=" *310 "
+
                                         if not condi:
                                             break
                                         try:
                                             fecha2 = contenido.publish_date.strftime('%Y/%m/%d %H:%M:%S')
-                                            article['fecha_hora'] = datetime.strptime(fecha2,
+                                            article['fecha_hora'] = datetime.datetime.strptime(fecha2,
                                                                                       '%Y/%m/%d %H:%M:%S')
+
+                                            # sila fecha del artículo es antigua (3 dias) lo descarta
+                                            fecha_art = contenido.publish_date
+
+                                            fecha_hoy = datetime.datetime.now() - datetime.timedelta(days=3)
+
+                                            # si la fecha del articulo tiene mas de 3 días no lo tomo
+                                            if not fecha_art.strftime('%Y/%m/%d') >=  fecha_hoy.strftime('%Y/%m/%d') and tipo != "prueba":
+                                                break
+                                            self.prueba +=" *327 "
+
                                         except Exception as e:
+                                            try:
+                                                article['fecha_hora'] = datetime.datetime.strptime(fecha2,'%Y/%m/%d %H:%M:%S')
+                                            except Exception as ee:
+                                                _log(f"Exception 287:  {str(ee)}")
+                                                pass
+                                            print(str(e))
                                             pass
 
 
                                         article['regla'] = rec.regla.id
                                         article['titulo'] = contenido.title
-                                        article['tipo'] = random.choice(['positiva','negativa','neutra','neutra'])
 
+                                        #article['tipo'] = random.choice(['positiva','negativa','neutra','neutra'])
+                                        article['tipo'] = sentimiento(contenido.title)
 
-                                        _log(f"****** Guardando {str(article)}")
-                                        all_records_resultados.create(article)
+                                        try:
+                                            article['nube'] = nube(contenido.text )
+                                        except Exception as e:
+                                            self.prueba +=" *348 "
+                                            _log(f"Exception 302:  {str(e)}")
+
+                                        if tipo == "prueba":
+
+                                            self.prueba += str(article)+ f"\n\n  ------- Nuevo Artículo {contador}------- \n\n"
+
+                                        else:
+
+                                            _log(f"****** Guardando {str(article)}")
+                                            all_records_resultados.create(article)
                                         contador = contador + 1
 
                                 except Exception as e:
+                                    _log(f"Exception 310:  {str(e)}")
                                     print(e)
 
                         contador = 1
