@@ -128,6 +128,7 @@ def sentimiento(texto):
     return sentiment
 
 def entidades(texto):
+    return ""
     try:
         entidades = textblob.TextBlob(texto).noun_phrases
         entidades = list(filter(lambda x: len(x) > 4, entidades))
