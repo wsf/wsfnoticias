@@ -70,8 +70,8 @@
                                             <field name="prueba"/>
                                     </page>
 
-                                    <page string="Resultado lindo">
-                                            <field name="prueba"/>
+                                    <page string="Aplicación de Reglas">
+                                            <field name="reglas"/>
                                     </page>
 
                                     <page string="Laboratorio Político">

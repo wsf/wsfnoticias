@@ -38,6 +38,7 @@ class Medios(models.Model):
     latitud = fields.Char('Latitud')
     longitud = fields.Char('Longitud')
     prueba = fields.Text('Prueba')
+    reglas = fields.Text('Reglas')
     resultado1 = fields.Html(default='<h1> Labo1 </h1')
     resultado2 = fields.Html(default='<h1> Labo2 </h1')
 
@@ -92,6 +93,7 @@ class Medios(models.Model):
                     continue
                 else:
                     self.prueba = "Comenzando a tomar información del portal a las: " + datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S') + "\n\n"
+                    self.reglas = "Comenzando a visualizar las reglas: " + datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S') + "\n\n"
             else:
                 if not (rec.estado == 'on' and rec.importancia == importancia):
                     break
@@ -165,6 +167,8 @@ class Medios(models.Model):
                                     lista_reglas = r[0]
 
                                     _log(f" Aplicando regla \n  {r[1]}")
+
+                                    self.reglas += r[1]
 
                                     if lista_reglas == 'set()' and tipo != "prueba":  # si me devuelve set() es porque no aplicó regla
                                         break
@@ -270,6 +274,8 @@ class Medios(models.Model):
                                 self.prueba +=" *269 "
 
                                 lista_reglas = r[0]
+
+                                self.reglas += r[1]
 
                                 _log(f" Aplicando regla \n  {r[1]}")
 
