@@ -26,6 +26,8 @@ class Resultados(models.Model):
     regla2 = fields.Char('Reglas Aplicadas')
     valorar =  fields.Char('Valorar')
     nube = fields.Char('Nube')
+    clasificacion = fields.Char('Clasificacion')
+    entidades = fields.Char('Entidades')
 
     # dias_hora = fields.Char('Dias_Hora', compute='dias_hora_agrupacion',store=True)
 
