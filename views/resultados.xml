@@ -77,6 +77,8 @@
                 <field name="tipo" widget="badge" decoration-danger ="tipo =='negativa'" decoration-success ="tipo =='positiva'"  decoration-warning="tipo =='neutra'"/>
                 <field name="regla2"  string="Reglas Alicadas"/>
                 <field name="localidad"/>
+                <field name="entidades"/>
+                <field name="clasificacion"/>
                 <field name="departamento" invisible="1"/>
                 <field name="hora" invisible="1"/>
                 <field name="dias" invisible="1"/>

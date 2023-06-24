@@ -5,7 +5,7 @@ import newspaper
 from newspaper import Article
 from datetime import *
 import random
-from .tools.tools import filtra_url, aplica_regla, sentimiento, nube
+from .tools.tools import filtra_url, aplica_regla, sentimiento, nube, entidades
 import os
 import datetime
 
@@ -168,7 +168,8 @@ class Medios(models.Model):
 
                                     _log(f" Aplicando regla \n  {r[1]}")
 
-                                    self.reglas += r[1]
+                                    if tipo  == "prueba":
+                                        self.reglas += r[1]
 
                                     if lista_reglas == 'set()' and tipo != "prueba":  # si me devuelve set() es porque no aplicó regla
                                         break
@@ -190,6 +191,7 @@ class Medios(models.Model):
 
                                         try:
                                             article['nube'] = nube(contenido.text )
+                                            article['entidades'] = entidades(contenido.text )
                                         except Exception as e:
                                             _log(f"Exception:  {str(e)}")
 
@@ -207,7 +209,8 @@ class Medios(models.Model):
                                             # si la fecha del articulo tiene mas de 3 días no lo tomo
                                             if not fecha_art.strftime('%Y/%m/%d') >=  fecha_hoy.strftime('%Y/%m/%d') and tipo != "prueba":
                                                 break
-                                            self.prueba +=" *206 "
+
+
 
                                         except Exception as e:
                                             try:
@@ -246,7 +249,8 @@ class Medios(models.Model):
                             }
                             contador = 1
 
-                            self.prueba += f"Cantidad de artículos candidatos:  {len(hoja.articles)} \n"
+                            if tipo == "prueba":
+                                self.prueba += f"Cantidad de artículos candidatos:  {len(hoja.articles)} \n"
 
                             # hoja.articles -> obtiene una lista con todos los artículos del portal que está visitando (escrapeando)
                             for contenido in hoja.articles:  # recorre cada uno de los artículos
@@ -264,18 +268,19 @@ class Medios(models.Model):
                                     continue
                                     print(e)
 
-
-                                self.prueba += f" \n -- Bajando artículo:  {str(contenido.url)} \n"
+                                if tipo == "prueba":
+                                    self.prueba += f" \n -- Bajando artículo:  {str(contenido.url)} \n"
 
                                 reglas = self.env['wsf_noticias_reglas'].search([('estado','=','on')])
 
                                 r =  aplica_regla(contenido.title,contenido.text,contenido.meta_description, reglas)
 
-                                self.prueba +=" *269 "
+
 
                                 lista_reglas = r[0]
 
-                                self.reglas += r[1]
+                                if tipo == "prueba":
+                                    self.reglas += r[1]
 
                                 _log(f" Aplicando regla \n  {r[1]}")
 
@@ -287,7 +292,6 @@ class Medios(models.Model):
                                 article['titulo'] = contenido.title
                                 article['regla2'] = lista_reglas
 
-                                self.prueba +=" *283 "
 
                                 try:
                                     encontrado = self.env['wsf_noticias_resultados'].search(
@@ -313,7 +317,6 @@ class Medios(models.Model):
                                         url_medio2 = url_medio.replace("https","http")
                                         condi = filtra_url(article['link'],url_medio2,url_medio)
 
-                                        self.prueba +=" *310 "
 
                                         if not condi:
                                             break
@@ -330,7 +333,6 @@ class Medios(models.Model):
                                             # si la fecha del articulo tiene mas de 3 días no lo tomo
                                             if not fecha_art.strftime('%Y/%m/%d') >=  fecha_hoy.strftime('%Y/%m/%d') and tipo != "prueba":
                                                 break
-                                            self.prueba +=" *327 "
 
                                         except Exception as e:
                                             try:
@@ -350,8 +352,8 @@ class Medios(models.Model):
 
                                         try:
                                             article['nube'] = nube(contenido.text )
+                                            article['entidades'] = entidades(contenido.text )
                                         except Exception as e:
-                                            self.prueba +=" *348 "
                                             _log(f"Exception 302:  {str(e)}")
 
                                         if tipo == "prueba":
@@ -371,5 +373,6 @@ class Medios(models.Model):
                         contador = 1
                 else:
                     pass
-            except:
+            except Exception as e:
+                print(str(e))
                 pass

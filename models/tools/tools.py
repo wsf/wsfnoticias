@@ -1,5 +1,6 @@
 import textblob
 
+
 def aplica_regla(titulo, cuerpo, copete,reglas):
     regla_nombre = set()
     lista_condicionales = []
@@ -125,6 +126,14 @@ def sentimiento(texto):
         sentiment = "neutra"
 
     return sentiment
+
+def entidades(texto):
+    try:
+        entidades = textblob.TextBlob(texto).noun_phrases
+        print(entidades)
+    except:
+        entidad = "-"
+    return entidades
 
 import string
 
