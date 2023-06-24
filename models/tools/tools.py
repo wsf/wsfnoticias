@@ -130,6 +130,8 @@ def sentimiento(texto):
 def entidades(texto):
     try:
         entidades = textblob.TextBlob(texto).noun_phrases
+        entidades = list(filter(lambda x: len(x) < 6, entidades))
+
         print(entidades)
     except:
         entidad = "-"
