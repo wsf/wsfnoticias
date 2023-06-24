@@ -16,7 +16,9 @@ def aplica_regla(titulo, cuerpo, copete,reglas):
         lista_condicionales = []
         condi = False
 
-
+        log += f"\n\n----------------------------------------------------------" \
+               f"----------------------------------------------------------" \
+               f"\n** Aplicando la regla: {r.nombre_regla.upper()} para el artículo con título: {titulo.upper()}:\n"
         for t in terminos:
 
             condi_titulo = t.name.upper() in titulo.upper()
@@ -25,6 +27,8 @@ def aplica_regla(titulo, cuerpo, copete,reglas):
 
             condi = condi_copete or condi_titulo or condi_cuerpo
 
+            log += f"\n - Analiza regla OR con el termino {t.name.upper()}"
+
             if condi:
                 #regla_nombre.add(r.nombre_regla)
                 log += f"\n -- entra por regla or, por el termino {t.name.upper()}"
@@ -32,7 +36,7 @@ def aplica_regla(titulo, cuerpo, copete,reglas):
 
         # si no hay terminos en or ->
         if not terminos:
-            log += f"\n -- no hay or"
+            log += f"\n -- no hay terminos  or en la regla"
             cumple_or = True
 
 
@@ -48,9 +52,10 @@ def aplica_regla(titulo, cuerpo, copete,reglas):
 
             condi = condi_copete or condi_titulo or condi_cuerpo
 
+            log += f"\n - Analiza regla AND con el termino {t.name.upper()}"
             if not condi:
                 # cualquiera que no cumpla el and
-                log += f"\n -- no cumple en adn  {t.name.upper()}"
+                log += f"\n -- no cumple en and  {t.name.upper()}"
                 cumple_and = False
                 break
 
@@ -60,7 +65,7 @@ def aplica_regla(titulo, cuerpo, copete,reglas):
             cumple_and = True
 
         if not terminos:
-            log += f"\n -- no hay and"
+            log += f"\n -- no hay terminos and en la regla"
             cumple_and = True
 
         # terminos not  -------------------------------------------
@@ -75,22 +80,23 @@ def aplica_regla(titulo, cuerpo, copete,reglas):
 
             condi = condi_copete and condi_titulo and condi_cuerpo
 
+            log += f"\n - Analiza regla NOT con el termino {t.name.upper()}"
             if condi:
                 #regla_nombre.add(r.nombre_regla)
                 log += f"\n -- cumple con not  {t.name.upper()}"
                 cumple_not = True
 
         if not terminos:
-            log += f"\n -- no hay not"
+            log += f"\n -- no hay terminos not en la regla"
             cumple_not = True
 
 
         # Verifico que se cumplan todos los tipo de condicionales
         if cumple_and and cumple_not and cumple_or:
-            log += f"\n -- filtra !!!    {t.name.upper()}"
+            log += f"\n -- filtra !!!!!!!!!!!!!!!!!!  {t.name.upper()}"
             regla_nombre.add(r.nombre_regla)
         else:
-            log += f"\n -- no filtra *** "
+            log += f"\n -- no filtra *************** "
             regla_nombre = set()
 
 
