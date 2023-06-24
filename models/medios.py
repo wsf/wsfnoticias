@@ -49,7 +49,10 @@ class Medios(models.Model):
         return result
 
     def scrap_prueba(self):
-        self.scrap_noticias("todos","prueba",self.pagina_web)
+        if self.pagina_web:
+            self.scrap_noticias("todos","prueba",self.pagina_web)
+        else:
+            self.scrap_noticias("todos","prueba",self.pagina_rss)
 
     @api.model
     def scrap_importancia_baja(self):
@@ -89,7 +92,7 @@ class Medios(models.Model):
         for rec in all_records:
 
             if tipo == "prueba":
-                if  rec.pagina_web != pagina:
+                if  rec.pagina_web != pagina and  rec.pagina_rss != pagina:
                     continue
                 else:
                     self.prueba = "Comenzando a tomar información del portal a las: " + datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S') + "\n\n"
@@ -210,8 +213,6 @@ class Medios(models.Model):
                                             if not fecha_art.strftime('%Y/%m/%d') >=  fecha_hoy.strftime('%Y/%m/%d') and tipo != "prueba":
                                                 break
 
-
-
                                         except Exception as e:
                                             try:
                                                 article['fecha_hora'] = datetime.datetime.strptime(fecha2,'%Y/%m/%d %H:%M:%S')
@@ -226,7 +227,6 @@ class Medios(models.Model):
                                         if tipo == "prueba":
                                             self.prueba += str(article) + f"\n\n  ------- Nuevo Artículo {contador}------ \n\n"
 
-
                                         else:
                                             _log(f"Guardando {str(article)}")
                                             all_records_resultados.create(article)
@@ -237,7 +237,6 @@ class Medios(models.Model):
                                     print(e)
 
                         if 'link' in valor and valor['link'] != False:
-
 
                             url_medio = valor['link']
                             hoja = newspaper.build(url_medio, memoize_articles=False)
@@ -274,8 +273,6 @@ class Medios(models.Model):
                                 reglas = self.env['wsf_noticias_reglas'].search([('estado','=','on')])
 
                                 r =  aplica_regla(contenido.title,contenido.text,contenido.meta_description, reglas)
-
-
 
                                 lista_reglas = r[0]
 
