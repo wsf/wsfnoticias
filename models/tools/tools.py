@@ -190,7 +190,7 @@ def nube(text):
     word_count = {}
     for word in words:
         count = text.count(word)
-        if len(word) > 3:
+        if len(word) > 3 and count > 1:
             word_count[word] = count
 
     # ordernarlo:
