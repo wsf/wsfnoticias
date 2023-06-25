@@ -75,7 +75,7 @@
                 <field name="copete"/>
                 <field name="texto" invisible="1"/>
                 <field name="tipo" widget="badge" decoration-danger ="tipo =='negativa'" decoration-success ="tipo =='positiva'"  decoration-warning="tipo =='neutra'"/>
-                <field name="regla2"  string="Reglas Alicadas"/>
+                <field name="regla2"  string="Reglas Aplicadas"/>
                 <field name="departamento"/>
                 <field name="localidad" invisible="1"/>
                 <field name="entidades"/>
