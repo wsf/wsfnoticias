@@ -26,16 +26,9 @@
 
                 <header>
 
-                    <button name="scrap_prueba" string="Probar Página" class="btn btn-primary ml4" type="object"/>
+                  <button name="scrap_prueba" string="Probar Página" class="btn btn-primary ml4" type="object"/>
+                  <button name="scrap_importancia_prueba" string="Act. medios importancia = prueba" class="btn btn-primary ml4" type="object"/>
 
-                        <button name="scrap_importancia_baja" string="Act. medios importancia baja" class="btn btn-primary ml4" type="object"
-                    />
-
-                        <button name="scrap_importancia_alta" string="Act. medios importancia alta" class="btn btn-primary ml4" type="object"
-                    />
-
-                        <button name="scrap_importancia_media" string="Act. medios importancia media" class="btn btn-primary ml4" type="object"
-                    />
                 </header>
 
                 <sheet>
