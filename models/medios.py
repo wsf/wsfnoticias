@@ -30,7 +30,7 @@ class Medios(models.Model):
     pagina_web = fields.Char('Pagina Web:')
     pagina_rss = fields.Char('Pagina rss:')
     regla = fields.Many2one('wsf_noticias_reglas')
-    importancia = fields.Selection([('baja', 'Baja'), ('media', 'Media'), ('alta', 'Alta')])
+    importancia = fields.Selection([('baja', 'Baja'), ('media', 'Media'), ('alta', 'Alta'),('prueba', 'Prueba')])
     pauta = fields.Float('Pauta')
     estado = fields.Selection([('on', 'ON'), ('off', 'OFF')], required=True)
     puntuacion = fields.Char('Puntuacion')
@@ -54,6 +54,9 @@ class Medios(models.Model):
             self.scrap_noticias("todos","prueba",self.pagina_web)
         else:
             self.scrap_noticias("todos","prueba",self.pagina_rss)
+
+    def scrap_importancia_prueba(self):
+        self.scrap_noticias('prueba')
 
     @api.model
     def scrap_importancia_baja(self):
@@ -83,6 +86,8 @@ class Medios(models.Model):
             filtro_importancia = [('importancia', '=', 'media')]
         elif importancia == 'alta':
             filtro_importancia = [('importancia', '=', 'alta')]
+        elif importancia == 'prueba':
+            filtro_importancia = [('importancia', '=', 'prueba')]
         else:
             filtro_importancia = []
 
@@ -100,7 +105,7 @@ class Medios(models.Model):
                     self.reglas = "Comenzando a visualizar las reglas: " + datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S') + "\n\n"
             else:
                 if not (rec.estado == 'on' and rec.importancia == importancia):
-                    break
+                    continue
 
 
             _log(f"Tomando la página {rec.pagina_web}")
@@ -148,7 +153,7 @@ class Medios(models.Model):
                                     limite = 50
 
                                 if contador > limite:
-                                    break
+                                    continue
                                 article = {}
 
                                 # article['keywords'] = entrada
@@ -177,7 +182,7 @@ class Medios(models.Model):
                                         self.reglas += r[1]
 
                                     if lista_reglas == 'set()' and tipo != "prueba":  # si me devuelve set() es porque no aplicó regla
-                                        break
+                                        continue
 
                                     encontrado = self.env['wsf_noticias_resultados'].search(
                                         [('titulo', '=', article['titulo'])])
@@ -185,7 +190,7 @@ class Medios(models.Model):
 
                                     if encontrado and tipo != "prueba":
                                         _log(f"*** Noticia ya guadada {str(encontrado)}")
-                                        break
+                                        continue
                                     else:
                                         article['medio'] = rec.medio.id
                                         article['copete'] = contenido.meta_description  ##
@@ -214,7 +219,7 @@ class Medios(models.Model):
 
                                             # si la fecha del articulo tiene mas de 3 días no lo tomo
                                             if not fecha_art.strftime('%Y/%m/%d') >=  fecha_hoy.strftime('%Y/%m/%d') and tipo != "prueba":
-                                                break
+                                                continue
 
                                         except Exception as e:
                                             try:
@@ -260,7 +265,7 @@ class Medios(models.Model):
                                 if tipo  == "prueba":
                                     limite = 50
                                 if contador > limite:
-                                    break
+                                    continue
                                 try:
                                     contenido.download()
                                     contenido.parse()
@@ -285,11 +290,12 @@ class Medios(models.Model):
                                 _log(f" Aplicando regla \n  {r[1]}")
 
                                 if lista_reglas == 'set()' and tipo != "prueba":  # si me devuelve set() es porque no aplicó regla
-                                    break
+                                    continue
 
                                 # noticia concreta
                                 article = {}
                                 article['titulo'] = contenido.title
+                                print(contenido.title)
                                 article['regla2'] = lista_reglas
 
 
@@ -301,7 +307,7 @@ class Medios(models.Model):
 
                                     if encontrado and tipo !="prueba":
                                         _log(f"*** Noticia ya guadada {str(encontrado)}")
-                                        break
+                                        continue
                                     else:
                                         article['medio'] = rec.medio.id
                                         article['copete'] = contenido.meta_description ##
@@ -319,7 +325,7 @@ class Medios(models.Model):
 
 
                                         if not condi:
-                                            break
+                                            continue
                                         try:
                                             fecha2 = contenido.publish_date.strftime('%Y/%m/%d %H:%M:%S')
                                             article['fecha_hora'] = datetime.datetime.strptime(fecha2,
@@ -332,7 +338,7 @@ class Medios(models.Model):
 
                                             # si la fecha del articulo tiene mas de 3 días no lo tomo
                                             if not fecha_art.strftime('%Y/%m/%d') >=  fecha_hoy.strftime('%Y/%m/%d') and tipo != "prueba":
-                                                break
+                                                continue
 
                                         except Exception as e:
                                             try:
