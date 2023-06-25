@@ -41,6 +41,7 @@ class Medios(models.Model):
     reglas = fields.Text('Reglas')
     resultado1 = fields.Html(default='<h1> Labo1 </h1')
     resultado2 = fields.Html(default='<h1> Labo2 </h1')
+    departamento = fields.Char('Departamento')
 
     def name_get(self):
         result = []
@@ -100,6 +101,7 @@ class Medios(models.Model):
             else:
                 if not (rec.estado == 'on' and rec.importancia == importancia):
                     break
+
 
             _log(f"Tomando la página {rec.pagina_web}")
 
@@ -191,6 +193,7 @@ class Medios(models.Model):
                                         article['link'] = contenido.url
                                         #article['tipo'] = random.choice(['positiva','negativa','neutra','neutra'])
                                         article['tipo'] = sentimiento(contenido.title)
+                                        article['departamento'] = rec.departamento
 
                                         try:
                                             article['nube'] = nube(contenido.text )
@@ -346,6 +349,7 @@ class Medios(models.Model):
 
                                         #article['tipo'] = random.choice(['positiva','negativa','neutra','neutra'])
                                         article['tipo'] = sentimiento(contenido.title)
+                                        article['departamento'] = rec.departamento
 
                                         try:
                                             article['nube'] = nube(contenido.text )
