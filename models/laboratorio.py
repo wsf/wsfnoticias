@@ -12,8 +12,10 @@ class Resultados(models.Model):
     nombre= fields.Char("Nombre")
     fecha_desde = fields.Datetime('Fecha Hasta')
     fecha_hasta = fields.Datetime('Fecha Desde')
-
     nube= fields.Char("Nube")
+    clasificador = fields.Text("Clasificador")
+
+
     analisis1 = fields.Html()
     analisis2 = fields.Html()
     analisis3 = fields.Html()

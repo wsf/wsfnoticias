@@ -25,10 +25,7 @@
                         <h1>Datos del análisis de noticias: </h1>
                     </div>
 
-
                     <group>
-
-
 
                         <group>
                             <field name="nombre" string="Nombre del Laboratorio:"/>
@@ -54,6 +51,19 @@
                             <page string="Nube" name="description">
                                 <field name="nube" />
                                 <field name="analisis1" />
+                            </page>
+
+                            <page string="Clasificador" name="description">
+                                <h3>Reglas de entrenamiento para la clasificación:</h3>
+                                <a>- Utiliza NaiveBayesClassifier -</a>
+                                <field name="clasificador" string="Regla de entranamiento: "/>
+                                <br></br>
+                                <br></br>
+                                <button name="clasificar" string="Ejercutar la Clasificar" class="btn btn-danger ml4" />
+                                <br></br>
+                                <br></br>
+                                <h3>Resultado de la clasificación: </h3>
+                                <field name="analisis9" />
                             </page>
 
                             <page string="Entidades" name="description">
