@@ -30,6 +30,7 @@
                             <field name="fecha_hora" string="Publicado"/>
                             <field name="copete"/>
                             <field name="valorar"/>
+                            <field name="nube"/>
                         </group>
                         <group>
                             <field name="regla"/>
@@ -59,14 +60,15 @@
             <tree multi_edit="1">
 
                 <header>
-                    <button name="set_marcar" string="Marcar p/ Valorar" />
+                    <button name="set_marcar" string="Marcar p/ Valorar" class="btn btn-danger ml4" type="object"/>
 
                     <button name="set_defender" string="Defender" class="btn btn-danger ml4" type="object"/>
                     <button name="set_contraatacar" string="Contraatacar" class="btn btn-success ml4" type="object"/>
                     <button name="set_atacar" string="Atacar" class="btn btn-primary ml4" type="object"/>
                     <button name="set_diluir" string="Diluir" class="btn btn-warning ml4"  type="object"/>
                 </header>
-                <field name="valorar"/>
+                <field name="valorar" widget="badge" decoration-danger ="valorar =='valorar'" decoration-success ="valorar =='atacar'"  decoration-warning="valorar =='diluir'"/>
+                <field name="nube" invisible="1"/>
                 <field name="fecha_registro" string="Fecha de Registro"/>
                 <field name="medio"/>
                 <field name="fecha_hora" string="Publicado"/>
