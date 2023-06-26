@@ -153,7 +153,7 @@ class Medios(models.Model):
                                     limite = 50
 
                                 if contador > limite:
-                                    continue
+                                    break
                                 article = {}
 
                                 # article['keywords'] = entrada
@@ -165,7 +165,7 @@ class Medios(models.Model):
                                     _log(f"Exception:  {str(e)}")
 
                                     print(e)
-                                    continue
+                                    break
 
                                 article['titulo'] = contenido.title
 
@@ -182,7 +182,7 @@ class Medios(models.Model):
                                         self.reglas += r[1]
 
                                     if lista_reglas == 'set()' and tipo != "prueba":  # si me devuelve set() es porque no aplicó regla
-                                        continue
+                                        break
 
                                     encontrado = self.env['wsf_noticias_resultados'].search(
                                         [('titulo', '=', article['titulo'])])
@@ -190,7 +190,7 @@ class Medios(models.Model):
 
                                     if encontrado and tipo != "prueba":
                                         _log(f"*** Noticia ya guadada {str(encontrado)}")
-                                        continue
+                                        break
                                     else:
                                         article['medio'] = rec.medio.id
                                         article['copete'] = contenido.meta_description  ##
@@ -219,7 +219,7 @@ class Medios(models.Model):
 
                                             # si la fecha del articulo tiene mas de 3 días no lo tomo
                                             if not fecha_art.strftime('%Y/%m/%d') >=  fecha_hoy.strftime('%Y/%m/%d') and tipo != "prueba":
-                                                continue
+                                                break
 
                                         except Exception as e:
                                             try:
@@ -265,14 +265,14 @@ class Medios(models.Model):
                                 if tipo  == "prueba":
                                     limite = 50
                                 if contador > limite:
-                                    continue
+                                    break
                                 try:
                                     contenido.download()
                                     contenido.parse()
 
                                 except Exception as e:
                                     _log(f"Exception:  {str(e)}")
-                                    continue
+                                    break
                                     print(e)
 
                                 if tipo == "prueba":
@@ -290,7 +290,7 @@ class Medios(models.Model):
                                 _log(f" Aplicando regla \n  {r[1]}")
 
                                 if lista_reglas == 'set()' and tipo != "prueba":  # si me devuelve set() es porque no aplicó regla
-                                    continue
+                                    break
 
                                 # noticia concreta
                                 article = {}
@@ -307,7 +307,7 @@ class Medios(models.Model):
 
                                     if encontrado and tipo !="prueba":
                                         _log(f"*** Noticia ya guadada {str(encontrado)}")
-                                        continue
+                                        break
                                     else:
                                         article['medio'] = rec.medio.id
                                         article['copete'] = contenido.meta_description ##
@@ -325,7 +325,7 @@ class Medios(models.Model):
 
 
                                         if not condi:
-                                            continue
+                                            break
                                         try:
                                             fecha2 = contenido.publish_date.strftime('%Y/%m/%d %H:%M:%S')
                                             article['fecha_hora'] = datetime.datetime.strptime(fecha2,
@@ -338,7 +338,7 @@ class Medios(models.Model):
 
                                             # si la fecha del articulo tiene mas de 3 días no lo tomo
                                             if not fecha_art.strftime('%Y/%m/%d') >=  fecha_hoy.strftime('%Y/%m/%d') and tipo != "prueba":
-                                                continue
+                                                break
 
                                         except Exception as e:
                                             try:
