@@ -68,7 +68,7 @@
                     <button name="set_diluir" string="Diluir" class="btn btn-warning ml4"  type="object"/>
                 </header>
                 <field name="valorar" widget="badge" decoration-danger ="valorar =='valorar'" decoration-success ="valorar =='atacar'"  decoration-warning="valorar =='diluir'"/>
-                <field name="nube"/>
+                <field name="nube" invisible="1"/>
                 <field name="fecha_registro" string="Fecha de Registro"/>
                 <field name="medio"/>
                 <field name="fecha_hora" string="Publicado"/>
