@@ -11,8 +11,8 @@ import datetime
 
 def _log(dato):
     
-    
     return
+
     nombre = os.path.dirname(__file__) + '/medio.log'
     log = open(nombre, 'a')
     dato = "- Log: " + str(datetime.datetime.now()) + " ---> " + dato
@@ -181,8 +181,10 @@ class Medios(models.Model):
                                     if tipo  == "prueba":
                                         self.reglas += r[1]
 
-                                    if lista_reglas == 'set()' and tipo != "prueba":  # si me devuelve set() es porque no aplicó regla
-                                        break
+                                    regla_nombre = lista_reglas.split(',')
+
+                                    if ('set' in (regla_nombre)[0] and len(list(regla_nombre)) == 1) and tipo != "prueba":
+                                        continue
 
                                     encontrado = self.env['wsf_noticias_resultados'].search(
                                         [('titulo', '=', article['titulo'])])
@@ -190,7 +192,7 @@ class Medios(models.Model):
 
                                     if encontrado and tipo != "prueba":
                                         _log(f"*** Noticia ya guadada {str(encontrado)}")
-                                        break
+                                        continue
                                     else:
                                         article['medio'] = rec.medio.id
                                         article['copete'] = contenido.meta_description  ##
@@ -219,7 +221,7 @@ class Medios(models.Model):
 
                                             # si la fecha del articulo tiene mas de 3 días no lo tomo
                                             if not fecha_art.strftime('%Y/%m/%d') >=  fecha_hoy.strftime('%Y/%m/%d') and tipo != "prueba":
-                                                break
+                                                continue
 
                                         except Exception as e:
                                             try:
@@ -292,8 +294,10 @@ class Medios(models.Model):
 
                                 _log(f" Aplicando regla \n  {r[1]}")
 
-                                if lista_reglas == 'set()' and tipo != "prueba":  # si me devuelve set() es porque no aplicó regla
-                                    break
+                                regla_nombre = lista_reglas.split(',')
+
+                                if ('set' in (regla_nombre)[0]  and  len(list(regla_nombre)) == 1) and tipo != "prueba":  # si me devuelve set() es porque no aplicó regla
+                                    continue
 
                                 # noticia concreta
                                 article = {}
@@ -310,7 +314,7 @@ class Medios(models.Model):
 
                                     if encontrado and tipo !="prueba":
                                         _log(f"*** Noticia ya guadada {str(encontrado)}")
-                                        break
+                                        continue
                                     else:
                                         article['medio'] = rec.medio.id
                                         article['copete'] = contenido.meta_description ##
@@ -328,7 +332,7 @@ class Medios(models.Model):
 
 
                                         if not condi:
-                                            break
+                                            continue
                                         try:
                                             fecha2 = contenido.publish_date.strftime('%Y/%m/%d %H:%M:%S')
                                             article['fecha_hora'] = datetime.datetime.strptime(fecha2,
@@ -341,7 +345,7 @@ class Medios(models.Model):
 
                                             # si la fecha del articulo tiene mas de 3 días no lo tomo
                                             if not fecha_art.strftime('%Y/%m/%d') >=  fecha_hoy.strftime('%Y/%m/%d') and tipo != "prueba":
-                                                break
+                                                continue
 
                                         except Exception as e:
                                             try:

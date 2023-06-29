@@ -156,7 +156,7 @@ def aplica_regla(titulo, cuerpo, copete,reglas):
             regla_nombre.add(r.nombre_regla)
         else:
             log += f"\n -- no filtra *************** "
-            regla_nombre = set()
+            regla_nombre.add('set()')
 
 
     return (str(regla_nombre),log)
