@@ -1,5 +1,63 @@
 import textblob
 
+import requests
+
+
+# https://api.telegram.org/botAAFfoTbrGSXwXm20KFPB/getUpdates
+# https://api.telegram.org/bot6197272098:AAFfoTbrGSXwXm20KFPB-1B-rb1EHveCYBM/getUpdates
+
+def enviar_telegram(article,chat_id = '1007231414',bot_token = '6197272098:AAFfoTbrGSXwXm20KFPB-1B-rb1EHveCYBM' ):
+
+    try:
+        # armo el texto a enviar con article:
+        message = ""
+
+
+        #message += str(article['medio'])
+        message += "\n-- 🗞️ -- \n"
+        message += article['titulo'].upper()
+        message += "\n--\n"
+        message += article['tipo'].upper()
+
+        if article['tipo'].upper() == "NEGATIVA":
+            message += " 🔴🔴🔴🔴🔴🔴"
+        elif article['tipo'].upper() == "POSITIVA":
+            message += " 🟢🟢🟢🟢🟢🟢"
+        else:
+            message += " 🟡🟡🟡🟡🟡🟡"
+
+
+        message += "\n\n"
+        message += article['link']
+
+
+        # Replace YOUR_BOT_TOKEN with your actual bot token
+        #bot_token = '6197272098:AAFfoTbrGSXwXm20KFPB-1B-rb1EHveCYBM'
+
+        # Replace YOUR_CHAT_ID with the chat ID you want to send the message to
+        #chat_id = '1007231414'
+
+        # The message you want to send
+        #message = 'Hello, world!'
+
+        # Make a POST request to the Telegram API to send the message
+        response = requests.post(
+            f'https://api.telegram.org/bot{bot_token}/sendMessage',
+            data={
+                'chat_id': chat_id,
+                'text': message
+            }
+        )
+
+        # Check if the request was successful
+        if response.status_code == 200:
+            print('Message sent successfully!')
+        else:
+            print('Failed to send message:', response.text)
+
+    except Exception as e:
+        print(str(e))
+
 
 def aplica_regla(titulo, cuerpo, copete,reglas):
     regla_nombre = set()

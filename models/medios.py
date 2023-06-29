@@ -5,7 +5,7 @@ import newspaper
 from newspaper import Article
 from datetime import *
 import random
-from .tools.tools import filtra_url, aplica_regla, sentimiento, nube, entidades
+from .tools.tools import filtra_url, aplica_regla, sentimiento, nube, entidades, enviar_telegram
 import os
 import datetime
 
@@ -238,6 +238,9 @@ class Medios(models.Model):
                                         else:
                                             _log(f"Guardando {str(article)}")
                                             all_records_resultados.create(article)
+
+                                            enviar_telegram(article)
+
                                         contador = contador + 1
 
                                 except Exception as e:
@@ -371,6 +374,9 @@ class Medios(models.Model):
 
                                             _log(f"****** Guardando {str(article)}")
                                             all_records_resultados.create(article)
+
+                                            enviar_telegram(article)
+
                                         contador = contador + 1
 
                                 except Exception as e:
