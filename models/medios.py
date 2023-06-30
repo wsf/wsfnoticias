@@ -378,7 +378,10 @@ class Medios(models.Model):
                                         else:
 
                                             _log(f"****** Guardando {str(article)}")
-                                            all_records_resultados.create(article)
+                                            try:
+                                                all_records_resultados.create(article)
+                                            except Exception as e:
+                                                medio += " -" + str(e)
 
                                             enviar_telegram(article, medio)
 
