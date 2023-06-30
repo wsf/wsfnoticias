@@ -418,6 +418,21 @@ class Medios(models.Model):
 
                                                 self.env['wsf_noticias_resultados'].sudo().create(article)
 
+                                                condi = [('link','=',article['link'])]
+                                                grabado = self.env['wsf_noticias_resultados'].sudo().search(condi)
+                                                if not grabado:
+                                                    article2 ={}
+
+                                                    article2['medio'] = article['medio']
+                                                    article2['link']=article['link']
+                                                    article2['departamento'] = article['departamento']
+                                                    article2['tipo'] = article['tipo']
+
+
+                                                    self.env['wsf_noticias_resultados'].sudo().create(article2)
+
+
+
                                             except Exception as e:
                                                 medio += " -" + str(e)
 
