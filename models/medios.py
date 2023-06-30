@@ -418,6 +418,7 @@ class Medios(models.Model):
 
                                                 self.env['wsf_noticias_resultados'].sudo().create(article)
 
+                                                # verifico que se haya grabado
                                                 condi = [('link','=',article['link'])]
                                                 grabado = self.env['wsf_noticias_resultados'].sudo().search(condi)
                                                 if not grabado:

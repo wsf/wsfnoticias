@@ -182,7 +182,7 @@ def filtra_url(article_link, url_medio2, url_medio):
 
 def sentimiento(texto):
     blob = textblob.TextBlob(texto)
-    blob = blob.translate("es")
+    blob = blob.translate(from_lang='es',to='en')
 
     r = blob.sentiment.polarity
     if r < 0:
