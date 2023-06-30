@@ -333,7 +333,7 @@ class Medios(models.Model):
 
                                 # noticia concreta
                                 article = {}
-                                article['titulo'] = contenido.title
+                                article['titulo'] = contenido.title.replace('“',"").replace("'","").replace('"',"")
                                 print(contenido.title)
                                 article['regla2'] = lista_reglas.replace("'set()'", "").replace("{", "").replace("}",
                                                                                                                  "").replace(
@@ -352,8 +352,8 @@ class Medios(models.Model):
                                         article['medio'] = rec.medio.id
                                         medio = rec.medio.name
 
-                                        article['copete'] = contenido.meta_description.replace('"','').replace("'","")
-                                        article['texto'] = contenido.text.replace('"','').replace("'","")
+                                        article['copete'] = contenido.meta_description.replace('"','').replace("'","").replace('“',"")
+                                        article['texto'] = contenido.text.replace('"','').replace("'","").replace('“',"")
 
                                         try:
                                             article['link'] = contenido.url
@@ -393,7 +393,7 @@ class Medios(models.Model):
 
 
 
-                                        article['titulo'] = str(codigo+1) + " - " +  contenido.title.replace('"','').replace("'","")
+                                        article['titulo'] = str(codigo+1) + " - " +  contenido.title.replace('"','').replace("'","").replace('“',"")
 
                                         #article['tipo'] = random.choice(['positiva','negativa','neutra','neutra'])
                                         article['tipo'] = sentimiento(contenido.title)
@@ -420,8 +420,10 @@ class Medios(models.Model):
 
                                                 # verifico que se haya grabado
                                                 condi = [('link','=',article['link'])]
+
                                                 grabado = self.env['wsf_noticias_resultados'].sudo().search(condi)
                                                 if not grabado:
+
                                                     article2 ={}
 
                                                     article2['medio'] = article['medio']
