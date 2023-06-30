@@ -398,6 +398,7 @@ class Medios(models.Model):
 
                                             print(article['texto'])
 
+                                            medio += "   - Reglas: " + article['regla2']
                                             enviar_telegram(article, medio)
 
                                         contador = contador + 1
