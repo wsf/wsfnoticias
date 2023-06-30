@@ -233,7 +233,7 @@ class Medios(models.Model):
                                             print(str(e))
                                             pass
 
-                                        article['regla2'] = lista_reglas
+                                        article['regla2'] = lista_reglas.replace("'set()'","")
 
                                         if tipo == "prueba":
                                             self.prueba += str(article) + f"\n\n  ------- Nuevo Artículo {contador}------ \n\n"
@@ -304,8 +304,7 @@ class Medios(models.Model):
                                 article = {}
                                 article['titulo'] = contenido.title
                                 print(contenido.title)
-                                article['regla2'] = lista_reglas
-
+                                article['regla2'] = lista_reglas.replace("'set()'", "")
 
                                 try:
                                     encontrado = self.env['wsf_noticias_resultados'].search(
