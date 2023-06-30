@@ -126,18 +126,19 @@
         </field>
     </record>
 
-<!--    &lt;!&ndash; Vista graph resultados &ndash;&gt;-->
-<!--    <record id="wsf_noticias_resultados_graph" model="ir.ui.view">-->
-<!--        <field name="name">wsf_noticias_resultados_graph</field>-->
-<!--        <field name="model">wsf_noticias_resultados</field>-->
-<!--        <field name="arch" type="xml">-->
-<!--            <graph string="Analisis">-->
-<!--&lt;!&ndash;                <field name="fecha_hora" interval="day"/>&ndash;&gt;-->
-<!--                <field name="fecha_hora"/>-->
-<!--                <field name="medio" type="measure"/>-->
-<!--            </graph>-->
-<!--        </field>-->
-<!--    </record>-->
+
+ <record id="wsf_noticias_resultados_graph" model="ir.ui.view">
+ <field name="name">wsf_noticias_resultados_graph</field>
+ <field name="model">wsf_noticias_resultados</field>
+
+ <field name="arch" type="xml">
+ <graph string="Analisis">
+ <field name="fecha_hora" interval="day"/>
+ <field name="fecha_hora"/>
+ <field name="medio" type="measure"/>
+</graph>
+</field>
+</record>
 
 <!--    &lt;!&ndash; vista pivot resultados &ndash;&gt;-->
 <!--    <record id="wsf_noticias_resultados_pivot" model="ir.ui.view">-->
