@@ -26,16 +26,16 @@ class Medios(models.Model):
     _description = "modelo para ingresar las páginas"
     _order = "id desc"
 
-    medio = fields.Many2one('res.partner')
+    medio = fields.Many2one('res.partner', tracking=True)
     limite = fields.Integer('Limite')
-    pagina_web = fields.Char('Pagina Web:')
-    pagina_rss = fields.Char('Pagina rss:')
+    pagina_web = fields.Char('Pagina Web:' , tracking=True)
+    pagina_rss = fields.Char('Pagina rss:', tracking=True)
     regla = fields.Many2one('wsf_noticias_reglas')
     importancia = fields.Selection([('baja', 'Baja'), ('media', 'Media'), ('alta', 'Alta'),('prueba', 'Prueba'),('nuevo','Nuevo'),('cat1','Categoría #1'),('cat2','Categoría #2'),('cat3','Categoría #3')])
     pauta = fields.Float('Pauta')
     estado = fields.Selection([('on', 'ON'), ('off', 'OFF')], required=True)
     puntuacion = fields.Char('Puntuacion')
-    comentario = fields.Text('Comentario')
+    comentario = fields.Text('Comentario', tracking=True)
     latitud = fields.Char('Latitud')
     longitud = fields.Char('Longitud')
     prueba = fields.Text('Prueba')
@@ -58,6 +58,20 @@ class Medios(models.Model):
 
     def scrap_importancia_prueba(self):
         self.scrap_noticias('prueba')
+
+
+    @api.model
+    def scrap_importancia_nuevo(self):
+        self.scrap_noticias('nuevo')
+
+
+    @api.model
+    def scrap_importancia_cat1(self):
+        self.scrap_noticias('cat1')
+
+    @api.model
+    def scrap_importancia_cat2(self):
+        self.scrap_noticias('cat2')
 
     @api.model
     def scrap_importancia_baja(self):
@@ -89,6 +103,12 @@ class Medios(models.Model):
             filtro_importancia = [('importancia', '=', 'alta')]
         elif importancia == 'prueba':
             filtro_importancia = [('importancia', '=', 'prueba')]
+        elif importancia == 'cat1':
+            filtro_importancia = [('importancia', '=', 'cat1')]
+        elif importancia == 'cat2':
+            filtro_importancia = [('importancia', '=', 'cat2')]
+        elif importancia == 'nuevo':
+            filtro_importancia = [('importancia', '=', 'nuevo')]
         else:
             filtro_importancia = []
 
