@@ -8,6 +8,7 @@ import random
 from .tools.tools import filtra_url, aplica_regla, sentimiento, nube, entidades, enviar_telegram
 import os
 import datetime
+from odoo.http import request
 
 def _log(dato):
     
@@ -194,13 +195,12 @@ class Medios(models.Model):
                                         _log(f"*** Noticia ya guadada {str(encontrado)}")
                                         continue
                                     else:
-                                        article['medio'] = rec.medio.id
                                         medio = rec.medio.name
-                                        article['copete'] = contenido.meta_description  ##
-                                        article['texto'] = contenido.text
+                                        article['medio'] = rec.medio.id
+                                        article['copete'] = contenido.meta_description.contenido.text.replace('"','').replace("'","")  ##
+                                        article['texto'] = contenido.text.contenido.text.replace('"','').replace("'","")
                                         article['link'] = contenido.url
-                                        #article['tipo'] = random.choice(['positiva','negativa','neutra','neutra'])
-                                        article['tipo'] = sentimiento(contenido.title)
+                                        article['tipo'] = sentimiento(contenido.title.contenido.text.replace('"','').replace("'",""))
                                         article['departamento'] = rec.departamento
 
                                         try:
@@ -240,7 +240,14 @@ class Medios(models.Model):
 
                                         else:
                                             _log(f"Guardando {str(article)}")
-                                            all_records_resultados.create(article)
+
+
+
+
+
+
+                                            all_records_resultados.sudo().create(article)
+
 
                                             enviar_telegram(article, medio)
 
@@ -318,8 +325,8 @@ class Medios(models.Model):
                                     else:
                                         article['medio'] = rec.medio.id
                                         medio = rec.medio.name
-                                        article['copete'] = contenido.meta_description ##
-                                        article['texto'] = contenido.text
+                                        article['copete'] = contenido.meta_description.replace('"','').replace("'","")
+                                        article['texto'] = contenido.text.replace('"','').replace("'","")
 
                                         try:
                                             article['link'] = contenido.url
@@ -358,8 +365,8 @@ class Medios(models.Model):
                                             pass
 
 
-                                        article['regla'] = rec.regla.id
-                                        article['titulo'] = contenido.title
+
+                                        article['titulo'] = contenido.title.replace('"','').replace("'","")
 
                                         #article['tipo'] = random.choice(['positiva','negativa','neutra','neutra'])
                                         article['tipo'] = sentimiento(contenido.title)
@@ -379,9 +386,17 @@ class Medios(models.Model):
 
                                             _log(f"****** Guardando {str(article)}")
                                             try:
-                                                all_records_resultados.create(article)
+
+
+
+                                                self.env['wsf_noticias_resultados'].sudo().create(article)
+
+
+
                                             except Exception as e:
                                                 medio += " -" + str(e)
+
+                                            print(article['texto'])
 
                                             enviar_telegram(article, medio)
 
