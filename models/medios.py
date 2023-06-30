@@ -148,6 +148,8 @@ class Medios(models.Model):
                                 "link": valor['link'],
                                 "articulos": []  # Se crea un elemento en blanco, donde se guardaran las noticias
                             }
+
+                            codigo = 0
                             for entrada in v.entries:
 
                                 if tipo=="prueba":
@@ -233,21 +235,22 @@ class Medios(models.Model):
                                             print(str(e))
                                             pass
 
-                                        article['regla2'] = lista_reglas.replace("'set()'","")
+                                        article['regla2'] = lista_reglas.replace("'set()'","").replace("{","").replace("}","").replace("'","").replace(",,",",")
 
                                         if tipo == "prueba":
                                             self.prueba += str(article) + f"\n\n  ------- Nuevo Artículo {contador}------ \n\n"
 
                                         else:
+
+                                            # Gruardo la Noticia
                                             _log(f"Guardando {str(article)}")
-
-
-
-
-
 
                                             all_records_resultados.sudo().create(article)
 
+                                            medio += "\n- Reglas: " + article['regla2']
+                                            codigo += 1
+                                            medio += "\n- Código: " + str(codigo)
+                                            enviar_telegram(article, medio)
 
                                             enviar_telegram(article, medio)
 
@@ -273,6 +276,7 @@ class Medios(models.Model):
                                 self.prueba += f"Cantidad de artículos candidatos:  {len(hoja.articles)} \n"
 
                             # hoja.articles -> obtiene una lista con todos los artículos del portal que está visitando (escrapeando)
+                            codigo = 0
                             for contenido in hoja.articles:  # recorre cada uno de los artículos
 
                                 if tipo  == "prueba":
@@ -311,7 +315,9 @@ class Medios(models.Model):
                                 article = {}
                                 article['titulo'] = contenido.title
                                 print(contenido.title)
-                                article['regla2'] = lista_reglas.replace("'set()'", "")
+                                article['regla2'] = lista_reglas.replace("'set()'", "").replace("{", "").replace("}",
+                                                                                                                 "").replace(
+                                    "'", "").replace(",,","")
 
                                 try:
                                     encontrado = self.env['wsf_noticias_resultados'].search(
@@ -366,7 +372,7 @@ class Medios(models.Model):
 
 
 
-                                        article['titulo'] = contenido.title.replace('"','').replace("'","")
+                                        article['titulo'] = str(codigo+1) + " - " +  contenido.title.replace('"','').replace("'","")
 
                                         #article['tipo'] = random.choice(['positiva','negativa','neutra','neutra'])
                                         article['tipo'] = sentimiento(contenido.title)
@@ -384,21 +390,20 @@ class Medios(models.Model):
 
                                         else:
 
+                                            # Guardo la noticia
                                             _log(f"****** Guardando {str(article)}")
                                             try:
 
-
-
                                                 self.env['wsf_noticias_resultados'].sudo().create(article)
-
-
 
                                             except Exception as e:
                                                 medio += " -" + str(e)
 
                                             print(article['texto'])
 
-                                            medio += "   - Reglas: " + article['regla2']
+                                            medio += "\n\n- Reglas: " + article['regla2']
+                                            codigo += 1
+                                            medio += "\n- Código: " + str(codigo)
                                             enviar_telegram(article, medio)
 
                                         contador = contador + 1
