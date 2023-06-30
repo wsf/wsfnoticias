@@ -6,7 +6,7 @@ import requests
 # https://api.telegram.org/botAAFfoTbrGSXwXm20KFPB/getUpdates
 # https://api.telegram.org/bot6197272098:AAFfoTbrGSXwXm20KFPB-1B-rb1EHveCYBM/getUpdates
 
-def enviar_telegram(article,chat_id = '-918982585',bot_token = '6197272098:AAFfoTbrGSXwXm20KFPB-1B-rb1EHveCYBM' ):
+def enviar_telegram(article,medio=" Medio", chat_id = '-918982585',bot_token = '6197272098:AAFfoTbrGSXwXm20KFPB-1B-rb1EHveCYBM' ):
 
     try:
         # armo el texto a enviar con article:
@@ -15,6 +15,8 @@ def enviar_telegram(article,chat_id = '-918982585',bot_token = '6197272098:AAFfo
 
         #message += str(article['medio'])
         message += "\n-- 🗞️ -- \n"
+        message += medio
+        message += "\n-- \n"
         message += article['titulo'].upper()
         message += "\n--\n"
         message += article['tipo'].upper()

@@ -195,6 +195,7 @@ class Medios(models.Model):
                                         continue
                                     else:
                                         article['medio'] = rec.medio.id
+                                        medio = rec.medio.name
                                         article['copete'] = contenido.meta_description  ##
                                         article['texto'] = contenido.text
                                         article['link'] = contenido.url
@@ -241,7 +242,7 @@ class Medios(models.Model):
                                             _log(f"Guardando {str(article)}")
                                             all_records_resultados.create(article)
 
-                                            enviar_telegram(article)
+                                            enviar_telegram(article, medio)
 
                                         contador = contador + 1
 
@@ -317,6 +318,7 @@ class Medios(models.Model):
                                         continue
                                     else:
                                         article['medio'] = rec.medio.id
+                                        medio = rec.medio.name
                                         article['copete'] = contenido.meta_description ##
                                         article['texto'] = contenido.text
 
@@ -379,7 +381,7 @@ class Medios(models.Model):
                                             _log(f"****** Guardando {str(article)}")
                                             all_records_resultados.create(article)
 
-                                            enviar_telegram(article)
+                                            enviar_telegram(article, medio)
 
                                         contador = contador + 1
 
