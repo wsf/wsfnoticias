@@ -12,7 +12,7 @@ from odoo.http import request
 
 def _log(dato):
     
-    return
+
 
     nombre = os.path.dirname(__file__) + '/medio.log'
     log = open(nombre, 'a')
@@ -188,7 +188,7 @@ class Medios(models.Model):
                                         continue
 
                                     encontrado = self.env['wsf_noticias_resultados'].search(
-                                        [('titulo', '=', article['titulo'])])
+                                        [('link', '=', contenido.url)])
 
 
                                     if encontrado and tipo != "prueba":
@@ -315,7 +315,7 @@ class Medios(models.Model):
 
                                 try:
                                     encontrado = self.env['wsf_noticias_resultados'].search(
-                                        [('titulo', '=', article['titulo'])])
+                                        [('link', '=', contenido.url)])
 
                                     print(contenido.text)
 
