@@ -11,9 +11,9 @@ import datetime
 from odoo.http import request
 
 def _log(dato):
-    
 
 
+    return
     nombre = os.path.dirname(__file__) + '/medio.log'
     log = open(nombre, 'a')
     dato = "- Log: " + str(datetime.datetime.now()) + " ---> " + dato
@@ -179,7 +179,7 @@ class Medios(models.Model):
                                                                 contenido.meta_description, reglas)
                                     lista_reglas = r[0]
 
-                                    _log(f" Aplicando regla \n  {r[1]}")
+                                    #_log(f" Aplicando regla \n  {r[1]}")
 
                                     if tipo  == "prueba":
                                         self.reglas += r[1]
@@ -304,7 +304,7 @@ class Medios(models.Model):
                                 if tipo == "prueba":
                                     self.reglas += r[1]
 
-                                _log(f" Aplicando regla \n  {r[1]}")
+                                #_log(f" Aplicando regla \n  {r[1]}")
 
                                 regla_nombre = lista_reglas.split(',')
 
@@ -331,8 +331,9 @@ class Medios(models.Model):
                                     else:
                                         article['medio'] = rec.medio.id
                                         medio = rec.medio.name
+
                                         article['copete'] = contenido.meta_description.replace('"','').replace("'","")
-                                        article['texto'] = contenido.text.replace('"','').replace("'","")[0:255]
+                                        article['texto'] = contenido.text.replace('"','').replace("'","")
 
                                         try:
                                             article['link'] = contenido.url
@@ -391,7 +392,8 @@ class Medios(models.Model):
                                         else:
 
                                             # Guardo la noticia
-                                            _log(f"****** Guardando {str(article)}")
+
+
                                             try:
 
                                                 self.env['wsf_noticias_resultados'].sudo().create(article)
@@ -405,6 +407,8 @@ class Medios(models.Model):
                                             codigo += 1
                                             medio += "\n- Código: " + str(codigo)
                                             enviar_telegram(article, medio)
+
+                                            _log(f"****** Guardando \n {medio} \n {str(article)} ")
 
                                         contador = contador + 1
 
