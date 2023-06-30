@@ -31,7 +31,7 @@ class Medios(models.Model):
     pagina_web = fields.Char('Pagina Web:')
     pagina_rss = fields.Char('Pagina rss:')
     regla = fields.Many2one('wsf_noticias_reglas')
-    importancia = fields.Selection([('baja', 'Baja'), ('media', 'Media'), ('alta', 'Alta'),('prueba', 'Prueba')])
+    importancia = fields.Selection([('baja', 'Baja'), ('media', 'Media'), ('alta', 'Alta'),('prueba', 'Prueba'),('nuevo','Nuevo'),('cat1','Categoría #1'),('cat2','Categoría #2'),('cat3','Categoría #3')])
     pauta = fields.Float('Pauta')
     estado = fields.Selection([('on', 'ON'), ('off', 'OFF')], required=True)
     puntuacion = fields.Char('Puntuacion')
