@@ -75,7 +75,7 @@ class Medios(models.Model):
                                                                   ['regla2'])
         mensaje = "\n📈 Estadística diaria 📈 \n"
 
-        mensaje += "\n\n**Aplicación de Reglas**\n"
+        mensaje += "\n\n**Aplicación de reglas hoy**\n\n"
 
         for r in sorted(rec,key=lambda r:r['regla2_count'],reverse=True):
 
@@ -86,7 +86,7 @@ class Medios(models.Model):
                                                                   ['medio', 'id:count_distinct'],
                                                                   ['medio'])
 
-        mensaje += "\n\n**Medios alcanzados**\n"
+        mensaje += "\n\n**Medios alcanzados hoy**\n\n"
         for r in sorted(rec,key=lambda r:r['medio_count'],reverse=True):
 
             mensaje += f"- 📰 {r['medio'][1]} brindo noticias: [{r['medio_count']}] veces \n"
