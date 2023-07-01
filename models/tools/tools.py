@@ -68,6 +68,31 @@ def enviar_telegram(article,medio=" Medio", chat_id = '-918982585',bot_token = '
         print(str(e))
 
 
+def enviar_telegram_estadistica(message, chat_id = '-900652227',bot_token = '6197272098:AAFfoTbrGSXwXm20KFPB-1B-rb1EHveCYBM' ):
+
+    try:
+        # Make a POST request to the Telegram API to send the message
+        response = requests.post(
+            f'https://api.telegram.org/bot{bot_token}/sendMessage',
+            data={
+                'chat_id': chat_id,
+                'text': message
+            }
+        )
+
+        # Check if the request was successful
+        if response.status_code == 200:
+            print('Message sent successfully!')
+        else:
+            print('Failed to send message:', response.text)
+
+    except Exception as e:
+        print(str(e))
+
+
+
+
+
 def aplica_regla(titulo, cuerpo, copete,reglas):
     regla_nombre = set()
     telegram = []

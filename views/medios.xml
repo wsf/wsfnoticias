@@ -26,8 +26,10 @@
 
                 <header>
 
-                  <button name="scrap_prueba" string="Probar Página" class="btn btn-primary ml4" type="object"/>
-                  <button name="scrap_importancia_prueba" string="Act. medios importancia = prueba" class="btn btn-primary ml4" type="object"/>
+                    <button name="scrap_prueba" string="Probar Página" class="btn btn-primary ml4" type="object"/>
+                    <button name="scrap_importancia_prueba" string="Act. medios importancia = prueba" class="btn btn-primary ml4" type="object"/>
+
+                    <button name="estadisticas_diaria" string="Estadísticas por telegram" class="btn btn-primary ml4" type="object"/>
 
                 </header>
 

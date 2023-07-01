@@ -5,7 +5,7 @@ import newspaper
 from newspaper import Article
 from datetime import *
 import random
-from .tools.tools import filtra_url, aplica_regla, sentimiento, nube, entidades, enviar_telegram
+from .tools.tools import filtra_url, aplica_regla, sentimiento, nube, entidades, enviar_telegram, enviar_telegram_estadistica
 import os
 import datetime
 from odoo.http import request
@@ -59,11 +59,45 @@ class Medios(models.Model):
     def scrap_importancia_prueba(self):
         self.scrap_noticias('prueba')
 
+    @api.model
+    def estadisticas_diaria(self):
+
+        # filtar las noticias del día
+
+
+        condi = [('fecha_registro', '>=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),
+                  ('fecha_registro', '<=', datetime.datetime.now().strftime('%Y-%m-%d 23:59:59'))]
+
+        #rec = self.env['wsf_noticias_resultados'].search(condi)
+
+        rec = self.env['wsf_noticias_resultados'].read_group(condi,
+                                                                  ['regla2', 'id:count_distinct'],
+                                                                  ['regla2'])
+        mensaje = "\n📈 Estadística diaria 📈 \n"
+
+        mensaje += "\n\n**Aplicación de Reglas**\n"
+
+        for r in sorted(rec,key=lambda r:r['regla2_count'],reverse=True):
+
+            mensaje += f"- 📏 {r['regla2']} se aplicó: [{r['regla2_count']}] veces \n"
+
+
+        rec = self.env['wsf_noticias_resultados'].read_group(condi,
+                                                                  ['medio', 'id:count_distinct'],
+                                                                  ['medio'])
+
+        mensaje += "\n\n**Medios alcanzados**\n"
+        for r in sorted(rec,key=lambda r:r['medio_count'],reverse=True):
+
+            mensaje += f"- 📰 {r['medio'][1]} brindo noticias: [{r['medio_count']}] veces \n"
+
+        enviar_telegram_estadistica(mensaje)
+
+
 
     @api.model
     def scrap_importancia_nuevo(self):
         self.scrap_noticias('nuevo')
-
 
     @api.model
     def scrap_importancia_cat1(self):
