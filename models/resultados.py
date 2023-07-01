@@ -3,6 +3,22 @@ from datetime import *
 import pytz
 IST = pytz.timezone('America/Argentina/Buenos_Aires')
 
+class Norep(models.Model):
+    _name = "wsf_noticias_norep"
+    _description = "guarda registro para no repetir"
+    _order = "fecha_registro desc"
+    fecha_registro = fields.Datetime('Fecha registro',compute='compute_fecha_registro', store=True)
+    link = fields.Char()
+
+
+
+    @api.depends('link')
+    def compute_fecha_registro(self):
+        for rec in self:
+            fecha = datetime.now(IST).strftime('%Y/%m/%d %H:%M:%S')
+            rec.fecha_registro = datetime.strptime(fecha, '%Y/%m/%d %H:%M:%S')
+
+
 class Resultados(models.Model):
     _name = "wsf_noticias_resultados"
     _description = "modelo para guardar los resultados"

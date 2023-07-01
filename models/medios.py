@@ -444,7 +444,20 @@ class Medios(models.Model):
                                             medio += "\n\n- Reglas: " + article['regla2']
                                             codigo += 1
                                             medio += "\n- Código: " + str(codigo)
-                                            enviar_telegram(article, medio)
+
+                                            # verifico que se haya grabado
+                                            condi = [('link', '=', article['link'])]
+
+                                            grabado = self.env['wsf_noticias_norep'].sudo().search(condi)
+
+                                            if not grabado:
+                                                norepe = {}
+                                                norepe['link'] = article['link']
+                                                self.env['wsf_noticias_norep'].sudo().create(norepe)
+                                                enviar_telegram(article, medio)
+                                            else:
+                                                pass
+
 
                                             _log(f"****** Guardando \n {medio} \n {str(article)} ")
 
