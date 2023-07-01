@@ -70,6 +70,7 @@ def enviar_telegram(article,medio=" Medio", chat_id = '-918982585',bot_token = '
 
 def aplica_regla(titulo, cuerpo, copete,reglas):
     regla_nombre = set()
+    telegram = []
     lista_condicionales = []
     log = ""
 
@@ -163,12 +164,13 @@ def aplica_regla(titulo, cuerpo, copete,reglas):
         if cumple_and and cumple_not and cumple_or:
             log += f"\n -- filtra !!!!!!!!!!!!!!!!!!  {t.name.upper()}"
             regla_nombre.add(r.nombre_regla)
+            telegram.append(r.telegram)
         else:
             log += f"\n -- no filtra *************** "
             regla_nombre.add('set()')
 
 
-    return (str(regla_nombre),log)
+    return (str(regla_nombre),log,telegram)
 
 def filtra_url(article_link, url_medio2, url_medio):
     condi = True

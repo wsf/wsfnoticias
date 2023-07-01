@@ -93,6 +93,8 @@ class Medios(models.Model):
     def scrap_noticias(self, importancia="todos", tipo="", pagina=""):
 
 
+        telegram = ""
+
         filtro_importancia = []
 
         if importancia == 'baja':
@@ -199,6 +201,8 @@ class Medios(models.Model):
                                                                 contenido.meta_description, reglas)
                                     lista_reglas = r[0]
 
+                                    telegram = r[2]
+
                                     #_log(f" Aplicando regla \n  {r[1]}")
 
                                     if tipo  == "prueba":
@@ -270,9 +274,11 @@ class Medios(models.Model):
                                             medio += "\n- Reglas: " + article['regla2']
                                             codigo += 1
                                             medio += "\n- Código: " + str(codigo)
-                                            enviar_telegram(article, medio)
 
-                                            enviar_telegram(article, medio)
+                                            if telegram:
+                                                enviar_telegram(article, medio,telegram)
+                                            else:
+                                                enviar_telegram(article, medio)
 
                                         contador = contador + 1
 
@@ -320,6 +326,8 @@ class Medios(models.Model):
                                 r =  aplica_regla(contenido.title,contenido.text,contenido.meta_description, reglas)
 
                                 lista_reglas = r[0]
+
+                                telegram = r[2]
 
                                 if tipo == "prueba":
                                     self.reglas += r[1]
@@ -391,8 +399,6 @@ class Medios(models.Model):
                                             print(str(e))
                                             pass
 
-
-
                                         article['titulo'] = str(codigo+1) + " - " +  contenido.title.replace('"','').replace("'","").replace('“',"")
 
                                         #article['tipo'] = random.choice(['positiva','negativa','neutra','neutra'])
@@ -454,10 +460,17 @@ class Medios(models.Model):
                                                 norepe = {}
                                                 norepe['link'] = article['link']
                                                 self.env['wsf_noticias_norep'].sudo().create(norepe)
-                                                enviar_telegram(article, medio)
+
+                                                notele = 0
+                                                for tele in telegram:
+                                                    if tele:
+                                                        enviar_telegram(article, medio, tele)
+                                                    else:
+                                                        notele += 1
+                                                if notel > 1:
+                                                    enviar_telegram(article, medio)
                                             else:
                                                 pass
-
 
                                             _log(f"****** Guardando \n {medio} \n {str(article)} ")
 
