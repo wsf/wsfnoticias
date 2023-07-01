@@ -38,7 +38,7 @@
 
                     </group>
 
-                        <button name="laboratorio_procesar" type="button" class="btn btn-info" >Procesar</button>
+                        <button name="procesar_labo"  class="btn btn-info" type="object">Procesar</button>
 
                         <br></br>
                         <br></br>

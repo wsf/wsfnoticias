@@ -275,10 +275,26 @@ class Medios(models.Model):
                                             codigo += 1
                                             medio += "\n- Código: " + str(codigo)
 
-                                            if telegram:
-                                                enviar_telegram(article, medio,telegram)
+                                            # verifico que se haya grabado
+                                            condi = [('link', '=', article['link'])]
+
+                                            grabado = self.env['wsf_noticias_norep'].sudo().search(condi)
+
+                                            if not grabado:
+                                                norepe = {}
+                                                norepe['link'] = article['link']
+                                                self.env['wsf_noticias_norep'].sudo().create(norepe)
+
+                                                notele = 0
+                                                for tele in telegram:
+                                                    if tele:
+                                                        enviar_telegram(article, medio, tele)
+                                                    else:
+                                                        notele += 1
+                                                if notele > 0:
+                                                    enviar_telegram(article, medio)
                                             else:
-                                                enviar_telegram(article, medio)
+                                                pass
 
                                         contador = contador + 1
 
@@ -467,7 +483,7 @@ class Medios(models.Model):
                                                         enviar_telegram(article, medio, tele)
                                                     else:
                                                         notele += 1
-                                                if notel > 1:
+                                                if notele > 0:
                                                     enviar_telegram(article, medio)
                                             else:
                                                 pass
