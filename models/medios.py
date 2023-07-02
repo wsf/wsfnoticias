@@ -310,29 +310,31 @@ class Medios(models.Model):
                                             medio += "\n- Código: " + str(codigo)
 
                                             # verifico que se haya grabado
-                                            condi = [('link', '=', article['link'])]
+                                            condi = [('titulo', '=', article['titulo'])]
 
                                             grabado = self.env['wsf_noticias_norep'].sudo().search(condi)
 
                                             if not grabado:
-                                                norepe = {}
-                                                norepe['link'] = article['link']
+                                                norepe = []
+                                                norepe.append(article['titulo'])
+
                                                 self.env['wsf_noticias_norep'].sudo().create(norepe)
 
                                                 notele = 0
-                                                jnorep = {}
+
+                                                jnorep = []
                                                 for tele in telegram:
                                                     if tele:
-
-                                                        if not article['link'] in jnorep.keys():
-                                                            jnorep[article['link']] = 1
+                                                        if not article['titulo'] in jnorep:
+                                                            jnorep.append(article['titulo'])
                                                             enviar_telegram(article, medio, tele)
                                                     else:
                                                         notele += 1
                                                 if notele > 0:
-                                                    if not article['link'] in jnorep.keys():
-                                                        jnorep[article['link']] = 1
-                                                        enviar_telegram(article, medio)
+                                                    if not article['titulo'] in jnorep:
+                                                        jnorep.append(article['titulo'])
+                                                        enviar_telegram(article, medio, tele)
+
                                             else:
                                                 pass
 
@@ -495,6 +497,10 @@ class Medios(models.Model):
 
 
                                                     self.env['wsf_noticias_resultados'].sudo().create(article2)
+                                                else:
+                                                    # hago una marca en el telegram cuando no grabó
+                                                    medio += " ###"
+
 
 
 
@@ -508,28 +514,29 @@ class Medios(models.Model):
                                             medio += "\n- Código: " + str(codigo)
 
                                             # verifico que se haya grabado
-                                            condi = [('link', '=', article['link'])]
+                                            condi = [('titulo', '=', article['titulo'])]
 
                                             grabado = self.env['wsf_noticias_norep'].sudo().search(condi)
 
                                             if not grabado:
                                                 norepe = {}
-                                                norepe['link'] = article['link']
+                                                norepe['titulo']=article['titulo']
+
                                                 self.env['wsf_noticias_norep'].sudo().create(norepe)
 
                                                 notele = 0
 
-                                                jnorep = {}
+                                                jnorep = []
                                                 for tele in telegram:
                                                     if tele:
-                                                        if not article['link'] in jnorep.keys():
-                                                            jnorep[article['link']] = 1
+                                                        if not article['titulo'] in jnorep:
+                                                            jnorep.append(article['titulo'])
                                                             enviar_telegram(article, medio, tele)
                                                     else:
                                                         notele += 1
                                                 if notele > 0:
-                                                    if not article['link'] in jnorep.keys():
-                                                        jnorep[article['link']] = 1
+                                                    if not article['titulo'] in jnorep:
+                                                        jnorep.append(article['titulo'])
                                                         enviar_telegram(article, medio, tele)
                                             else:
                                                 pass
