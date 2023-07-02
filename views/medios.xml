@@ -109,8 +109,8 @@
             <tree multi_edit="1">
                 <field name="medio"/>
                 <field name="departamento"/>
-                <field name="pagina_web"/>
-                <field name="pagina_rss"/>
+                <field name="pagina_web" widget="url"/>
+                <field name="pagina_rss" widget="url"/>
                 <field name="importancia"/>
                 <field name="pauta"/>
                 <field name="estado"/>
