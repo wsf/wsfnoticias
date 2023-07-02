@@ -149,27 +149,35 @@ class Medios(models.Model):
         self.verificar_resultados()
         self.verificar_notep()
 
-
     @api.model
     def scrap_importancia_cat2(self):
         self.scrap_noticias('cat2')
+        self.verificar_resultados()
+        self.verificar_notep()
 
     @api.model
     def scrap_importancia_baja(self):
         self.scrap_noticias('baja')
         self.verificar_resultados()
+        self.verificar_notep()
 
     @api.model
     def scrap_importancia_alta(self):
         self.scrap_noticias('alta')
+        self.verificar_resultados()
+        self.verificar_notep()
 
     @api.model
     def scrap_importancia_media(self):
         self.scrap_noticias('media')
+        self.verificar_resultados()
+        self.verificar_notep()
 
     @api.model
     def scrap_importancia_todos(self):
         self.scrap_noticias('todos')
+        self.verificar_resultados()
+        self.verificar_notep()
 
     @api.model
     def scrap_noticias(self, importancia="todos", tipo="", pagina=""):
