@@ -588,23 +588,31 @@ class Medios(models.Model):
 
                                                 self.env['wsf_noticias_norep'].sudo().create(norepe)
                                                 wsf_noticias_norep.append(article['titulo'])
-                                                self.norepe2.append(article['titulo'])
+
 
                                                 notele = 0
 
                                                 jnorep = []
+
                                                 for tele in telegram:
                                                     if tele:
-                                                        if not article['titulo'] in jnorep:
+                                                        if not article['titulo'] in self.norepe2 and not article['titulo'] in jnorep:
                                                             jnorep.append(article['titulo'])
+                                                            self.norepe2.append(article['titulo'])
                                                             enviar_telegram(article, medio, tele)
+                                                        else:
+                                                            print("ya envio el telegrama")
 
                                                     else:
                                                         notele += 1
                                                 if notele > 0:
-                                                    if not article['titulo'] in jnorep:
+                                                    if not article['titulo'] in self.norepe2 and not article['titulo'] in jnorep:
                                                         jnorep.append(article['titulo'])
+                                                        self.norepe2.append(article['titulo'])
                                                         enviar_telegram(article, medio, tele)
+                                                    else:
+                                                        print("ya envió el telegram")
+
                                             else:
                                                 # encontró noticias repetidas
                                                 pass
