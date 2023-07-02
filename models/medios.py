@@ -264,7 +264,7 @@ class Medios(models.Model):
                                         article['departamento'] = rec.departamento
 
                                         try:
-                                            article['nube'] = nube(contenido.text )
+                                            article['nube'] = nube(contenido.text )[0:300]
                                             article['entidades'] = entidades(contenido.text )
                                         except Exception as e:
                                             _log(f"Exception:  {str(e)}")
@@ -462,7 +462,7 @@ class Medios(models.Model):
                                         article['departamento'] = rec.departamento
 
                                         try:
-                                            article['nube'] = nube(contenido.text )
+                                            article['nube'] = nube(contenido.text )[0:300]
                                             article['entidades'] = entidades(contenido.text )
                                         except Exception as e:
                                             _log(f"Exception 302:  {str(e)}")
