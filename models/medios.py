@@ -315,7 +315,7 @@ class Medios(models.Model):
                                         article['medio'] = rec.medio.id
                                         article['copete'] = contenido.meta_description.contenido.text.replace('"','').replace("'","")  ##
                                         article['texto'] = contenido.text.contenido.text.replace('"','').replace("'","")
-                                        article['link'] = contenido.url
+                                        article['link'] = contenido.url.strip()
                                         article['tipo'] = sentimiento(contenido.title.contenido.text.replace('"','').replace("'",""))
                                         article['departamento'] = rec.departamento
 
@@ -485,7 +485,7 @@ class Medios(models.Model):
                                         article['texto'] = contenido.text.replace('"','').replace("'","").replace('“',"")
 
                                         try:
-                                            article['link'] = contenido.url
+                                            article['link'] = contenido.url.strip()
 
                                         except Exception as e:
                                             _log(f"Exception 261:  {str(e)}")
