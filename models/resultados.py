@@ -69,6 +69,10 @@ class Resultados(models.Model):
             rec.fecha_registro = datetime.strptime(fecha, '%Y/%m/%d %H:%M:%S')
 
 
+    def set_verificada(self):
+        for rec in self:
+            rec.valorar = "Verificada"
+
     def set_marcar(self):
         for rec in self:
             rec.valorar = "valorar"

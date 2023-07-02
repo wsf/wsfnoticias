@@ -294,6 +294,9 @@ class Medios(models.Model):
                                             pass
 
                                         article['regla2'] = lista_reglas.replace("'set()'","").replace("{","").replace("}","").replace("'","").replace(",,",",")
+                                        if article['regla2'][0:2] == ', ':
+                                            article['regla2'] = article['regla2'][2:]
+
 
                                         if tipo == "prueba":
                                             self.prueba += str(article) + f"\n\n  ------- Nuevo Artículo {contador}------ \n\n"
@@ -501,9 +504,6 @@ class Medios(models.Model):
                                                     # hago una marca en el telegram cuando no grabó
                                                     medio += " ###"
 
-
-
-
                                             except Exception as e:
                                                 medio += " -" + str(e)
 
@@ -539,6 +539,7 @@ class Medios(models.Model):
                                                         jnorep.append(article['titulo'])
                                                         enviar_telegram(article, medio, tele)
                                             else:
+                                                # encontró noticias repetidas
                                                 pass
 
                                             _log(f"****** Guardando \n {medio} \n {str(article)} ")
