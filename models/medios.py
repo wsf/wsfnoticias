@@ -22,6 +22,8 @@ def _log(dato):
 
 
 wsf_noticias_norep = []
+resultados = []
+norepe2 = []
 
 class Medios(models.Model):
     _name = "wsf_noticias_medios"
@@ -47,14 +49,13 @@ class Medios(models.Model):
     departamento = fields.Char('Departamento')
 
 
-    resultados = []
-    norepe2 = []
+
 
 
     def verificar_notep(self):
         # recorro resultados
         try:
-            for r in self.norepe2:
+            for r in norepe2:
                 try:
                     titulo = r
                     condi = [('titulo','=',titulo)]
@@ -74,7 +75,7 @@ class Medios(models.Model):
     def verificar_resultados(self):
         # recorro resultados
         try:
-            for r in self.resultados:
+            for r in resultados:
                 try:
                     link = r['link']
                     condi = [('link','=',link)]
@@ -363,7 +364,7 @@ class Medios(models.Model):
                                             _log(f"Guardando {str(article)}")
 
                                             all_records_resultados.sudo().create(article)
-                                            self.resultados.appendarticle(article)
+                                            resultados.appendarticle(article)
 
                                             medio += "\n- Reglas: " + article['regla2']
                                             codigo += 1
@@ -381,7 +382,7 @@ class Medios(models.Model):
 
                                                 self.env['wsf_noticias_norep'].sudo().create(norepe)
                                                 wsf_noticias_norep.append(article['titulo'])
-                                                self.norepe2.append(article['titulo'])
+                                                norepe2.append(article['titulo'])
 
                                                 notele = 0
 
@@ -544,7 +545,7 @@ class Medios(models.Model):
                                             try:
 
                                                 self.env['wsf_noticias_resultados'].sudo().create(article)
-                                                self.resultados.append(article)
+                                                resultados.append(article)
 
                                                 # verifico que se haya grabado
                                                 condi = [('link','=',article['link'])]
@@ -596,9 +597,9 @@ class Medios(models.Model):
 
                                                 for tele in telegram:
                                                     if tele:
-                                                        if not article['titulo'] in self.norepe2 and not article['titulo'] in jnorep:
+                                                        if not article['titulo'] in norepe2 and not article['titulo'] in jnorep:
                                                             jnorep.append(article['titulo'])
-                                                            self.norepe2.append(article['titulo'])
+                                                            norepe2.append(article['titulo'])
                                                             enviar_telegram(article, medio, tele)
                                                         else:
                                                             print("ya envio el telegrama")
@@ -606,9 +607,9 @@ class Medios(models.Model):
                                                     else:
                                                         notele += 1
                                                 if notele > 0:
-                                                    if not article['titulo'] in self.norepe2 and not article['titulo'] in jnorep:
+                                                    if not article['titulo'] in norepe2 and not article['titulo'] in jnorep:
                                                         jnorep.append(article['titulo'])
-                                                        self.norepe2.append(article['titulo'])
+                                                        norepe2.append(article['titulo'])
                                                         enviar_telegram(article, medio, tele)
                                                     else:
                                                         print("ya envió el telegram")
