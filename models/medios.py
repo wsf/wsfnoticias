@@ -224,7 +224,7 @@ class Medios(models.Model):
                                     _log(f"Exception:  {str(e)}")
 
                                     print(e)
-                                    break
+                                    continue
 
                                 article['titulo'] = contenido.title
 
@@ -371,7 +371,7 @@ class Medios(models.Model):
 
                                 except Exception as e:
                                     _log(f"Exception:  {str(e)}")
-                                    break
+                                    continue
                                     print(e)
 
                                 if tipo == "prueba":
