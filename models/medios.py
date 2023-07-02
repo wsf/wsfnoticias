@@ -21,6 +21,8 @@ def _log(dato):
     log.close()
 
 
+wsf_noticias_norep = []
+
 class Medios(models.Model):
     _name = "wsf_noticias_medios"
     _description = "modelo para ingresar las páginas"
@@ -43,6 +45,48 @@ class Medios(models.Model):
     resultado1 = fields.Html(default='<h1> Labo1 </h1')
     resultado2 = fields.Html(default='<h1> Labo2 </h1')
     departamento = fields.Char('Departamento')
+
+
+    resultados = []
+    norepe2 = []
+
+
+    def verificar_notep(self):
+        # recorro resultados
+        try:
+            for r in self.norepe2:
+                try:
+                    titulo = r
+                    condi = [('titulo','=',titulo)]
+                    result = self.env['wsf_noticias_norep'].sudo().search(condi)
+                    if not result:
+                        jr = {}
+                        jr['titulo']=r
+                        self.env['wsf_noticias_norep'].sudo().create(jr)
+                except Exception as e:
+                    print(e)
+
+        except Exception as e:
+            print(str(e))
+
+
+
+    def verificar_resultados(self):
+        # recorro resultados
+        try:
+            for r in self.resultados:
+                try:
+                    link = r['link']
+                    condi = [('link','=',link)]
+                    result = self.env['wsf_noticias_resultados'].sudo().search(condi)
+                    if not result:
+                        self.env['wsf_noticias_resultados'].sudo().create(r)
+                except Exception as e:
+                    print(e)
+
+        except Exception as e:
+            print(str(e))
+
 
     def name_get(self):
         result = []
@@ -102,6 +146,9 @@ class Medios(models.Model):
     @api.model
     def scrap_importancia_cat1(self):
         self.scrap_noticias('cat1')
+        self.verificar_resultados()
+        self.verificar_notep()
+
 
     @api.model
     def scrap_importancia_cat2(self):
@@ -110,6 +157,7 @@ class Medios(models.Model):
     @api.model
     def scrap_importancia_baja(self):
         self.scrap_noticias('baja')
+        self.verificar_resultados()
 
     @api.model
     def scrap_importancia_alta(self):
@@ -307,6 +355,7 @@ class Medios(models.Model):
                                             _log(f"Guardando {str(article)}")
 
                                             all_records_resultados.sudo().create(article)
+                                            self.resultados.appendarticle(article)
 
                                             medio += "\n- Reglas: " + article['regla2']
                                             codigo += 1
@@ -316,12 +365,15 @@ class Medios(models.Model):
                                             condi = [('titulo', '=', article['titulo'])]
 
                                             grabado = self.env['wsf_noticias_norep'].sudo().search(condi)
+                                            grabado2 =  article['titulo'] in wsf_noticias_norep
 
-                                            if not grabado:
+                                            if not (grabado or grabado2):
                                                 norepe = []
                                                 norepe.append(article['titulo'])
 
                                                 self.env['wsf_noticias_norep'].sudo().create(norepe)
+                                                wsf_noticias_norep.append(article['titulo'])
+                                                self.norepe2.append(article['titulo'])
 
                                                 notele = 0
 
@@ -484,11 +536,13 @@ class Medios(models.Model):
                                             try:
 
                                                 self.env['wsf_noticias_resultados'].sudo().create(article)
+                                                self.resultados.append(article)
 
                                                 # verifico que se haya grabado
                                                 condi = [('link','=',article['link'])]
 
                                                 grabado = self.env['wsf_noticias_resultados'].sudo().search(condi)
+
                                                 if not grabado:
 
                                                     article2 ={}
@@ -517,12 +571,16 @@ class Medios(models.Model):
                                             condi = [('titulo', '=', article['titulo'])]
 
                                             grabado = self.env['wsf_noticias_norep'].sudo().search(condi)
+                                            grabado2 =  article['titulo'] in wsf_noticias_norep
 
-                                            if not grabado:
+
+                                            if not (grabado or grabado2):
                                                 norepe = {}
                                                 norepe['titulo']=article['titulo']
 
                                                 self.env['wsf_noticias_norep'].sudo().create(norepe)
+                                                wsf_noticias_norep.append(article['titulo'])
+                                                self.norepe2.append(article['titulo'])
 
                                                 notele = 0
 
@@ -532,6 +590,7 @@ class Medios(models.Model):
                                                         if not article['titulo'] in jnorep:
                                                             jnorep.append(article['titulo'])
                                                             enviar_telegram(article, medio, tele)
+
                                                     else:
                                                         notele += 1
                                                 if notele > 0:
