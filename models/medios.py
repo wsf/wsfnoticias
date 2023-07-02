@@ -320,13 +320,19 @@ class Medios(models.Model):
                                                 self.env['wsf_noticias_norep'].sudo().create(norepe)
 
                                                 notele = 0
+                                                jnorep = {}
                                                 for tele in telegram:
                                                     if tele:
-                                                        enviar_telegram(article, medio, tele)
+
+                                                        if not article['link'] in jnorep.keys():
+                                                            jnorep[article['link']] = 1
+                                                            enviar_telegram(article, medio, tele)
                                                     else:
                                                         notele += 1
                                                 if notele > 0:
-                                                    enviar_telegram(article, medio)
+                                                    if not article['link'] in jnorep.keys():
+                                                        jnorep[article['link']] = 1
+                                                        enviar_telegram(article, medio)
                                             else:
                                                 pass
 
@@ -512,13 +518,19 @@ class Medios(models.Model):
                                                 self.env['wsf_noticias_norep'].sudo().create(norepe)
 
                                                 notele = 0
+
+                                                jnorep = {}
                                                 for tele in telegram:
                                                     if tele:
-                                                        enviar_telegram(article, medio, tele)
+                                                        if not article['link'] in jnorep.keys():
+                                                            jnorep[article['link']] = 1
+                                                            enviar_telegram(article, medio, tele)
                                                     else:
                                                         notele += 1
                                                 if notele > 0:
-                                                    enviar_telegram(article, medio)
+                                                    if not article['link'] in jnorep.keys():
+                                                        jnorep[article['link']] = 1
+                                                        enviar_telegram(article, medio, tele)
                                             else:
                                                 pass
 
