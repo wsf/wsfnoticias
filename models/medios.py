@@ -79,7 +79,7 @@ class Medios(models.Model):
 
         for r in sorted(rec,key=lambda r:r['regla2_count'],reverse=True):
 
-            mensaje += f"- 📏 {r['regla2']} se aplicó: [{r['regla2_count']}] veces \n"
+            mensaje += f"- 📏 [{r['regla2']}] se aplicó: [{r['regla2_count']}] veces \n"
 
 
         rec = self.env['wsf_noticias_resultados'].read_group(condi,
@@ -89,7 +89,7 @@ class Medios(models.Model):
         mensaje += "\n\n**Medios alcanzados hoy**\n\n"
         for r in sorted(rec,key=lambda r:r['medio_count'],reverse=True):
 
-            mensaje += f"- 📰 {r['medio'][1]} brindo noticias: [{r['medio_count']}] veces \n"
+            mensaje += f"- 📰 [{r['medio'][1]}] brindo noticias: [{r['medio_count']}] veces \n"
 
         enviar_telegram_estadistica(mensaje)
 

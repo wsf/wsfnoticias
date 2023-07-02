@@ -9,7 +9,7 @@ class Norep(models.Model):
     _order = "fecha_registro desc"
     fecha_registro = fields.Datetime('Fecha registro',compute='compute_fecha_registro', store=True)
     link = fields.Char()
-
+    titulo = fields.Char()
 
 
     @api.depends('link')
