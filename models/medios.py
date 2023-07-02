@@ -282,7 +282,7 @@ class Medios(models.Model):
                                     print(e)
                                     continue
 
-                                article['titulo'] = contenido.title
+                                article['titulo'] = contenido.title.replace('“',"").replace("'","").replace('"',"").strip()
 
                                 try:
 
@@ -462,7 +462,7 @@ class Medios(models.Model):
 
                                 # noticia concreta
                                 article = {}
-                                article['titulo'] = contenido.title.replace('“',"").replace("'","").replace('"',"")
+                                article['titulo'] = contenido.title.replace('“',"").replace("'","").replace('"',"").strip()
                                 print(contenido.title)
                                 article['regla2'] = lista_reglas.replace("'set()'", "").replace("{", "").replace("}",
                                                                                                                  "").replace(
@@ -520,7 +520,7 @@ class Medios(models.Model):
                                             print(str(e))
                                             pass
 
-                                        article['titulo'] = str(codigo+1) + " - " +  contenido.title.replace('"','').replace("'","").replace('“',"")
+                                        article['titulo'] = str(codigo+1) + " - " +  contenido.title.replace('"','').replace("'","").replace('“',"").strip()
 
                                         #article['tipo'] = random.choice(['positiva','negativa','neutra','neutra'])
                                         article['tipo'] = sentimiento(contenido.title)
