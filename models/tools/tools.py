@@ -1,7 +1,6 @@
 import textblob
-
 import requests
-
+import datetime as datetime
 import re
 
 # https://api.telegram.org/botAAFfoTbrGSXwXm20KFPB/getUpdates
@@ -294,6 +293,18 @@ def nube(text):
 import sqlite3
 
 
+def telegram_norep_add_autoincrement():
+
+    q = "ALTER TABLE norep ADD COLUMN fecha TEXT;"
+    nombre = os.path.dirname(__file__) + '/telegram_norep.db'
+    conexion = sqlite3.connect(nombre)
+    cursor = conexion.cursor()
+    cursor.execute(q)
+
+    conexion.commit()
+    pass
+
+
 def telegram_norep_init():
 
     nombre = os.path.dirname(__file__) + '/telegram_norep.db'
@@ -317,6 +328,8 @@ def telegram_norep_init():
 import os
 def telegram_norep(titulo,link):
 
+    yymm = datetime.datetime.now().strftime('%Y%M')
+
     nombre = os.path.dirname(__file__) + '/telegram_norep.db'
     conexion = sqlite3.connect(nombre)
     cursor = conexion.cursor()
@@ -329,7 +342,7 @@ def telegram_norep(titulo,link):
 
         return True
     else:
-        q = f"INSERT INTO norep VALUES ('{titulo}','{link}')"
+        q = f"INSERT INTO norep VALUES ('{titulo}','{link}','{yymm}')"
         cursor.execute(q)
         conexion.commit()
 
@@ -348,12 +361,12 @@ def telegram_listar():
         print(r)
 
 
-
 if __name__ == "__main__":
+    telegram_norep_add_autoincrement()
     telegram_listar()
 
 #r  = telegram_norep('t1','l1')
-#r2  = telegram_norep('t4','l4')
+#r2  = telegram_norep('t5','l5')
 #print(r,r2)
 
 
