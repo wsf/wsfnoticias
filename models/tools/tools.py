@@ -364,6 +364,7 @@ def telegram_listar():
 if __name__ == "__main__":
     telegram_norep_add_autoincrement()
     telegram_listar()
+    pass
 
 #r  = telegram_norep('t1','l1')
 #r2  = telegram_norep('t5','l5')
