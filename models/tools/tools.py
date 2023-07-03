@@ -328,7 +328,7 @@ def telegram_norep_init():
 import os
 def telegram_norep(titulo,link):
 
-    yymm = datetime.datetime.now().strftime('%Y%M')
+    yymm = datetime.datetime.now().strftime('%Y%m')
 
     nombre = os.path.dirname(__file__) + '/telegram_norep.db'
     conexion = sqlite3.connect(nombre)
