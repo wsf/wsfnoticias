@@ -346,7 +346,11 @@ def telegram_listar():
     for r in resultados:
         print(r)
 
-#telegram_listar()
+
+
+if __name__ == "__main__":
+    telegram_listar()
+
 #r  = telegram_norep('t1','l1')
 #r2  = telegram_norep('t4','l4')
 #print(r,r2)

@@ -146,31 +146,31 @@ class Medios(models.Model):
     def scrap_importancia_cat1(self):
         self.scrap_noticias('cat1')
         self.verificar_resultados()
-        self.verificar_notep()
+
 
     @api.model
     def scrap_importancia_cat2(self):
         self.scrap_noticias('cat2')
         self.verificar_resultados()
-        self.verificar_notep()
+
 
     @api.model
     def scrap_importancia_baja(self):
         self.scrap_noticias('baja')
         self.verificar_resultados()
-        self.verificar_notep()
+
 
     @api.model
     def scrap_importancia_alta(self):
         self.scrap_noticias('alta')
         self.verificar_resultados()
-        self.verificar_notep()
+
 
     @api.model
     def scrap_importancia_media(self):
         self.scrap_noticias('media')
         self.verificar_resultados()
-        self.verificar_notep()
+
 
     @api.model
     def scrap_importancia_todos(self):
@@ -568,7 +568,6 @@ class Medios(models.Model):
 
                                                 self.env['wsf_noticias_norep'].sudo().create(norepe)
                                                 wsf_noticias_norep.append(article['titulo'])
-
 
                                                 notele = 0
 
