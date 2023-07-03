@@ -90,9 +90,6 @@ def enviar_telegram_estadistica(message, chat_id = '-900652227',bot_token = '619
         print(str(e))
 
 
-
-
-
 def aplica_regla(titulo, cuerpo, copete,reglas):
     regla_nombre = set()
     telegram = []
@@ -292,3 +289,66 @@ def nube(text):
 
     # Devolver el diccionario con el recuento de palabras
     return str(sorted_dict)
+
+
+import sqlite3
+
+
+def telegram_norep_init():
+
+    nombre = os.path.dirname(__file__) + '/telegram_norep.db'
+    conexion = sqlite3.connect(nombre)
+    cursor = conexion.cursor()
+
+    # Creamos una tabla
+    cursor.execute('''CREATE TABLE norep
+                      (titulo TEXT KEY, link TEXT)''')
+
+    # Insertamos algunos datos
+    cursor.execute("INSERT INTO norep VALUES ('t1', 'l1')")
+    cursor.execute("INSERT INTO norep VALUES ('t2', 'l2')")
+
+    # Guardamos los cambios
+    conexion.commit()
+
+
+#telegram_norep_init()
+
+import os
+def telegram_norep(titulo,link):
+
+    nombre = os.path.dirname(__file__) + '/telegram_norep.db'
+
+    conexion = sqlite3.connect(nombre)
+    cursor = conexion.cursor()
+
+    q = f"select titulo from norep where titulo = '{titulo}'"
+    cursor.execute(q)
+    resultados=cursor.fetchall()
+
+    if resultados:
+
+        return True
+    else:
+        q = f"INSERT INTO norep VALUES ('{titulo}','{link}')"
+        cursor.execute(q)
+        conexion.commit()
+
+        return False
+
+
+def telegram_listar():
+    conexion = sqlite3.connect('telegram_norep.db')
+    cursor = conexion.cursor()
+    q = "select * from norep"
+    cursor.execute(q)
+    resultados=cursor.fetchall()
+    for r in resultados:
+        print(r)
+
+#telegram_listar()
+#r  = telegram_norep('t1','l1')
+#r2  = telegram_norep('t4','l4')
+#print(r,r2)
+
+

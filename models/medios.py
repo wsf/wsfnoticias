@@ -5,7 +5,7 @@ import newspaper
 from newspaper import Article
 from datetime import *
 import random
-from .tools.tools import filtra_url, aplica_regla, sentimiento, nube, entidades, enviar_telegram, enviar_telegram_estadistica
+from .tools.tools import filtra_url, aplica_regla, sentimiento, nube, entidades, enviar_telegram, enviar_telegram_estadistica,telegram_norep
 import os
 import datetime
 from odoo.http import request
@@ -47,8 +47,6 @@ class Medios(models.Model):
     resultado1 = fields.Html(default='<h1> Labo1 </h1')
     resultado2 = fields.Html(default='<h1> Labo2 </h1')
     departamento = fields.Char('Departamento')
-
-
 
 
 
@@ -370,37 +368,19 @@ class Medios(models.Model):
                                             codigo += 1
                                             medio += "\n- Código: " + str(codigo)
 
-                                            # verifico que se haya grabado
-                                            condi = [('titulo', '=', article['titulo'])]
+                                            notele = 0
 
-                                            grabado = self.env['wsf_noticias_norep'].sudo().search(condi)
-                                            grabado2 =  article['titulo'] in wsf_noticias_norep
-
-                                            if not (grabado or grabado2):
-                                                norepe = []
-                                                norepe.append(article['titulo'])
-
-                                                self.env['wsf_noticias_norep'].sudo().create(norepe)
-                                                wsf_noticias_norep.append(article['titulo'])
-                                                norepe2.append(article['titulo'])
-
-                                                notele = 0
-
-                                                jnorep = []
-                                                for tele in telegram:
-                                                    if tele:
-                                                        if not article['titulo'] in jnorep:
-                                                            jnorep.append(article['titulo'])
-                                                            enviar_telegram(article, medio, tele)
-                                                    else:
-                                                        notele += 1
-                                                if notele > 0:
-                                                    if not article['titulo'] in jnorep:
-                                                        jnorep.append(article['titulo'])
+                                            jnorep = []
+                                            for tele in telegram:
+                                                if tele:
+                                                    if not telegram_norep(article['titulo'],article['link']):
                                                         enviar_telegram(article, medio, tele)
+                                                else:
+                                                    notele += 1
+                                            if notele > 0:
+                                                if not telegram_norep(article['titulo'], article['link']):
+                                                    enviar_telegram(article, medio, tele)
 
-                                            else:
-                                                pass
 
                                         contador = contador + 1
 
@@ -582,7 +562,6 @@ class Medios(models.Model):
                                             grabado = self.env['wsf_noticias_norep'].sudo().search(condi)
                                             grabado2 =  article['titulo'] in wsf_noticias_norep
 
-
                                             if not (grabado or grabado2):
                                                 norepe = {}
                                                 norepe['titulo']=article['titulo']
@@ -597,22 +576,14 @@ class Medios(models.Model):
 
                                                 for tele in telegram:
                                                     if tele:
-                                                        if not article['titulo'] in norepe2 and not article['titulo'] in jnorep:
-                                                            jnorep.append(article['titulo'])
-                                                            norepe2.append(article['titulo'])
+                                                         if not telegram_norep(article['titulo'], article['link']):
                                                             enviar_telegram(article, medio, tele)
-                                                        else:
-                                                            print("ya envio el telegrama")
-
                                                     else:
                                                         notele += 1
                                                 if notele > 0:
-                                                    if not article['titulo'] in norepe2 and not article['titulo'] in jnorep:
-                                                        jnorep.append(article['titulo'])
-                                                        norepe2.append(article['titulo'])
+                                                    if not telegram_norep(article['titulo'], article['link']):
                                                         enviar_telegram(article, medio, tele)
-                                                    else:
-                                                        print("ya envió el telegram")
+
 
                                             else:
                                                 # encontró noticias repetidas
