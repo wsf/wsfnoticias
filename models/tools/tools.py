@@ -318,7 +318,6 @@ import os
 def telegram_norep(titulo,link):
 
     nombre = os.path.dirname(__file__) + '/telegram_norep.db'
-
     conexion = sqlite3.connect(nombre)
     cursor = conexion.cursor()
 
@@ -338,7 +337,9 @@ def telegram_norep(titulo,link):
 
 
 def telegram_listar():
-    conexion = sqlite3.connect('telegram_norep.db')
+
+    nombre = os.path.dirname(__file__) + '/telegram_norep.db'
+    conexion = sqlite3.connect(nombre)
     cursor = conexion.cursor()
     q = "select * from norep"
     cursor.execute(q)
