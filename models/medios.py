@@ -449,6 +449,9 @@ class Medios(models.Model):
                                                                                                                  "").replace(
                                     "'", "").replace(",,","")
 
+                                if article['regla2'][0:2] == ', ':
+                                    article['regla2'] = article['regla2'][2:]
+
                                 try:
                                     encontrado = self.env['wsf_noticias_resultados'].search(
                                         [('link', '=', contenido.url)])
