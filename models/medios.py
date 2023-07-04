@@ -12,20 +12,24 @@ from odoo.http import request
 import xmlrpc.client
 
 
+
 def xmlrpc22():
     def get_products(db, uid, password):
         """Gets all products from the Odoo database."""
         url = "http://localhost:8069/xmlrpc/2/object"
-        rpc = xmlrpc.client.ServerProxy(url)
-        result = rpc.execute_kw(db, uid, password,
-                                "wsf_noticias_medios", "search_read", [],
-                                {"fields": ["link", "medio"]})
+        rpc = xmlrpc.client.ServerProxy(url, allow_none=True)
+
+        result = rpc.execute_kw(db, 6, 'demo', 'res.partner', 'search', [[['is_company', '=', True]]])
+
         return result
 
     url = "http://localhost:8069"
     db = "odoo16"
-    user = "alejandro.sartorio@gmail.com"
+    #user = "alejandro.sartorio@gmail.com"
+    user = "demo"
     pwd = "123"
+    pwd = "demo"
+
     message = ""
 
     # url = '0.0.0.0:8069'
@@ -45,7 +49,7 @@ def xmlrpc22():
     # context = self.env._context
     # uid = context.get('uid')
     # uid = "5"
-    # password = pwd
+    password = pwd
     password = "openpgpwd"
     products = get_products(db, uid, password)
     for product in products:
