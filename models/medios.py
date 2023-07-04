@@ -9,6 +9,48 @@ from .tools.tools import filtra_url, aplica_regla, sentimiento, nube, entidades,
 import os
 import datetime
 from odoo.http import request
+import xmlrpc.client
+
+
+def xmlrpc22():
+    def get_products(db, uid, password):
+        """Gets all products from the Odoo database."""
+        url = "http://localhost:8069/xmlrpc/2/object"
+        rpc = xmlrpc.client.ServerProxy(url)
+        result = rpc.execute_kw(db, uid, password,
+                                "wsf_noticias_medios", "search_read", [],
+                                {"fields": ["link", "medio"]})
+        return result
+
+    url = "http://localhost:8069"
+    db = "odoo16"
+    user = "alejandro.sartorio@gmail.com"
+    pwd = "123"
+    message = ""
+
+    # url = '0.0.0.0:8069'
+    try:
+        common = xmlrpc.client.ServerProxy('{}/xmlrpc/2/common'.format(url), allow_none=1)
+        uid = common.authenticate(db, user, pwd, {})
+        if uid == 0:
+            raise Exception('Credentials are wrong for remote system access')
+        else:
+            message = 'Connection Stablished Successfully'
+    except Exception as e:
+        # raise except_orm(_('Remote system access Issue \n '), _(e))
+        pass
+
+    # db = "odoo16"
+    #context = self.env.context
+    # context = self.env._context
+    # uid = context.get('uid')
+    # uid = "5"
+    # password = pwd
+    password = "openpgpwd"
+    products = get_products(db, uid, password)
+    for product in products:
+        print(product["name"], product["price"])
+
 
 def _log(dato):
 
@@ -48,8 +90,8 @@ class Medios(models.Model):
     resultado2 = fields.Html(default='<h1> Labo2 </h1')
     departamento = fields.Char('Departamento')
 
-
-
+    def xmlrpc(self):
+        xmlrpc22()
     def verificar_notep(self):
         # recorro resultados
         try:
