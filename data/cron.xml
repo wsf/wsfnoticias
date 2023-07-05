@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <data noupdate="1">
-        <record id="scrap_noticias_cron" model="ir.cron">
-            <field name="name">Cron de Scrap de Noticias</field>
+        <record id="scrap_noticias_cron_secuencial" model="ir.cron">
+            <field name="name">Cron de Scrap de Noticias Secuencial</field>
             <field name="model_id" ref="model_wsf_noticias_medios"/>
             <field name="type">ir.actions.server</field>
             <field name="state">code</field>
-            <field name="code">model.scrap_noticias()</field>
-            <field name="interval_number">1</field>
-            <field name="interval_type">days</field>
+            <field name="code">model.scrap_importancia_cat1()</field>
+            <field name="interval_number">8</field>
+            <field name='interval_type'>minutes</field>
             <field name="numbercall">-1</field>
+            <field name="priority">1</field>
         </record>
     </data>
 </odoo>
