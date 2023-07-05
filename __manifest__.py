@@ -22,6 +22,7 @@
         'views/laboratorio.xml',
         'views/log.xml',
         'views/norep.xml',
+        'views/secuencia.xml',
         'security/ir.model.access.csv'
 
     ],
