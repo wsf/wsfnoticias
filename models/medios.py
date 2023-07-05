@@ -354,7 +354,7 @@ class Medios(models.Model):
                                         article['copete'] = contenido.meta_description.contenido.text.replace('"','').replace("'","")  ##
                                         article['texto'] = contenido.text.contenido.text.replace('"','').replace("'","")
                                         article['link'] = contenido.url.strip()
-                                        article['tipo'] = sentimiento(contenido.title.contenido.text.replace('"','').replace("'",""))
+                                        #article['tipo'] = sentimiento(contenido.title.contenido.text.replace('"','').replace("'",""))
                                         article['departamento'] = rec.departamento
 
                                         try:
@@ -539,7 +539,7 @@ class Medios(models.Model):
 
                                         article['titulo'] = contenido.title.replace('"','').replace("'","").replace('“',"").strip()
 
-                                        article['tipo'] = sentimiento(contenido.title)
+                                        #article['tipo'] = sentimiento(contenido.title)
                                         article['departamento'] = rec.departamento
 
                                         try:
