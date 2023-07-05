@@ -25,7 +25,7 @@
         <!-- Reglas de dominiopara cada Grupo -->
 
         <record id="ir_rule_operador2" model="ir.rule">
-            <field name="model_id" ref="noticias.model_wsf_noticias_resultados"/>
+            <field name="model_id" ref="wsfnoticias.model_wsf_noticias_resultados"/>
             <field name="domain_force">[('valorar','=','Verificada')]
             </field>
             <field name="name">Los operadores pueden ver solo las noticias Verificadas</field>
@@ -33,7 +33,7 @@
             <field eval="0" name="perm_write"/>
             <field eval="1" name="perm_read"/>
             <field eval="0" name="perm_create"/>
-            <field name="groups" eval="[(4, ref('noticias.noticias_operadores'))]"/>
+            <field name="groups" eval="[(4, ref('wsfnoticias.noticias_operadores'))]"/>
             <!--        <field name="global" eval="True" />-->
         </record>
 
