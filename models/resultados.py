@@ -69,6 +69,7 @@ class Resultados(models.Model):
             rec.fecha_registro = datetime.strptime(fecha, '%Y/%m/%d %H:%M:%S')
 
 
+
     def set_verificada(self):
         for rec in self:
             rec.valorar = "Verificada"
@@ -77,21 +78,21 @@ class Resultados(models.Model):
         for rec in self:
             rec.valorar = "valorar"
 
-    def set_defender(self):
+    def set_negativa(self):
         for rec in self:
-            rec.valorar = "defender"
+            rec.valorar = "negativa"
 
-    def set_contraatacar(self):
+    def set_positiva(self):
         for rec in self:
-            rec.valorar = "contraatacar"
+            rec.valorar = "positiva"
 
-    def set_atacar(self):
+    def set_valorar(self):
         for rec in self:
-            rec.valorar = "atacar"
+            rec.valorar = "valorar"
 
-    def set_diluir(self):
+    def set_archivar(self):
         for rec in self:
-            rec.valorar = "diluir"
+            rec.valorar = "archivar"
 
     # @api.depends('fecha_hora')
     # def dias_hora_agrupacion(self):
