@@ -205,6 +205,7 @@ class Medios(models.Model):
         self.scrap_noticias('cat2')
         self.grabar_resultados()
 
+
     @api.model
     def scrap_importancia_cat3(self):
         self.scrap_noticias('cat3')
