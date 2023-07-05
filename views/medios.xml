@@ -31,6 +31,8 @@
 
                     <button name="estadisticas_diaria" string="Estadísticas por telegram" class="btn btn-primary ml4" type="object"/>
 
+                    <button name="xmlrpc" string="xmlrpc" class="btn btn-primary ml4" type="object"/>
+
                 </header>
 
                 <sheet>
