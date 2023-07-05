@@ -257,36 +257,39 @@ class Medios(models.Model):
 
         # averiguo valor de secuencia en el campo ult_id
 
-        q = "select max(id) as dato from wsf_noticias_medios"
-        request.cr.execute(q)
-        ult_medio = request.cr.fetchall()[0][0]
+        ult_medio = self.env['wsf_noticias_medios'].search([])[1].id
+        primer_medio = self.env['wsf_noticias_medios'].search([])[-1].id
 
-        q = "select min(id) as dato from wsf_noticias_medios"
-        request.cr.execute(q)
-        primer_medio  = request.cr.fetchall()[0][0]
-
+        ult_id = self.env['wsf_noticias_secuencia'].search([]).ult_id
         q = "select ult_id as dato from wsf_noticias_secuencia "
-        request.cr.execute(q)
-        ult_id = request.cr.fetchall()
+
 
         desde = 0
         hasta = 0
 
         if ult_id:
-            u = ult_id[0][0]
+            u = ult_id
             u +=5
             if u > ult_medio:
                 u=primer_medio
                 hasta = ult_medio
-                desde = ult_id[0][0]
+                desde = ult_id
 
-            q = f"update wsf_noticias_secuencia set ult_id = {u} where ult_id = {ult_id[0][0]}"
-            request.cr.execute(q)
-            desde = ult_id[0][0]
+
+            j = {'ult_id':u}
+
+            obj = self.env['wsf_noticias_secuencia'].search([], limit=1).write(j)
+
+
+
+            #q = f"update wsf_noticias_secuencia set ult_id = {u} where ult_id = {ult_id}"
+            #request.cr.execute(q)
+            desde = ult_id
             hasta = u
         else:
-            q = f"insert into wsf_noticias_secuencia (ult_id) VALUES ({primer_medio + 5})"
-            request.cr.execute(q)
+            j = {'ult_id': primer_medio + 5}
+            self.env['wsf_noticias_secuencia'].create(j)
+
             desde = primer_medio
             hasta = primer_medio + 5
 
