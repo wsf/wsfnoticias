@@ -68,7 +68,7 @@ def _log(dato):
 
 
 wsf_noticias_norep = []
-resultados = []
+
 norepe2 = []
 
 class Medios(models.Model):
@@ -94,6 +94,8 @@ class Medios(models.Model):
     resultado2 = fields.Html(default='<h1> Labo2 </h1')
     departamento = fields.Char('Departamento')
 
+    resultados = []
+
     def xmlrpc(self):
         xmlrpc22()
     def verificar_notep(self):
@@ -115,11 +117,10 @@ class Medios(models.Model):
             print(str(e))
 
 
-
     def verificar_resultados(self):
         # recorro resultados
         try:
-            for r in resultados:
+            for r in self.resultados:
                 try:
                     link = r['link']
                     condi = [('link','=',link)]
@@ -129,6 +130,13 @@ class Medios(models.Model):
                 except Exception as e:
                     print(e)
 
+        except Exception as e:
+            print(str(e))
+
+
+    def grabar_resultados(self):
+        try:
+            self.env['wsf_noticias_resultados'].sudo().create(self.resultados)
         except Exception as e:
             print(str(e))
 
@@ -182,8 +190,6 @@ class Medios(models.Model):
 
         enviar_telegram_estadistica(mensaje)
 
-
-
     @api.model
     def scrap_importancia_nuevo(self):
         self.scrap_noticias('nuevo')
@@ -191,38 +197,42 @@ class Medios(models.Model):
     @api.model
     def scrap_importancia_cat1(self):
         self.scrap_noticias('cat1')
-        self.verificar_resultados()
+        self.grabar_resultados()
 
 
     @api.model
     def scrap_importancia_cat2(self):
         self.scrap_noticias('cat2')
-        self.verificar_resultados()
+        self.grabar_resultados()
 
+
+    @api.model
+    def scrap_importancia_cat3(self):
+        self.scrap_noticias('cat3')
+        self.grabar_resultados()
 
     @api.model
     def scrap_importancia_baja(self):
         self.scrap_noticias('baja')
-        self.verificar_resultados()
+        self.grabar_resultados()
 
 
     @api.model
     def scrap_importancia_alta(self):
         self.scrap_noticias('alta')
-        self.verificar_resultados()
-
+        self.grabar_resultados()
 
     @api.model
     def scrap_importancia_media(self):
         self.scrap_noticias('media')
-        self.verificar_resultados()
+        self.grabar_resultados()
 
 
     @api.model
     def scrap_importancia_todos(self):
         self.scrap_noticias('todos')
         self.verificar_resultados()
-        self.verificar_notep()
+        self.grabar_resultados()
 
     @api.model
     def scrap_noticias(self, importancia="todos", tipo="", pagina=""):
@@ -232,26 +242,14 @@ class Medios(models.Model):
 
         filtro_importancia = []
 
-        if importancia == 'baja':
-            filtro_importancia = [('importancia', '=', 'baja')]
-        elif importancia == 'media':
-            filtro_importancia = [('importancia', '=', 'media')]
-        elif importancia == 'alta':
-            filtro_importancia = [('importancia', '=', 'alta')]
-        elif importancia == 'prueba':
-            filtro_importancia = [('importancia', '=', 'prueba')]
-        elif importancia == 'cat1':
-            filtro_importancia = [('importancia', '=', 'cat1')]
-        elif importancia == 'cat2':
-            filtro_importancia = [('importancia', '=', 'cat2')]
-        elif importancia == 'nuevo':
-            filtro_importancia = [('importancia', '=', 'nuevo')]
+        if importancia:
+            filtro_importancia = [('importancia', '=', importancia)]
         else:
             filtro_importancia = []
 
         all_records = self.env['wsf_noticias_medios'].search(filtro_importancia,order='medio asc')
 
-        all_records_resultados = self.env['wsf_noticias_resultados'].search([])
+        #all_records_resultados = self.env['wsf_noticias_resultados'].search([])
 
         for rec in all_records:
 
@@ -283,20 +281,15 @@ class Medios(models.Model):
                     }
                 }
                 lista_termninos = []
-
-                # las reglas se aplican para todos. No para un medio particular
-                """
-                for t in rec.regla.terminos_and:
-                    lista_termninos.append(t.name)
-                """
-                # Iterar por cada pagina de noticias
-
-
                 contador = 1
                 if rec.estado == 'on':
+
                     for pagina, valor in paginas.items():
                         # Checar si hay un link rss en el json para darle prioridad
                         if 'rss' in valor and valor['rss'] != False:
+
+
+
                             v = fp.parse(valor['rss'])
                             print("Descargando articulos de: ",
                                   pagina)  # Se crea un diccionario con la palabra reservada newspaper jalando los datos de nuestro json
@@ -404,36 +397,31 @@ class Medios(models.Model):
 
                                         else:
 
-                                            # Gruardo la Noticia
-                                            _log(f"Guardando {str(article)}")
+                                            # Guardo la noticia
 
-                                            all_records_resultados.sudo().create(article)
-                                            resultados.appendarticle(article)
+                                            try:
 
-                                            medio += "\n- Reglas: " + article['regla2']
+                                                # **********************************************************
+                                                # self.env['wsf_noticias_resultados'].sudo().create(article)
+                                                self.resultados.append(article)
+                                                print("\n\n\n*** guardando ", str(article), "\n\n")
+                                                # **********************************************************
+                                            except Exception as e:
+                                                medio += " -" + str(e)
+
+                                            medio += "\n\n- Reglas: " + article['regla2']
                                             codigo += 1
                                             medio += "\n- Código: " + str(codigo)
 
-                                            notele = 0
+                                            self.fun_enviar_telegrama(telegram, medio, article)
 
-                                            jnorep = []
-                                            for tele in telegram:
-                                                if tele:
-                                                    if not telegram_norep(article['titulo'],article['link']):
-                                                        enviar_telegram(article, medio, tele)
-                                                else:
-                                                    notele += 1
-                                            if notele > 0:
-                                                if not telegram_norep(article['titulo'], article['link']):
-                                                    enviar_telegram(article, medio, tele)
-
+                                            _log(f"****** Guardando \n {medio} \n {str(article)} ")
 
                                         contador = contador + 1
 
                                 except Exception as e:
-                                    _log(f"Exception:  {str(e)}")
+                                    _log(f"Exception 310:  {str(e)}")
                                     print(e)
-
                         if 'link' in valor and valor['link'] != False:
 
                             url_medio = valor['link']
@@ -454,7 +442,7 @@ class Medios(models.Model):
                             for contenido in hoja.articles:  # recorre cada uno de los artículos
 
                                 if tipo  == "prueba":
-                                    limite = 50
+                                    limite = 10
                                 if contador > limite:
                                     break
                                 try:
@@ -474,7 +462,6 @@ class Medios(models.Model):
                                 r =  aplica_regla(contenido.title,contenido.text,contenido.meta_description, reglas)
 
                                 lista_reglas = r[0]
-
                                 telegram = r[2]
 
                                 if tipo == "prueba":
@@ -489,8 +476,8 @@ class Medios(models.Model):
 
                                 # noticia concreta
                                 article = {}
+
                                 article['titulo'] = contenido.title.replace('“',"").replace("'","").replace('"',"").strip()
-                                print(contenido.title)
                                 article['regla2'] = lista_reglas.replace("'set()'", "").replace("{", "").replace("}",
                                                                                                                  "").replace(
                                     "'", "").replace(",,","")
@@ -500,14 +487,14 @@ class Medios(models.Model):
 
                                 try:
                                     encontrado = self.env['wsf_noticias_resultados'].search(
-                                        [('link', '=', contenido.url)])
-
-                                    print(contenido.text)
+                                        ['|',('link', '=', contenido.url),('titulo','=',article['titulo'])])
 
                                     if encontrado and tipo !="prueba":
                                         _log(f"*** Noticia ya guadada {str(encontrado)}")
                                         continue
+
                                     else:
+                                        # !!!!!! No está grabada
                                         article['medio'] = rec.medio.id
                                         medio = rec.medio.name
 
@@ -527,6 +514,7 @@ class Medios(models.Model):
 
                                         if not condi:
                                             continue
+
                                         try:
                                             fecha2 = contenido.publish_date.strftime('%Y/%m/%d %H:%M:%S')
                                             article['fecha_hora'] = datetime.datetime.strptime(fecha2,
@@ -540,7 +528,6 @@ class Medios(models.Model):
                                             # si la fecha del articulo tiene mas de 3 días no lo tomo
                                             if not fecha_art.strftime('%Y/%m/%d') >=  fecha_hoy.strftime('%Y/%m/%d') and tipo != "prueba":
                                                 continue
-
                                         except Exception as e:
                                             try:
                                                 article['fecha_hora'] = datetime.datetime.strptime(fecha2,'%Y/%m/%d %H:%M:%S')
@@ -552,13 +539,13 @@ class Medios(models.Model):
 
                                         article['titulo'] = contenido.title.replace('"','').replace("'","").replace('“',"").strip()
 
-                                        #article['tipo'] = random.choice(['positiva','negativa','neutra','neutra'])
                                         article['tipo'] = sentimiento(contenido.title)
                                         article['departamento'] = rec.departamento
 
                                         try:
                                             article['nube'] = nube(contenido.text )[0:300]
                                             article['entidades'] = entidades(contenido.text )
+
                                         except Exception as e:
                                             _log(f"Exception 302:  {str(e)}")
 
@@ -570,72 +557,21 @@ class Medios(models.Model):
 
                                             # Guardo la noticia
 
-
                                             try:
 
-                                                self.env['wsf_noticias_resultados'].sudo().create(article)
-                                                resultados.append(article)
-
-                                                # verifico que se haya grabado
-                                                condi = [('link','=',article['link'])]
-
-                                                grabado = self.env['wsf_noticias_resultados'].sudo().search(condi)
-
-                                                if not grabado:
-
-                                                    article2 ={}
-
-                                                    article2['medio'] = article['medio']
-                                                    article2['link']=article['link']
-                                                    article2['departamento'] = article['departamento']
-                                                    article2['tipo'] = article['tipo']
-
-
-                                                    self.env['wsf_noticias_resultados'].sudo().create(article2)
-                                                else:
-                                                    # hago una marca en el telegram cuando no grabó
-                                                    medio += " ###"
-
+                                                #**********************************************************
+                                                #self.env['wsf_noticias_resultados'].sudo().create(article)
+                                                self.resultados.append(article)
+                                                print("\n\n\n*** guardando ", str(article), "\n\n")
+                                                #**********************************************************
                                             except Exception as e:
                                                 medio += " -" + str(e)
-
-                                            print(article['texto'])
 
                                             medio += "\n\n- Reglas: " + article['regla2']
                                             codigo += 1
                                             medio += "\n- Código: " + str(codigo)
 
-                                            # verifico que se haya grabado
-                                            condi = [('titulo', '=', article['titulo'])]
-
-                                            grabado = self.env['wsf_noticias_norep'].sudo().search(condi)
-                                            grabado2 =  article['titulo'] in wsf_noticias_norep
-
-                                            if not (grabado or grabado2):
-                                                norepe = {}
-                                                norepe['titulo']=article['titulo']
-
-                                                self.env['wsf_noticias_norep'].sudo().create(norepe)
-                                                wsf_noticias_norep.append(article['titulo'])
-
-                                                notele = 0
-
-                                                jnorep = []
-
-                                                for tele in telegram:
-                                                    if tele:
-                                                         if not telegram_norep(article['titulo'], article['link']):
-                                                            enviar_telegram(article, medio, tele)
-                                                    else:
-                                                        notele += 1
-                                                if notele > 0:
-                                                    if not telegram_norep(article['titulo'], article['link']):
-                                                        enviar_telegram(article, medio, tele)
-
-
-                                            else:
-                                                # encontró noticias repetidas
-                                                pass
+                                            self.fun_enviar_telegrama(telegram, medio, article)
 
                                             _log(f"****** Guardando \n {medio} \n {str(article)} ")
 
@@ -651,3 +587,21 @@ class Medios(models.Model):
             except Exception as e:
                 print(str(e))
                 pass
+
+
+    def fun_enviar_telegrama(self,telegram, medio,article):
+
+        notele = 0
+
+        for tele in telegram:
+            if tele:
+                if not telegram_norep(article['titulo'], article['link']):
+                    enviar_telegram(article, medio, tele)
+            else:
+                notele += 1
+
+        if notele > 0:
+            if not telegram_norep(article['titulo'], article['link']):
+                enviar_telegram(article, medio)
+        else:
+            pass
