@@ -2,7 +2,7 @@
 <odoo>
     <data>
         <!--Defino una Categoría de seguridad para el módulo-->
-        <record model="ir.module.category" id="module_pricai">
+        <record model="ir.module.category" id="module_noticias">
             <field name="name">Noticias</field>
             <field name="description">Nivel de acceso para el modulo Noticias</field>
         </record>
@@ -11,159 +11,31 @@
 
         <record id="noticias_analista" model="res.groups">
             <field name="name">Analista de Noticias</field>
-            <field name="category_id" ref="module_wsf_noticias"/>
+            <field name="category_id" ref="module_noticias"/>
         </record>
 
 
-        <!--Defino Grupo Directores de Laboratorio-->
+        <!--Defino Grupo de Operadores-->
 
-        <record id="pricai_director_general" model="res.groups">
-            <field name="name">Director Pricai</field>
-            <field name="category_id" ref="module_pricai"/>
+        <record id="noticias_operadores" model="res.groups">
+            <field name="name">Operadores de Noticias</field>
+            <field name="category_id" ref="module_noticias"/>
         </record>
 
+        <!-- Reglas de dominiopara cada Grupo -->
 
-        <!--Defino Grupo Usuario Jefe -->
-
-        <record id="pricai_jefe" model="res.groups">
-            <field name="name">Jefe Medico</field>
-            <field name="category_id" ref="module_pricai"/>
-        </record>
-
-        <!--Defino Grupo Usuario Operarios -->
-
-        <record id="pricai_operarios" model="res.groups">
-            <field name="name">Tecnico</field>
-            <field name="category_id" ref="module_pricai"/>
-        </record>
-
-        <!--Defino Grupo Usuario Directores -->
-
-        <record id="pricai_directores" model="res.groups">
-            <field name="name">Jefe Laboratorio</field>
-            <field name="category_id" ref="module_pricai"/>
-        </record>
-
-        <record id="ir_rule_busqueda_filtro_jefes_operating_units" model="ir.rule">
-            <field name="model_id" ref="pricai.model_busqueda_cross_match"/>
-            <field name="domain_force">[('create_uid.default_operating_unit_id.id', '=' ,
-                user.default_operating_unit_id.id)]
+        <record id="ir_rule_operador" model="ir.rule">
+            <field name="model_id" ref="noticias.model_wsf_noticias_resultados"/>
+            <field name="domain_force">[('valorar', '=' ,
+                'Verificada')]
             </field>
-            <field name="name">Filtro para que los jefes vean solo lo de su operating units</field>
+            <field name="name">Los operadores pueden ver solo las noticias Verificadas</field>
             <field eval="0" name="perm_unlink"/>
             <field eval="0" name="perm_write"/>
             <field eval="1" name="perm_read"/>
             <field eval="0" name="perm_create"/>
-            <field name="groups" eval="[(4, ref('pricai.pricai_jefe')), (4, ref('pricai.pricai_medicos'))]"/>
+            <field name="groups" eval="[(4, ref('noticias.noticias_operadores'))]"/>
             <!--        <field name="global" eval="True" />-->
-        </record>
-
-        <record id="ir_rule_busqueda_filtro_medicos_pacientes" model="ir.rule">
-            <field name="model_id" ref="pricai.model_pacientes_cross_match"/>
-            <field name="domain_force">[('unidad_operativa_id', '=' , user.default_operating_unit_id.id)]</field>
-            <field name="name">Ale-1- Filtro para que los médicos vean los pacientes que están dentro de sus equipos
-            </field>
-            <field eval="0" name="perm_unlink"/>
-            <field eval="0" name="perm_write"/>
-            <field eval="1" name="perm_read"/>
-            <field eval="0" name="perm_create"/>
-            <field name="groups" eval="[(4, ref('pricai.pricai_medicos'))]"/>
-            <!--        <field name="global" eval="True" />-->
-        </record>
-
-        <record id="ir_rule_busqueda_filtro_medicos_pacientes" model="ir.rule">
-            <field name="model_id" ref="pricai.model_pacientes_cross_match"/>
-            <field name="domain_force">[('unidad_operativa_id', '=' , user.default_operating_unit_id.id)]</field>
-            <field name="name">Ale-11- Filtro para que los jefes médicos vean los pacientes que están dentro de sus
-                equipos
-            </field>
-            <field eval="0" name="perm_unlink"/>
-            <field eval="0" name="perm_write"/>
-            <field eval="1" name="perm_read"/>
-            <field eval="0" name="perm_create"/>
-            <field name="groups" eval="[(4, ref('pricai.pricai_jefe'))]"/>
-            <!--        <field name="global" eval="True" />-->
-        </record>
-
-        <record id="ir_rule_busqueda_filtro_tecnicos_operating_units" model="ir.rule">
-            <field name="model_id" ref="pricai.model_busqueda_cross_match"/>
-            <field name="domain_force">[(1, '=' , 1)]</field>
-            <field name="name">Ale-2- Filtro para que los opeadores vean todas las busquedas
-            </field>
-            <field eval="1" name="perm_unlink"/>
-            <field eval="1" name="perm_write"/>
-            <field eval="1" name="perm_read"/>
-            <field eval="1" name="perm_create"/>
-            <field name="groups" eval="[(4, ref('pricai.pricai_operarios'))]"/>
-        </record>
-
-        <record id="ir_rule_busqueda_filtro_medico_documentos_propios" model="ir.rule">
-            <field name="model_id" ref="pricai.model_busqueda_cross_match"/>
-            <field name="domain_force">[('create_uid.id', '=' , user.id)]</field>
-            <field name="name">Filtro para que los medicos vean solo lo que ellos crearon en el cross</field>
-            <field eval="0" name="perm_unlink"/>
-            <field eval="0" name="perm_write"/>
-            <field eval="1" name="perm_read"/>
-            <field eval="0" name="perm_create"/>
-            <field name="groups" eval="[(4, ref('pricai.pricai_medicos'))]"/>
-            <!--        <field name="global" eval="True" />-->
-        </record>
-
-        <record id="ir_rule_busqueda_filtro_medico_muestra_propios22" model="ir.rule">
-            <field name="model_id" ref="pricai.model_muestras_cross_match"/>
-            <field name="domain_force">[('equipo', '=' , user.default_operating_unit_id.name)]</field>
-            <field name="name">Ale -34- Filtro para que los jefes médicos vean solo la muestras de su equipo</field>
-            <field eval="0" name="perm_unlink"/>
-            <field eval="0" name="perm_write"/>
-            <field eval="1" name="perm_read"/>
-            <field eval="0" name="perm_create"/>
-            <field name="groups" eval="[(4, ref('pricai.pricai_jefe'))]"/>
-        </record>
-
-        <record id="ir_rule_busqueda_filtro_fejes_muestra_propios22" model="ir.rule">
-            <field name="model_id" ref="pricai.model_muestras_cross_match"/>
-            <field name="domain_force">[('equipo', '=' , user.default_operating_unit_id.name)]</field>
-            <field name="name">Ale -33- Filtro para que los medicos vean solo la muestras de su equipo</field>
-            <field eval="0" name="perm_unlink"/>
-            <field eval="0" name="perm_write"/>
-            <field eval="1" name="perm_read"/>
-            <field eval="0" name="perm_create"/>
-            <field name="groups" eval="[(4, ref('pricai.pricai_medicos'))]"/>
-        </record>
-
-
-        <record id="ir_rule_busqueda_filtro_directores_lab" model="ir.rule">
-            <field name="model_id" ref="pricai.model_busqueda_cross_match"/>
-            <field name="domain_force">[(1, '=' , 1)]</field>
-            <field name="name">Filtro para que los jefes de lab vean todo</field>
-            <field eval="1" name="perm_unlink"/>
-            <field eval="1" name="perm_write"/>
-            <field eval="1" name="perm_read"/>
-            <field eval="1" name="perm_create"/>
-            <field name="groups" eval="[(4, ref('pricai.pricai_directores'))]"/>
-        </record>
-
-                <record id="ir_rule_busqueda_filtro_directores" model="ir.rule">
-            <field name="model_id" ref="pricai.model_muestras_cross_match"/>
-            <field name="domain_force">[(1, '=' , 1)]</field>
-            <field name="name">Filtro para que los jefes de lab vean todo</field>
-            <field eval="1" name="perm_unlink"/>
-            <field eval="1" name="perm_write"/>
-            <field eval="1" name="perm_read"/>
-            <field eval="1" name="perm_create"/>
-            <field name="groups" eval="[(4, ref('pricai.pricai_directores'))]"/>
-        </record>
-
-
-        <record id="ir_rule_muestras_filtro_directores" model="ir.rule">
-            <field name="model_id" ref="pricai.model_busqueda_cross_match"/>
-            <field name="domain_force">[(1, '=' , 1)]</field>
-            <field name="name">Filtro para que los directores generales vean todo vean todo</field>
-            <field eval="1" name="perm_unlink"/>
-            <field eval="1" name="perm_write"/>
-            <field eval="1" name="perm_read"/>
-            <field eval="1" name="perm_create"/>
-            <field name="groups" eval="[(4, ref('pricai.pricai_director_general'))]"/>
         </record>
 
     </data>
