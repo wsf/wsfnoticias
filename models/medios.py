@@ -71,6 +71,12 @@ wsf_noticias_norep = []
 
 norepe2 = []
 
+class Secuencia(models.Model):
+    _name = "wsf_noticias_secuencia"
+    _description = "lleva el secuencia de ejecucion"
+    ult_id = fields.Integer()
+
+
 class Medios(models.Model):
     _name = "wsf_noticias_medios"
     _description = "modelo para ingresar las páginas"
@@ -249,6 +255,45 @@ class Medios(models.Model):
 
         all_records = self.env['wsf_noticias_medios'].search(filtro_importancia,order='medio asc')
 
+        # averiguo valor de secuencia en el campo ult_id
+
+        q = "select max(id) as dato from wsf_noticias_medios"
+        request.cr.execute(q)
+        ult_medio = request.cr.fetchall()[0][0]
+
+        q = "select min(id) as dato from wsf_noticias_medios"
+        request.cr.execute(q)
+        primer_medio  = request.cr.fetchall()[0][0]
+
+        q = "select ult_id as dato from wsf_noticias_secuencia "
+        request.cr.execute(q)
+        ult_id = request.cr.fetchall()
+
+        desde = 0
+        hasta = 0
+
+        if ult_id:
+            u = ult_id[0][0]
+            u +=5
+            if u > ult_medio:
+                u=primer_medio
+                hasta = ult_medio
+                desde = ult_id[0][0]
+
+            q = f"update wsf_noticias_secuencia set ult_id = {u} where ult_id = {ult_id[0][0]}"
+            request.cr.execute(q)
+            desde = ult_id[0][0]
+            hasta = u
+        else:
+            q = f"insert into wsf_noticias_secuencia (ult_id) VALUES ({primer_medio + 5})"
+            request.cr.execute(q)
+            desde = primer_medio
+            hasta = primer_medio + 5
+
+        filtro_importancia = [('id','>=',desde),('id','<=',hasta)]
+
+        all_records = self.env['wsf_noticias_medios'].search(filtro_importancia, order='medio asc')
+
         #all_records_resultados = self.env['wsf_noticias_resultados'].search([])
 
         for rec in all_records:
@@ -260,7 +305,8 @@ class Medios(models.Model):
                     self.prueba = "Comenzando a tomar información del portal a las: " + datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S') + "\n\n"
                     self.reglas = "Comenzando a visualizar las reglas: " + datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S') + "\n\n"
             else:
-                if not (rec.estado == 'on' and rec.importancia == importancia):
+                #if not (rec.estado == 'on' and rec.importancia == importancia):
+                if not (rec.estado == 'on'):
                     continue
 
 
