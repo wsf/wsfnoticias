@@ -417,11 +417,12 @@ class Medios(models.Model):
                                         try:
 
                                             fecha2 = contenido.publish_date.strftime('%Y/%m/%d %H:%M:%S')
-                                            article['fecha_hora'] = datetime.datetime.strptime(fecha2,'%Y/%m/%d %H:%M:%S')
+                                            #article['fecha_hora'] = datetime.datetime.strptime(fecha2,'%Y/%m/%d %H:%M:%S')
 
                                             # sila fecha del artículo es antigua (3 dias) lo descarta
                                             fecha_art = contenido.publish_date
 
+                                            # Le resto 3 días a la fecha de hoy
                                             fecha_hoy = datetime.datetime.now(IST) - datetime.timedelta(days=3)
 
                                             # si la fecha del articulo tiene mas de 3 días no lo tomo
@@ -430,7 +431,8 @@ class Medios(models.Model):
 
                                         except Exception as e:
                                             try:
-                                                article['fecha_hora'] = datetime.datetime.strptime(fecha2,'%Y/%m/%d %H:%M:%S')
+                                                if fecha2:
+                                                    article['fecha_hora'] = datetime.datetime.strptime(fecha2,'%Y/%m/%d %H:%M:%S')
                                             except Exception as e:
                                                 _log(f"Exception: 208  {str(e)}")
                                                 pass
@@ -580,7 +582,8 @@ class Medios(models.Model):
                                                 continue
                                         except Exception as e:
                                             try:
-                                                article['fecha_hora'] = datetime.datetime.strptime(fecha2,'%Y/%m/%d %H:%M:%S')
+                                                print(str(e))
+                                                # article['fecha_hora'] = datetime.datetime.strptime(fecha2,'%Y/%m/%d %H:%M:%S')
                                             except Exception as ee:
                                                 _log(f"Exception 287:  {str(ee)}")
                                                 pass
