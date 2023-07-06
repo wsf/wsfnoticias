@@ -10,7 +10,8 @@ import os
 import datetime
 from odoo.http import request
 import xmlrpc.client
-
+import pytz
+IST = pytz.timezone('America/Argentina/Buenos_Aires')
 
 
 def xmlrpc22():
@@ -62,7 +63,7 @@ def _log(dato):
     return
     nombre = os.path.dirname(__file__) + '/medio.log'
     log = open(nombre, 'a')
-    dato = "- Log: " + str(datetime.datetime.now()) + " ---> " + dato
+    dato = "- Log: " + str(datetime.datetime.now(IST)) + " ---> " + dato
     log.write(dato + '\n')
     log.close()
 
@@ -168,8 +169,8 @@ class Medios(models.Model):
         # filtar las noticias del día
 
 
-        condi = [('fecha_registro', '>=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')),
-                  ('fecha_registro', '<=', datetime.datetime.now().strftime('%Y-%m-%d 23:59:59'))]
+        condi = [('fecha_registro', '>=', datetime.datetime.now(IST).strftime('%Y-%m-%d 00:00:00')),
+                  ('fecha_registro', '<=', datetime.datetime.now(IST).strftime('%Y-%m-%d 23:59:59'))]
 
         #rec = self.env['wsf_noticias_resultados'].search(condi)
 
@@ -305,8 +306,8 @@ class Medios(models.Model):
                 if  rec.pagina_web != pagina and  rec.pagina_rss != pagina:
                     continue
                 else:
-                    self.prueba = "Comenzando a tomar información del portal a las: " + datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S') + "\n\n"
-                    self.reglas = "Comenzando a visualizar las reglas: " + datetime.datetime.now().strftime('%Y/%m/%d %H:%M:%S') + "\n\n"
+                    self.prueba = "Comenzando a tomar información del portal a las: " + datetime.datetime.now(IST).strftime('%Y/%m/%d %H:%M:%S') + "\n\n"
+                    self.reglas = "Comenzando a visualizar las reglas: " + datetime.datetime.now(IST).strftime('%Y/%m/%d %H:%M:%S') + "\n\n"
             else:
                 #if not (rec.estado == 'on' and rec.importancia == importancia):
                 if not (rec.estado == 'on'):
@@ -421,7 +422,7 @@ class Medios(models.Model):
                                             # sila fecha del artículo es antigua (3 dias) lo descarta
                                             fecha_art = contenido.publish_date
 
-                                            fecha_hoy = datetime.datetime.now() - datetime.timedelta(days=3)
+                                            fecha_hoy = datetime.datetime.now(IST) - datetime.timedelta(days=3)
 
                                             # si la fecha del articulo tiene mas de 3 días no lo tomo
                                             if not fecha_art.strftime('%Y/%m/%d') >=  fecha_hoy.strftime('%Y/%m/%d') and tipo != "prueba":
@@ -572,7 +573,7 @@ class Medios(models.Model):
                                             # sila fecha del artículo es antigua (3 dias) lo descarta
                                             fecha_art = contenido.publish_date
 
-                                            fecha_hoy = datetime.datetime.now() - datetime.timedelta(days=3)
+                                            fecha_hoy = datetime.datetime.now(IST) - datetime.timedelta(days=3)
 
                                             # si la fecha del articulo tiene mas de 3 días no lo tomo
                                             if not fecha_art.strftime('%Y/%m/%d') >=  fecha_hoy.strftime('%Y/%m/%d') and tipo != "prueba":
