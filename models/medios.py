@@ -270,7 +270,7 @@ class Medios(models.Model):
 
         if ult_id:
             u = ult_id
-            u +=5
+            u +=7
             if u > ult_medio:
                 u=primer_medio
                 hasta = ult_medio
@@ -288,11 +288,11 @@ class Medios(models.Model):
             desde = ult_id
             hasta = u
         else:
-            j = {'ult_id': primer_medio + 5}
+            j = {'ult_id': primer_medio + 7}
             self.env['wsf_noticias_secuencia'].create(j)
 
             desde = primer_medio
-            hasta = primer_medio + 5
+            hasta = primer_medio + 7
 
         filtro_importancia = [('id','>=',desde),('id','<=',hasta)]
 
