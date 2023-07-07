@@ -15,7 +15,7 @@ def limpiar_texto(texto):
     return r
 
 
-def enviar_telegram(article,medio="Medio", chat_id = '-918982585',bot_token = '6197272098:AAFfoTbrGSXwXm20KFPB-1B-rb1EHveCYBM' ):
+def enviar_telegram(article,medio=" Medio", chat_id = '-918982585',bot_token = '6197272098:AAFfoTbrGSXwXm20KFPB-1B-rb1EHveCYBM' ):
 
     try:
         # armo el texto a enviar con article:
@@ -28,17 +28,15 @@ def enviar_telegram(article,medio="Medio", chat_id = '-918982585',bot_token = '6
         message += "\n-- \n"
         message += article['titulo'].upper()
         message += "\n--\n"
+        message += article['tipo'].upper()
 
-        #message += article['tipo'].upper()
-
-        """
         if article['tipo'].upper() == "NEGATIVA":
             message += " 🔴🔴🔴🔴🔴🔴"
         elif article['tipo'].upper() == "POSITIVA":
             message += " 🟢🟢🟢🟢🟢🟢"
         else:
             message += " 🟡🟡🟡🟡🟡🟡"
-        """
+
 
         message += "\n\n"
         message += article['link']
@@ -330,25 +328,6 @@ def telegram_norep_init():
 
 #telegram_norep_init()
 
-def depurar_no_rep():
-    yymm =  datetime.datetime.now().strftime('%Y%m')
-    ano = yymm[0:4]
-    mes = int(yymm[4:6]) - 1
-    mes2 = int(yymm[4:6]) - 2
-
-    yymm1 = ""
-    yymm2 = ""
-
-    print(yymm)
-    nombre = os.path.dirname(__file__) + '/telegram_norep.db'
-    conexion = sqlite3.connect(nombre)
-    cursor = conexion.cursor()
-
-    q = f"delete from norep where  fecha = '{yymm1}' or fecha = '{yymm2}'"
-    cursor.execute(q)
-    conexion.commit()
-
-
 import os
 def telegram_norep(titulo,link):
 
@@ -378,47 +357,23 @@ def telegram_listar():
     nombre = os.path.dirname(__file__) + '/telegram_norep.db'
     conexion = sqlite3.connect(nombre)
     cursor = conexion.cursor()
-    q = "select fecha, titulo from norep"
+    q = "select * from norep"
     cursor.execute(q)
     resultados=cursor.fetchall()
     for r in resultados:
         print(r)
 
-import sys
-
-def main():
-
-    try:
-        parametro = sys.argv[1]
-        fecha = sys.argv[2]
-
-        if parametro == "borrar":
-
-            nombre = os.path.dirname(__file__) + '/telegram_norep.db'
-            conexion = sqlite3.connect(nombre)
-            cursor = conexion.cursor()
-
-            telegram_listar()
-
-
-            q = f"delete from norep where fecha = '{fecha}'"
-            cursor.execute(q)
-            conexion.commit()
-    except:
-        pass
-
-
 
 if __name__ == "__main__":
     #telegram_norep_add_autoincrement()
     #telegram_listar()
-    #r =  sentimiento("Esta es una frase positiva y linda")
-    #print(r)
-    main()
+    r =  sentimiento("Esta es una frase positiva y linda")
+    print(r)
 
-depurar_no_rep()
+
 
 #r  = telegram_norep('t1','l1')
 #r2  = telegram_norep('t5','l5')
 #print(r,r2)
+
 
