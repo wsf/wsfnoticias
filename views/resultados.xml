@@ -95,7 +95,7 @@
     </record>
     <!--fin tree-->
      <!-- inicio search -->
-    <record id="wsf_noticias_resultados_search" model="ir.ui.view">
+    <record id="wsf_noticias_resultados_search2" model="ir.ui.view">
         <field name="name">Resultados</field>
         <field name="model">wsf_noticias_resultados</field>
         <field name="arch" type="xml">
