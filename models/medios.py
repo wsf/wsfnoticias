@@ -143,7 +143,8 @@ class Medios(models.Model):
 
     def grabar_resultados(self):
         try:
-            self.env['wsf_noticias_resultados'].sudo().create(self.resultados)
+            if self.resultados:
+                self.env['wsf_noticias_resultados'].sudo().create(self.resultados)
         except Exception as e:
             print(str(e))
 
