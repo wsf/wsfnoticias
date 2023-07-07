@@ -7,6 +7,9 @@ import re
 # https://api.telegram.org/bot6197272098:AAFfoTbrGSXwXm20KFPB-1B-rb1EHveCYBM/getUpdates
 
 
+
+
+
 def limpiar_texto(texto):
     r = texto.replace("'","").replace('"',"")
     return r
