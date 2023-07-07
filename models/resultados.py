@@ -19,6 +19,8 @@ class Norep(models.Model):
             rec.fecha_registro = datetime.strptime(fecha, '%Y/%m/%d %H:%M:%S')
 
 
+
+
 class Resultados(models.Model):
     _name = "wsf_noticias_resultados"
     _description = "modelo para guardar los resultados"
