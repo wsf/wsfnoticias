@@ -303,6 +303,8 @@ class Medios(models.Model):
 
             for rec in all_records:
 
+                print("\n\n**********\nTomando el medio: ", rec.medio, "\n****\n" )
+
                 if tipo == "prueba":
                     if  rec.pagina_web != pagina and  rec.pagina_rss != pagina:
                         continue
@@ -402,10 +404,10 @@ class Medios(models.Model):
                                         else:
                                             medio = rec.medio.name
                                             article['medio'] = rec.medio.id
-                                            article['copete'] = contenido.meta_description.contenido.text.replace('"','').replace("'","")  ##
-                                            article['texto'] = contenido.text.contenido.text.replace('"','').replace("'","")
+                                            #article['copete'] = contenido.meta_description.contenido.text.replace('"','').replace("'","")  ##
+                                            article['texto'] = contenido.text.replace('"','').replace("'","")
                                             article['link'] = contenido.url.strip()
-                                            article['tipo'] = sentimiento(contenido.title.contenido.text.replace('"','').replace("'",""))
+                                            article['tipo'] = sentimiento(contenido.title.replace('"','').replace("'",""))
                                             article['departamento'] = rec.departamento
 
                                             try:
@@ -492,15 +494,24 @@ class Medios(models.Model):
 
                                 # hoja.articles -> obtiene una lista con todos los artículos del portal que está visitando (escrapeando)
                                 codigo = 0
+
+
                                 for contenido in hoja.articles:  # recorre cada uno de los artículos
+
+                                    print("\n\n**********\nContenido: ", str(contenido), "\n****\n")
 
                                     if tipo  == "prueba":
                                         limite = 10
                                     if contador > limite:
+                                        print("Sale - Sale - Sale")
                                         break
                                     try:
                                         contenido.download()
                                         contenido.parse()
+
+                                        print("\n\n------------\nContenido download title: ", contenido.title, "\n-----\n")
+
+
 
                                     except Exception as e:
                                         _log(f"Exception:  {str(e)}")
@@ -543,6 +554,8 @@ class Medios(models.Model):
                                             ['|',('link', '=', contenido.url),('titulo','=',article['titulo'])])
 
                                         if encontrado and tipo !="prueba":
+                                            print("XXXXXXXX Descartada por EXISTIR")
+
                                             _log(f"*** Noticia ya guadada {str(encontrado)}")
                                             continue
 
@@ -566,6 +579,9 @@ class Medios(models.Model):
 
 
                                             if not condi:
+
+                                                print("XXXXXXXX Descartada por REGLA")
+
                                                 continue
 
                                             try:
@@ -580,6 +596,7 @@ class Medios(models.Model):
 
                                                 # si la fecha del articulo tiene mas de 3 días no lo tomo
                                                 if not fecha_art.strftime('%Y/%m/%d') >=  fecha_hoy.strftime('%Y/%m/%d') and tipo != "prueba":
+                                                    print("XXXXXXXX Descartada por fecha")
                                                     continue
                                             except Exception as e:
                                                 try:
@@ -662,3 +679,8 @@ class Medios(models.Model):
                 enviar_telegram(article, medio)
         else:
             pass
+
+
+
+
+
