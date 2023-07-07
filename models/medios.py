@@ -583,11 +583,11 @@ class Medios(models.Model):
                                         except Exception as e:
                                             try:
                                                 print(str(e))
-                                                continue
+                                                pass
                                                 # article['fecha_hora'] = datetime.datetime.strptime(fecha2,'%Y/%m/%d %H:%M:%S')
                                             except Exception as ee:
                                                 _log(f"Exception 287:  {str(ee)}")
-                                                continue
+                                                pass
                                             print(str(e))
                                             pass
 
@@ -625,7 +625,8 @@ class Medios(models.Model):
                                             codigo += 1
                                             medio += "\n- Código: " + str(codigo)
 
-                                            self.fun_enviar_telegrama(telegram, medio, article)
+                                            if 'fecha_hora' in article.keys():
+                                                self.fun_enviar_telegrama(telegram, medio, article)
 
                                             _log(f"****** Guardando \n {medio} \n {str(article)} ")
 
