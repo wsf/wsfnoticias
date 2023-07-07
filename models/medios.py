@@ -583,10 +583,11 @@ class Medios(models.Model):
                                         except Exception as e:
                                             try:
                                                 print(str(e))
+                                                continue
                                                 # article['fecha_hora'] = datetime.datetime.strptime(fecha2,'%Y/%m/%d %H:%M:%S')
                                             except Exception as ee:
                                                 _log(f"Exception 287:  {str(ee)}")
-                                                pass
+                                                continue
                                             print(str(e))
                                             pass
 
