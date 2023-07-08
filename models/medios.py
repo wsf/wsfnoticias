@@ -199,10 +199,25 @@ class Medios(models.Model):
             print(str(e))
 
 
+    def remove_duplicate_record(self):
+            model = self.env['wsf_noticias_resultados']
+            records = model.read_group([],['link'], groupby=['link'])
+            for r in records:
+
+                if r['link_count'] > 1:
+                   condi = [('link','=',r['link'])]
+                   rr = self.env['wsf_noticias_resultados'].search(condi)[1:]
+                   l  = [rrr.id for rrr in rr]
+                   self.env['wsf_noticias_resultados'].search([('id', 'in', l)]).unlink()
+
+
     def grabar_resultados(self):
         try:
             if self.resultados:
                 self.env['wsf_noticias_resultados'].sudo().create(self.resultados)
+
+            self.remove_duplicate_record()
+
         except Exception as e:
             print(str(e))
 
