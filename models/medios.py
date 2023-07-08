@@ -75,7 +75,8 @@ norepe2 = []
 class Secuencia(models.Model):
     _name = "wsf_noticias_secuencia"
     _description = "lleva el secuencia de ejecucion"
-    ult_id = fields.Integer()
+    ult_id = fields.Integer("Ult ID")
+    importancia = fields.Char("Importancia")
 
 
 class Medios(models.Model):
@@ -104,12 +105,14 @@ class Medios(models.Model):
     resultados = []
 
 
-    def segmento(self, records):
+    def segmento(self, records, importancia = "alta"):
 
         ult_medio = len(records)
         primer_medio = 0
 
-        ult_id = self.env['wsf_noticias_secuencia'].search([])
+        condi_secuencia = [('importancia', '=', importancia)]
+
+        ult_id = self.env['wsf_noticias_secuencia'].search(condi_secuencia)
 
 
         desde = 0
@@ -125,18 +128,25 @@ class Medios(models.Model):
                 u = primer_medio
                 hasta = ult_medio
                 desde = hasta  - DELTA
+                if desde < 0:
+                    desde = 0
                 ult_id = desde
 
             j = {'ult_id': u}
 
-            obj = self.env['wsf_noticias_secuencia'].search([], limit=1).write(j)
+            obj = self.env['wsf_noticias_secuencia'].search(condi_secuencia, limit=1).write(j)
 
             # q = f"update wsf_noticias_secuencia set ult_id = {u} where ult_id = {ult_id}"
             # request.cr.execute(q)
 
             hasta = desde + DELTA
         else:
-            j = {'ult_id': primer_medio + DELTA}
+
+            # TODO: segun la importancia es el registro que agrego
+
+            j = {'ult_id': primer_medio + DELTA,
+                 'importancia':importancia}
+
             self.env['wsf_noticias_secuencia'].create(j)
 
             desde = primer_medio
@@ -296,8 +306,8 @@ class Medios(models.Model):
         else:
             filtro_importancia = []
 
-        all_records = self.env['wsf_noticias_medios'].search([('estado','=','on')],order="id asc")
-        all_records =  self.segmento(all_records)
+        all_records = self.env['wsf_noticias_medios'].search([('estado','=','on'),('importancia','=',importancia)],order="id asc")
+        all_records =  self.segmento(all_records,importancia)
 
         try:
 
