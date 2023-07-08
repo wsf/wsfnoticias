@@ -89,7 +89,7 @@ class Medios(models.Model):
     pagina_web = fields.Char('Pagina Web:' , tracking=True)
     pagina_rss = fields.Char('Pagina rss:', tracking=True)
     regla = fields.Many2one('wsf_noticias_reglas')
-    importancia = fields.Selection([('baja', 'Baja'), ('media', 'Media'), ('alta', 'Alta'),('prueba', 'Prueba'),('nuevo','Nuevo'),('cat1','Categoría #1'),('cat2','Categoría #2'),('cat3','Categoría #3')])
+    importancia = fields.Selection([('baja', 'Baja'), ('media', 'Media'), ('alta', 'Alta'),('prueba', 'Prueba'),('nuevo','Nuevo'),('cat1','Categoría #1'),('cat2','Categoría #2'),('cat3','Categoría #3'),('rss','RSS')])
     pauta = fields.Float('Pauta')
     estado = fields.Selection([('on', 'ON'), ('off', 'OFF')], required=True)
     puntuacion = fields.Char('Puntuacion')
@@ -291,6 +291,11 @@ class Medios(models.Model):
     @api.model
     def scrap_importancia_media(self):
         self.scrap_noticias('media')
+        self.grabar_resultados()
+
+    @api.model
+    def scrap_importancia_rss(self):
+        self.scrap_noticias('rss')
         self.grabar_resultados()
 
 
