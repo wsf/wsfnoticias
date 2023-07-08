@@ -19,6 +19,7 @@
             <tree multi_edit="1">
 <!--                <field name="medio"/>-->
                 <field name="ult_id"/>
+                <field name="importancia"/>
 
             </tree>
         </field>
