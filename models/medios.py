@@ -106,53 +106,60 @@ class Medios(models.Model):
 
 
     def segmento(self, records, importancia = "alta"):
+        try:
+            ult_medio = len(records)
+            primer_medio = 0
 
-        ult_medio = len(records)
-        primer_medio = 0
+            condi_secuencia = [('importancia', '=', importancia)]
 
-        condi_secuencia = [('importancia', '=', importancia)]
-
-        ult_id = self.env['wsf_noticias_secuencia'].search(condi_secuencia)
+            ult_id = self.env['wsf_noticias_secuencia'].search(condi_secuencia)
 
 
-        desde = 0
-        hasta = 0
+            desde = 0
+            hasta = 0
 
-        DELTA = 7
+            DELTA = 7
 
-        if len(ult_id) > 0:
-            ult_id = ult_id.ult_id
-            u = ult_id
-            u += DELTA
-            if u > ult_medio:
-                u = primer_medio
-                hasta = ult_medio
-                desde = hasta  - DELTA
-                if desde < 0:
-                    desde = 0
-                ult_id = desde
+            if len(ult_id) > 0:
+                ult_id = ult_id.ult_id
+                u = ult_id
+                u += DELTA
+                if u > ult_medio:
+                    u = primer_medio
+                    hasta = ult_medio
+                    desde = hasta  - DELTA
+                    if desde < 0:
+                        desde = 0
+                    ult_id = desde
 
-            j = {'ult_id': u}
+                j = {'ult_id': u}
 
-            obj = self.env['wsf_noticias_secuencia'].search(condi_secuencia, limit=1).write(j)
+                obj = self.env['wsf_noticias_secuencia'].search(condi_secuencia, limit=1).write(j)
 
-            # q = f"update wsf_noticias_secuencia set ult_id = {u} where ult_id = {ult_id}"
-            # request.cr.execute(q)
+                print("SSSSS Actualizando secuencia")
 
-            hasta = desde + DELTA
-        else:
+                # q = f"update wsf_noticias_secuencia set ult_id = {u} where ult_id = {ult_id}"
+                # request.cr.execute(q)
 
-            # TODO: segun la importancia es el registro que agrego
+                hasta = desde + DELTA
+            else:
 
-            j = {'ult_id': primer_medio + DELTA,
-                 'importancia':importancia}
+                # TODO: segun la importancia es el registro que agrego
 
-            self.env['wsf_noticias_secuencia'].create(j)
+                j = {'ult_id': primer_medio + DELTA,
+                     'importancia':importancia}
 
-            desde = primer_medio
-            hasta = primer_medio + DELTA
+                self.env['wsf_noticias_secuencia'].create(j)
 
-        return records[desde:hasta]
+                print("SSSSS Creando secuencia")
+
+
+                desde = primer_medio
+                hasta = primer_medio + DELTA
+
+            return records[desde:hasta]
+        except Exception as e:
+            print("SSSS Except en secuencia ", str(e))
 
     def xmlrpc(self):
         xmlrpc22()
