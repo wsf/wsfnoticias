@@ -1,5 +1,10 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_wsf_noticias_resultados_op,access.wsf_noticias_resultados_op,model_wsf_noticias_resultados,noticias_operadores,1,0,0,0
+access_wsf_noticias_medios_op,access.wsf_noticias_medios,model_wsf_noticias_medios,noticias_operadores,0,0,0,0
+access_wsf_noticias_reglas_op,access.wsf_noticias_reglas,model_wsf_noticias_reglas,noticias_operadores,0,0,0,0
+access_wsf_noticias_resultados_op,access.wsf_noticias_resultados,model_wsf_noticias_resultados,noticias_operadores,1,1,0,0
+access_wsf_noticias_terminos_op,access.wsf_noticias_terminos,model_wsf_noticias_terminos,noticias_operadores,0,0,0,0
+access_wsf_noticias_laboratorio_op,access.wsf_noticias_laboratorio,model_wsf_noticias_laboratorio,noticias_operadores,0,0,0,0
+access_wsf_noticias_secuencia_op,access.wsf_noticias_secuencia,model_wsf_noticias_secuencia,noticias_operadores,0,0,0,0
 
 
 access_wsf_noticias_medios,access.wsf_noticias_medios,model_wsf_noticias_medios,noticias_analista,1,1,1,1

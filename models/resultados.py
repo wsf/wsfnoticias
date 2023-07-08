@@ -33,7 +33,7 @@ class Resultados(models.Model):
     link = fields.Char('Link')
     copete = fields.Char('Copete')
     texto = fields.Text('Texto')
-    tipo = fields.Selection([('positiva', 'Positiva'), ('negativa', 'Negativa'), ('neutra', 'Neutra')])
+    tipo = fields.Selection([('positiva', "Pos"), ('negativa', 'Neg'), ('neutra', '???')])
     latitud = fields.Integer('Latitud')
     longitud = fields.Integer('Longitud')
     localidad = fields.Char('Localidad')
@@ -46,8 +46,23 @@ class Resultados(models.Model):
     nube = fields.Char('Nube')
     clasificacion = fields.Char('Clasificacion')
     entidades = fields.Char('Entidades')
+    _sql_constraints = [
+            ('link_uniq', 'UNIQUE (link)', 'Un solo link!'),
+        ]
 
     # dias_hora = fields.Char('Dias_Hora', compute='dias_hora_agrupacion',store=True)
+
+
+    def remove_duplicate_record(self):
+            model = self.env['wsf_noticias_resultados']
+            records = model.read_group([],['link'], groupby=['link'])
+            for r in records:
+
+                if r['link_count'] > 1:
+                   condi = [('link','=',r['link'])]
+                   rr = self.env['wsf_noticias_resultados'].search(condi)[1:]
+                   l  = [rrr.id for rrr in rr]
+                   self.env['wsf_noticias_resultados'].search([('id', 'in', l)]).unlink()
 
 
     @api.depends('fecha_hora')
@@ -72,13 +87,12 @@ class Resultados(models.Model):
 
 
 
-    def set_verificada(self):
-        for rec in self:
-            rec.valorar = "Verificada"
 
-    def set_marcar(self):
+
+    def set_alertar(self):
         for rec in self:
-            rec.valorar = "valorar"
+            rec.valorar = "alertar"
+
 
     def set_negativa(self):
         for rec in self:
