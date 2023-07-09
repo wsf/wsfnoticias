@@ -2,6 +2,8 @@ from odoo import fields, models, api, _
 from datetime import *
 import pytz
 IST = pytz.timezone('America/Argentina/Buenos_Aires')
+from .tools.tools import enviar_telegram
+
 
 class Norep(models.Model):
     _name = "wsf_noticias_norep"
@@ -51,6 +53,22 @@ class Resultados(models.Model):
         ]
 
     # dias_hora = fields.Char('Dias_Hora', compute='dias_hora_agrupacion',store=True)
+
+
+    @api.constrains('valorar')
+    def _check_date_end(self):
+       article2 = {}
+       for record in self:
+           if record.valorar == 'alertar':
+               article2['titulo'] = record.titulo
+               article2['link'] = record.link
+               article2['tipo'] = record.tipo
+               medio2 = "ALETA DEL OPERADOR !!! \n\n" + record.medio.name
+
+               self.valorar  == "ya_alertado"
+
+               enviar_telegram(article2,medio2,'-944811763')
+
 
 
     def remove_duplicate_record(self):
