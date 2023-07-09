@@ -89,7 +89,7 @@ class Medios(models.Model):
     pagina_web = fields.Char('Pagina Web:' , tracking=True)
     pagina_rss = fields.Char('Pagina rss:', tracking=True)
     regla = fields.Many2one('wsf_noticias_reglas')
-    importancia = fields.Selection([('baja', 'Baja'), ('media', 'Media'), ('alta', 'Alta'),('prueba', 'Prueba'),('nuevo','Nuevo'),('cat1','Categoría #1'),('cat2','Categoría #2'),('cat3','Categoría #3')])
+    importancia = fields.Selection([('baja', 'Baja'), ('media', 'Media'), ('alta', 'Alta'),('prueba', 'Prueba'),('nuevo','Nuevo'),('cat1','Categoría #1'),('cat2','Categoría #2'),('cat3','Categoría #3'),('rss','RSS'),('urgente','URGENTE')])
     pauta = fields.Float('Pauta')
     estado = fields.Selection([('on', 'ON'), ('off', 'OFF')], required=True)
     puntuacion = fields.Char('Puntuacion')
@@ -106,53 +106,60 @@ class Medios(models.Model):
 
 
     def segmento(self, records, importancia = "alta"):
+        try:
+            ult_medio = len(records)
+            primer_medio = 0
 
-        ult_medio = len(records)
-        primer_medio = 0
+            condi_secuencia = [('importancia', '=', importancia)]
 
-        condi_secuencia = [('importancia', '=', importancia)]
-
-        ult_id = self.env['wsf_noticias_secuencia'].search(condi_secuencia)
+            ult_id = self.env['wsf_noticias_secuencia'].search(condi_secuencia)
 
 
-        desde = 0
-        hasta = 0
+            desde = 0
+            hasta = 0
 
-        DELTA = 7
+            DELTA = 7
 
-        if len(ult_id) > 0:
-            ult_id = ult_id.ult_id
-            u = ult_id
-            u += DELTA
-            if u > ult_medio:
-                u = primer_medio
-                hasta = ult_medio
-                desde = hasta  - DELTA
-                if desde < 0:
-                    desde = 0
-                ult_id = desde
+            if len(ult_id) > 0:
+                ult_id = ult_id.ult_id
+                u = ult_id
+                u += DELTA
+                if u > ult_medio:
+                    u = primer_medio
+                    hasta = ult_medio
+                    desde = hasta  - DELTA
+                    if desde < 0:
+                        desde = 0
+                    ult_id = desde
 
-            j = {'ult_id': u}
+                j = {'ult_id': u}
 
-            obj = self.env['wsf_noticias_secuencia'].search(condi_secuencia, limit=1).write(j)
+                obj = self.env['wsf_noticias_secuencia'].search(condi_secuencia, limit=1).write(j)
 
-            # q = f"update wsf_noticias_secuencia set ult_id = {u} where ult_id = {ult_id}"
-            # request.cr.execute(q)
+                print("SSSSS Actualizando secuencia")
 
-            hasta = desde + DELTA
-        else:
+                # q = f"update wsf_noticias_secuencia set ult_id = {u} where ult_id = {ult_id}"
+                # request.cr.execute(q)
 
-            # TODO: segun la importancia es el registro que agrego
+                hasta = desde + DELTA
+            else:
 
-            j = {'ult_id': primer_medio + DELTA,
-                 'importancia':importancia}
+                # TODO: segun la importancia es el registro que agrego
 
-            self.env['wsf_noticias_secuencia'].create(j)
+                j = {'ult_id': primer_medio + DELTA,
+                     'importancia':importancia}
 
-            desde = primer_medio
-            hasta = primer_medio + DELTA
+                self.env['wsf_noticias_secuencia'].create(j)
 
-        return records[desde:hasta]
+                print("SSSSS Creando secuencia")
+
+
+                desde = primer_medio
+                hasta = primer_medio + DELTA
+
+            return records[desde:hasta]
+        except Exception as e:
+            print("SSSS Except en secuencia ", str(e))
 
     def xmlrpc(self):
         xmlrpc22()
@@ -264,9 +271,16 @@ class Medios(models.Model):
 
         enviar_telegram_estadistica(mensaje)
 
+
+    @api.model
+    def scrap_importancia_urgente(self):
+        self.scrap_noticias('urgente')
+        self.grabar_resultados()
+
     @api.model
     def scrap_importancia_nuevo(self):
         self.scrap_noticias('nuevo')
+        self.grabar_resultados()
 
     @api.model
     def scrap_importancia_cat1(self):
@@ -299,6 +313,11 @@ class Medios(models.Model):
     @api.model
     def scrap_importancia_media(self):
         self.scrap_noticias('media')
+        self.grabar_resultados()
+
+    @api.model
+    def scrap_importancia_rss(self):
+        self.scrap_noticias('rss')
         self.grabar_resultados()
 
 
