@@ -15,7 +15,7 @@ def limpiar_texto(texto):
     return r
 
 
-def enviar_telegram(article,medio=" Medio", chat_id = '-918982585',bot_token = '6197272098:AAFfoTbrGSXwXm20KFPB-1B-rb1EHveCYBM' ):
+def enviar_telegram(article,medio="Medio", chat_id = '-918982585',bot_token = '6197272098:AAFfoTbrGSXwXm20KFPB-1B-rb1EHveCYBM' ):
 
     try:
         # armo el texto a enviar con article:
