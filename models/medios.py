@@ -60,7 +60,9 @@ def xmlrpc22():
 def _log(dato):
 
 
-    return
+    if not "xxx" in dato:
+        return
+
     nombre = os.path.dirname(__file__) + '/medio.log'
     log = open(nombre, 'a')
     dato = "- Log: " + str(datetime.datetime.now(IST)) + " ---> " + dato
@@ -348,6 +350,9 @@ class Medios(models.Model):
             for rec in all_records:
 
                 print("\n\n**********\nTomando el medio: ", rec.medio, "\n****\n" )
+
+                mensaje = f"[xxx] Medio analidazo: {rec.medio.name} [xxx] {rec.importancia}"
+                _log(mensaje)
 
                 if tipo == "prueba":
                     if  rec.pagina_web != pagina and  rec.pagina_rss != pagina:
