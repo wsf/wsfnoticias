@@ -69,7 +69,9 @@
 
                     <button name="set_archivar" string="Archivar" class="btn btn-warning ml4"  type="object"/>
 
-                    <button name="remove_duplicate_record" string="Sacar Duplicado" class="btn btn-warning ml4"  type="object"/>
+                    <!--
+                        <button name="remove_duplicate_record" string="Sacar Duplicado" class="btn btn-warning ml4"  type="object"/>
+                    -->
 
                 </header>
                 <field name="valorar" widget="badge" decoration-danger ="valorar =='negativa'" decoration-success ="valorar =='positiva'"  decoration-primary="valorar =='valorar'" decoration-warning="valorar =='archivar'"/>

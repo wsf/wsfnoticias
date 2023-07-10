@@ -30,13 +30,14 @@ def enviar_telegram(article,medio="Medio", chat_id = '-918982585',bot_token = '6
         message += "\n--\n"
         message += article['tipo'].upper()
 
+        """
         if article['tipo'].upper() == "NEGATIVA":
             message += " 🔴🔴🔴🔴🔴🔴"
         elif article['tipo'].upper() == "POSITIVA":
             message += " 🟢🟢🟢🟢🟢🟢"
         else:
             message += " 🟡🟡🟡🟡🟡🟡"
-
+        """
 
         message += "\n\n"
         message += article['link']

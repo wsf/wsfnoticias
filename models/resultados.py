@@ -63,7 +63,7 @@ class Resultados(models.Model):
                article2['titulo'] = record.titulo
                article2['link'] = record.link
                article2['tipo'] = record.tipo
-               medio2 = "ALETA DEL OPERADOR !!! \n\n" + record.medio.name
+               medio2 = record.medio.name
 
                enviar_telegram(article2,medio2,'-944811763')
 
@@ -71,7 +71,7 @@ class Resultados(models.Model):
                 article2['titulo'] = record.titulo
                 article2['link'] = record.link
                 article2['tipo'] = record.tipo
-                medio2 = "Noticia Valorada por el Operador !!! \n\n" + record.medio.name
+                medio2 = record.medio.name
 
                 enviar_telegram(article2, medio2, '-926479407')
 
