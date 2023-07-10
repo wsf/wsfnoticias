@@ -139,7 +139,7 @@ class Medios(models.Model):
                 obj = self.env['wsf_noticias_secuencia'].search(condi_secuencia, limit=1).write(j)
                 verifico = self.env['wsf_noticias_secuencia'].search(condi_secuencia, limit=1).ult_id
 
-                men = f"SSSSS Actualizando secuencia {importancia} - {str(j)} - Verifico valor grabado:  {verifico} "
+                men = f"SSSSS xxx Actualizando secuencia {importancia} - {str(j)} - Verifico valor grabado:  {verifico} "
 
                 _log(men)
 
@@ -160,7 +160,7 @@ class Medios(models.Model):
 
                 print("SSSSS Creando secuencia")
 
-                _log("SSSSS Creando secuencia")
+                _log("SSSSS xxx Creando secuencia")
 
 
 
@@ -352,6 +352,7 @@ class Medios(models.Model):
             filtro_importancia = []
 
         all_records = self.env['wsf_noticias_medios'].search([('estado','=','on'),('importancia','=',importancia)],order="id asc")
+
         all_records =  self.segmento(all_records,importancia)
 
         try:
