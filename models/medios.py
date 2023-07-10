@@ -163,7 +163,7 @@ class Medios(models.Model):
                 _log(f"SSSSS xxx  Creando secuencia - {str(j)} - {importancia}")
 
 
-                _log("SSSSS Creando secuencia")
+                _log("SSSSS xxx Creando secuencia")
 
 
 
