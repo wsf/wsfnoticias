@@ -158,9 +158,9 @@ class Medios(models.Model):
 
                 self.env['wsf_noticias_secuencia'].create(j)
 
-                print("SSSSS Creando secuencia")
+                print(f"SSSSS Creando secuencia - {str(j)} - {importancia}" )
 
-                _log("SSSSS xxx Creando secuencia")
+                _log(f"SSSSS xxx  Creando secuencia - {str(j)} - {importancia}")
 
 
 
