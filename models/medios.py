@@ -160,6 +160,9 @@ class Medios(models.Model):
 
                 print("SSSSS Creando secuencia")
 
+                _log("SSSSS Creando secuencia")
+
+
 
                 desde = primer_medio
                 hasta = primer_medio + DELTA
