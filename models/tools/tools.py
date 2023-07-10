@@ -28,7 +28,8 @@ def enviar_telegram(article,medio="Medio", chat_id = '-918982585',bot_token = '6
         message += "\n-- \n"
         message += article['titulo'].upper()
         message += "\n--\n"
-        message += article['tipo'].upper()
+
+        #message += article['tipo'].upper()
 
         """
         if article['tipo'].upper() == "NEGATIVA":
