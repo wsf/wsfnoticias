@@ -137,8 +137,13 @@ class Medios(models.Model):
                 j = {'ult_id': u}
 
                 obj = self.env['wsf_noticias_secuencia'].search(condi_secuencia, limit=1).write(j)
+                verifico = self.env['wsf_noticias_secuencia'].search(condi_secuencia, limit=1).ult_id
 
-                print("SSSSS Actualizando secuencia")
+                men = f"SSSSS Actualizando secuencia {importancia} - {str(j)} - Verifico valor grabado:  {verifico} "
+
+                _log(men)
+
+                print(f"SSSSS Actualizando secuencia {importancia} - ")
 
                 # q = f"update wsf_noticias_secuencia set ult_id = {u} where ult_id = {ult_id}"
                 # request.cr.execute(q)
@@ -162,6 +167,7 @@ class Medios(models.Model):
             return records[desde:hasta]
         except Exception as e:
             print("SSSS Except en secuencia ", str(e))
+            _log(str(e))
 
     def xmlrpc(self):
         xmlrpc22()
