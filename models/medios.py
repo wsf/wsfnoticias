@@ -60,7 +60,9 @@ def xmlrpc22():
 def _log(dato):
 
 
-    return
+    if not "xxx" in dato:
+        return
+
     nombre = os.path.dirname(__file__) + '/medio.log'
     log = open(nombre, 'a')
     dato = "- Log: " + str(datetime.datetime.now(IST)) + " ---> " + dato
@@ -135,8 +137,13 @@ class Medios(models.Model):
                 j = {'ult_id': u}
 
                 obj = self.env['wsf_noticias_secuencia'].search(condi_secuencia, limit=1).write(j)
+                verifico = self.env['wsf_noticias_secuencia'].search(condi_secuencia, limit=1).ult_id
 
-                print("SSSSS Actualizando secuencia")
+                men = f"SSSSS xxx Actualizando secuencia {importancia} - {str(j)} - Verifico valor grabado:  {verifico} "
+
+                _log(men)
+
+                print(f"SSSSS Actualizando secuencia {importancia} - ")
 
                 # q = f"update wsf_noticias_secuencia set ult_id = {u} where ult_id = {ult_id}"
                 # request.cr.execute(q)
@@ -151,7 +158,10 @@ class Medios(models.Model):
 
                 self.env['wsf_noticias_secuencia'].create(j)
 
-                print("SSSSS Creando secuencia")
+                print(f"SSSSS Creando secuencia - {str(j)} - {importancia}" )
+
+                _log(f"SSSSS xxx  Creando secuencia - {str(j)} - {importancia}")
+
 
 
                 desde = primer_medio
@@ -160,6 +170,7 @@ class Medios(models.Model):
             return records[desde:hasta]
         except Exception as e:
             print("SSSS Except en secuencia ", str(e))
+            _log(str(e))
 
     def xmlrpc(self):
         xmlrpc22()
@@ -215,6 +226,8 @@ class Medios(models.Model):
         try:
             if self.resultados:
                 self.env['wsf_noticias_resultados'].sudo().create(self.resultados)
+
+                _log(f"xxx Grabando resultado:  {self.resultados}")
 
             self.remove_duplicate_record()
 
@@ -341,6 +354,7 @@ class Medios(models.Model):
             filtro_importancia = []
 
         all_records = self.env['wsf_noticias_medios'].search([('estado','=','on'),('importancia','=',importancia)],order="id asc")
+
         all_records =  self.segmento(all_records,importancia)
 
         try:
@@ -348,6 +362,9 @@ class Medios(models.Model):
             for rec in all_records:
 
                 print("\n\n**********\nTomando el medio: ", rec.medio, "\n****\n" )
+
+                mensaje = f"[xxx] Medio analidazo: {rec.medio.name} [xxx] {rec.importancia}"
+                _log(mensaje)
 
                 if tipo == "prueba":
                     if  rec.pagina_web != pagina and  rec.pagina_rss != pagina:
