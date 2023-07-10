@@ -1,35 +1,49 @@
 import textblob
 import requests
 import datetime as datetime
-import re
 
 # https://api.telegram.org/botAAFfoTbrGSXwXm20KFPB/getUpdates
 # https://api.telegram.org/bot6197272098:AAFfoTbrGSXwXm20KFPB-1B-rb1EHveCYBM/getUpdates
 
 
+# import xmlrpclib
+import xmlrpc.client as xmlrpclib
 
+# URL of the Odoo instance
+url = 'http://localhost:8069'
+
+# Database name, username, and password
+db_name = 'wsfnoticias16'
+username = 'admin'
+password = 'admin'
+
+# Connect to the Odoo instance
+common = xmlrpclib.ServerProxy('{}/xmlrpc/2/common'.format(url))
+uid = common.authenticate(db_name, username, password, {})
+
+# Create a new XML-RPC client instance
+models = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(url))
 
 
 def limpiar_texto(texto):
-    r = texto.replace("'","").replace('"',"")
+    r = texto.replace("'", "").replace('"', "")
     return r
 
 
-def enviar_telegram(article,medio="Medio", chat_id = '-918982585',bot_token = '6197272098:AAFfoTbrGSXwXm20KFPB-1B-rb1EHveCYBM' ):
-
+def enviar_telegram(article, medio="Medio", chat_id='-918982585',
+                    bot_token='6197272098:AAFfoTbrGSXwXm20KFPB-1B-rb1EHveCYBM'):
     try:
         # armo el texto a enviar con article:
         message = ""
 
-
-        #message += str(article['medio'])
+        # message += str(article['medio'])
         message += "\n-- 🗞️ -- \n"
         message += medio
         message += "\n-- \n"
         message += article['titulo'].upper()
         message += "\n--\n"
 
-        #message += article['tipo'].upper()
+        # message += article['tipo'].upper()
 
         """
         if article['tipo'].upper() == "NEGATIVA":
@@ -43,15 +57,14 @@ def enviar_telegram(article,medio="Medio", chat_id = '-918982585',bot_token = '6
         message += "\n\n"
         message += article['link']
 
-
         # Replace YOUR_BOT_TOKEN with your actual bot token
-        #bot_token = '6197272098:AAFfoTbrGSXwXm20KFPB-1B-rb1EHveCYBM'
+        # bot_token = '6197272098:AAFfoTbrGSXwXm20KFPB-1B-rb1EHveCYBM'
 
         # Replace YOUR_CHAT_ID with the chat ID you want to send the message to
-        #chat_id = '1007231414'
+        # chat_id = '1007231414'
 
         # The message you want to send
-        #message = 'Hello, world!'
+        # message = 'Hello, world!'
 
         # Make a POST request to the Telegram API to send the message
         response = requests.post(
@@ -72,8 +85,8 @@ def enviar_telegram(article,medio="Medio", chat_id = '-918982585',bot_token = '6
         print(str(e))
 
 
-def enviar_telegram_estadistica(message, chat_id = '-900652227',bot_token = '6197272098:AAFfoTbrGSXwXm20KFPB-1B-rb1EHveCYBM' ):
-
+def enviar_telegram_estadistica(message, chat_id='-900652227',
+                                bot_token='6197272098:AAFfoTbrGSXwXm20KFPB-1B-rb1EHveCYBM'):
     try:
         # Make a POST request to the Telegram API to send the message
         response = requests.post(
@@ -94,7 +107,7 @@ def enviar_telegram_estadistica(message, chat_id = '-900652227',bot_token = '619
         print(str(e))
 
 
-def aplica_regla(titulo, cuerpo, copete,reglas):
+def aplica_regla(titulo, cuerpo, copete, reglas):
     regla_nombre = set()
     telegram = []
     lista_condicionales = []
@@ -106,27 +119,29 @@ def aplica_regla(titulo, cuerpo, copete,reglas):
         cumple_or, cumple_and, cumple_not = False, False, False
 
         # terminos or -------------------------------------------
-        terminos = r.terminos_or
+        if r['terminos_or'].__len__() != 0:
+            terminos = models.execute_kw(db_name, uid, password,
+                                         'wsf_noticias_terminos', 'read', [r['terminos_or']])
 
         lista_condicionales = []
         condi = False
 
         log += f"\n\n----------------------------------------------------------" \
                f"----------------------------------------------------------" \
-               f"\n** Aplicando la regla: {r.nombre_regla.upper()} para el artículo con título: {titulo.upper()}:\n"
+               f"\n** Aplicando la regla: {r['nombre_regla'].upper()} para el artículo con título: {titulo.upper()}:\n"
         for t in terminos:
 
-            condi_titulo = t.name.upper() in titulo.upper()
-            condi_cuerpo = t.name.upper() in cuerpo.upper()
-            condi_copete = t.name.upper() in copete.upper()
+            condi_titulo = t['name'].upper() in titulo.upper()
+            condi_cuerpo = t['name'].upper() in cuerpo.upper()
+            condi_copete = t['name'].upper() in copete.upper()
 
             condi = condi_copete or condi_titulo or condi_cuerpo
 
-            log += f"\n - Analiza regla OR con el termino {t.name.upper()}"
+            log += f"\n - Analiza regla OR con el termino {t['name'].upper()}"
 
             if condi:
-                #regla_nombre.add(r.nombre_regla)
-                log += f"\n -- entra por regla or, por el termino {t.name.upper()}"
+                # regla_nombre.add(r.nombre_regla)
+                log += f"\n -- entra por regla or, por el termino {t['name'].upper()}"
                 cumple_or = True
 
         # si no hay terminos en or ->
@@ -134,29 +149,31 @@ def aplica_regla(titulo, cuerpo, copete,reglas):
             log += f"\n -- no hay terminos  or en la regla"
             cumple_or = True
 
-
         # terminos and  -------------------------------------------
-        terminos = r.terminos_and
+
+        if r['terminos_and'].__len__() != 0:
+            terminos = models.execute_kw(db_name, uid, password,
+                                         'wsf_noticias_reglas', 'read', [r['terminos_and']])
 
         cumple_and = True
         for t in terminos:
 
-            condi_titulo = t.name.upper() in titulo.upper()
-            condi_cuerpo = t.name.upper() in cuerpo.upper()
-            condi_copete = t.name.upper() in copete.upper()
+            condi_titulo = t['name'].upper() in titulo.upper()
+            condi_cuerpo = t['name'].upper() in cuerpo.upper()
+            condi_copete = t['name'].upper() in copete.upper()
 
             condi = condi_copete or condi_titulo or condi_cuerpo
 
-            log += f"\n - Analiza regla AND con el termino {t.name.upper()}"
+            log += f"\n - Analiza regla AND con el termino {t['name'].upper()}"
             if not condi:
                 # cualquiera que no cumpla el and
-                log += f"\n -- no cumple en and  {t.name.upper()}"
+                log += f"\n -- no cumple en and  {t['name'].upper()}"
                 cumple_and = False
                 break
 
         if cumple_and and terminos:
-            #regla_nombre.add(r.nombre_regla)
-            log += f"\n -- cumple en and  {t.name.upper()}"
+            # regla_nombre.add(r.nombre_regla)
+            log += f"\n -- cumple en and  {t['name'].upper()}"
             cumple_and = True
 
         if not terminos:
@@ -164,39 +181,41 @@ def aplica_regla(titulo, cuerpo, copete,reglas):
             cumple_and = True
 
         # terminos not  -------------------------------------------
-        terminos = r.terminos_not
+        if r['terminos_not'].__len__() != 0:
+            terminos = models.execute_kw(db_name, uid, password,
+                                         'wsf_noticias_reglas', 'read', [r['terminos_not']])
 
         lista_condicionales = []
+        cumple_not = True
         for t in terminos:
 
-            condi_titulo = t.name.upper() not in titulo.upper()
-            condi_cuerpo = t.name.upper() not in cuerpo.upper()
-            condi_copete = t.name.upper() not in copete.upper()
+            condi_titulo = t['name'].upper() not in titulo.upper()
+            condi_cuerpo = t['name'].upper() not in cuerpo.upper()
+            condi_copete = t['name'].upper() not in copete.upper()
 
             condi = condi_copete and condi_titulo and condi_cuerpo
 
-            log += f"\n - Analiza regla NOT con el termino {t.name.upper()}"
+            log += f"\n - Analiza regla NOT con el termino {t['name'].upper()}"
             if condi:
-                #regla_nombre.add(r.nombre_regla)
-                log += f"\n -- cumple con not  {t.name.upper()}"
+                # regla_nombre.add(r.nombre_regla)
+                log += f"\n -- cumple con not  {t['name'].upper()}"
                 cumple_not = True
 
         if not terminos:
             log += f"\n -- no hay terminos not en la regla"
             cumple_not = True
 
-
         # Verifico que se cumplan todos los tipo de condicionales
         if cumple_and and cumple_not and cumple_or:
-            log += f"\n -- filtra !!!!!!!!!!!!!!!!!!  {t.name.upper()}"
-            regla_nombre.add(r.nombre_regla)
-            telegram.append(r.telegram)
+            log += f"\n -- filtra !!!!!!!!!!!!!!!!!!  {t['name'].upper()}"
+            regla_nombre.add(r['nombre_regla'])
+            telegram.append(r['telegram'])
         else:
             log += f"\n -- no filtra *************** "
             regla_nombre.add('set()')
 
+    return (str(regla_nombre), log, telegram)
 
-    return (str(regla_nombre),log,telegram)
 
 def filtra_url(article_link, url_medio2, url_medio):
     condi = True
@@ -204,13 +223,14 @@ def filtra_url(article_link, url_medio2, url_medio):
         "http://", "").replace("https://", "")
     condi2 = "/rss" in article_link or "/feed" in article_link
 
-    condi  =  condi and not condi2
+    condi = condi and not condi2
 
     return condi
 
+
 def sentimiento(texto):
     blob = textblob.TextBlob(texto)
-    blob = blob.translate(from_lang='es',to='en')
+    blob = blob.translate(from_lang='es', to='en')
 
     r = blob.sentiment.polarity
     if r < 0:
@@ -221,6 +241,7 @@ def sentimiento(texto):
         sentiment = "neutra"
 
     return sentiment
+
 
 def entidades(texto):
     return ""
@@ -233,7 +254,9 @@ def entidades(texto):
         entidad = "-"
     return entidades
 
+
 import string
+
 
 def nube(text):
     # Convertir el texto a minúsculas y eliminar los caracteres no alfabéticos
@@ -244,9 +267,12 @@ def nube(text):
     words = set(text.split())
 
     # Eliminar las palabras vacías de la lista de palabras únicas
-    stopwords = {'va','tan','fue','era','san','ha', 'a', 'e', 'y', 'o', 'u','art','se','on','us','me','ve','le','da','ver','a', 'y', 'o', 'el', 'la', 'ante', 'cabo', 'con', 'contra', 'de', 'desde', 'para', 'por', 'según',
-                 'que','al','el','los','las','ellos','así','es','un','una','como','donde','esta','en','se','lo','ni','del','ese','de','si','no','estos','estas',
-                 'hay','tuvo','poco','mucho','hace','es','los','las','tener','aquí',
+    stopwords = {'va', 'tan', 'fue', 'era', 'san', 'ha', 'a', 'e', 'y', 'o', 'u', 'art', 'se', 'on', 'us', 'me', 've',
+                 'le', 'da', 'ver', 'a', 'y', 'o', 'el', 'la', 'ante', 'cabo', 'con', 'contra', 'de', 'desde', 'para',
+                 'por', 'según',
+                 'que', 'al', 'el', 'los', 'las', 'ellos', 'así', 'es', 'un', 'una', 'como', 'donde', 'esta', 'en',
+                 'se', 'lo', 'ni', 'del', 'ese', 'de', 'si', 'no', 'estos', 'estas',
+                 'hay', 'tuvo', 'poco', 'mucho', 'hace', 'es', 'los', 'las', 'tener', 'aquí',
                  'el', 'la', 'los', 'las', 'un', 'una', 'unos', 'unas',
                  'yo', 'tú', 'él', 'ella', 'usted', 'nosotros', 'vosotros', 'ellos', 'ellas', 'ustedes',
                  'mi', 'tu', 'su', 'nuestro', 'vuestro', 'su',
@@ -276,7 +302,7 @@ def nube(text):
                  'ir', 'venir', 'hacer', 'decir', 'ver', 'sentir', 'pensar', 'creer', 'conocer', 'entender', 'querer',
                  'poder', 'deber',
                  'bailar', 'cantar', 'tocar', 'cocinar', 'leer', 'escribir', 'correr', 'nadar', 'jugar', 'mirar',
-                 'escuchar','vi','te','le','me','mi','da','ex','uno','dos','tres'
+                 'escuchar', 'vi', 'te', 'le', 'me', 'mi', 'da', 'ex', 'uno', 'dos', 'tres'
                  }
 
     words = words - stopwords
@@ -299,7 +325,6 @@ import sqlite3
 
 
 def telegram_norep_add_autoincrement():
-
     q = "ALTER TABLE norep ADD COLUMN fecha TEXT;"
     nombre = os.path.dirname(__file__) + '/telegram_norep.db'
     conexion = sqlite3.connect(nombre)
@@ -311,7 +336,6 @@ def telegram_norep_add_autoincrement():
 
 
 def telegram_norep_init():
-
     nombre = os.path.dirname(__file__) + '/telegram_norep.db'
     conexion = sqlite3.connect(nombre)
     cursor = conexion.cursor()
@@ -328,10 +352,10 @@ def telegram_norep_init():
     conexion.commit()
 
 
-#telegram_norep_init()
+# telegram_norep_init()
 
 def depurar_no_rep():
-    yymm =  datetime.datetime.now().strftime('%Y%m')
+    yymm = datetime.datetime.now().strftime('%Y%m')
     ano = yymm[0:4]
     mes = int(yymm[4:6]) - 1
     mes2 = int(yymm[4:6]) - 2
@@ -350,8 +374,9 @@ def depurar_no_rep():
 
 
 import os
-def telegram_norep(titulo,link):
 
+
+def telegram_norep(titulo, link):
     yymm = datetime.datetime.now().strftime('%Y%m')
 
     nombre = os.path.dirname(__file__) + '/telegram_norep.db'
@@ -360,7 +385,7 @@ def telegram_norep(titulo,link):
 
     q = f"select titulo from norep where titulo = '{titulo}'"
     cursor.execute(q)
-    resultados=cursor.fetchall()
+    resultados = cursor.fetchall()
 
     if resultados:
 
@@ -374,32 +399,30 @@ def telegram_norep(titulo,link):
 
 
 def telegram_listar():
-
     nombre = os.path.dirname(__file__) + '/telegram_norep.db'
     conexion = sqlite3.connect(nombre)
     cursor = conexion.cursor()
     q = "select fecha, titulo from norep"
     cursor.execute(q)
-    resultados=cursor.fetchall()
+    resultados = cursor.fetchall()
     for r in resultados:
         print(r)
 
+
 import sys
 
-def main():
 
+def main():
     try:
         parametro = sys.argv[1]
         fecha = sys.argv[2]
 
         if parametro == "borrar":
-
             nombre = os.path.dirname(__file__) + '/telegram_norep.db'
             conexion = sqlite3.connect(nombre)
             cursor = conexion.cursor()
 
             telegram_listar()
-
 
             q = f"delete from norep where fecha = '{fecha}'"
             cursor.execute(q)
@@ -408,18 +431,15 @@ def main():
         pass
 
 
-
 if __name__ == "__main__":
-    #telegram_norep_add_autoincrement()
-    #telegram_listar()
-    #r =  sentimiento("Esta es una frase positiva y linda")
-    #print(r)
+    # telegram_norep_add_autoincrement()
+    # telegram_listar()
+    # r =  sentimiento("Esta es una frase positiva y linda")
+    # print(r)
     main()
 
 depurar_no_rep()
 
-#r  = telegram_norep('t1','l1')
-#r2  = telegram_norep('t5','l5')
-#print(r,r2)
-
-
+# r  = telegram_norep('t1','l1')
+# r2  = telegram_norep('t5','l5')
+# print(r,r2)
