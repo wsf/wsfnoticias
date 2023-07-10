@@ -227,6 +227,8 @@ class Medios(models.Model):
             if self.resultados:
                 self.env['wsf_noticias_resultados'].sudo().create(self.resultados)
 
+                _log(f"xxx Grabando resultado:  {self.resultados}")
+
             self.remove_duplicate_record()
 
         except Exception as e:
