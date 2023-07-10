@@ -525,7 +525,7 @@ class Medios(models.Model):
                                                 except Exception as e:
                                                     medio += " -" + str(e)
 
-                                                medio += "\n\n- Reglas: " + article['regla2']
+                                                #medio += "\n\n- Reglas: " + article['regla2']
                                                 codigo += 1
                                                 medio += "\n- Código: " + str(codigo)
 
@@ -700,7 +700,7 @@ class Medios(models.Model):
                                                 except Exception as e:
                                                     medio += " -" + str(e)
 
-                                                medio += "\n\n- Reglas: " + article['regla2']
+                                                #medio += "\n\n- Reglas: " + article['regla2']
                                                 codigo += 1
                                                 medio += "\n- Código: " + str(codigo)
 
