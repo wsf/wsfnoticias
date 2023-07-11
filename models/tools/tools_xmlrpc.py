@@ -13,12 +13,11 @@ import xmlrpc.client as xmlrpclib
 # Open the JSON file in read mode.
 import json
 
-
 def xmlrpc_config():
     with open('xmlrpc_credenciales.json', 'r') as f:
+
         data = json.load(f)
     return data
-
 
 data = xmlrpc_config()
 
@@ -29,6 +28,7 @@ url = data['url']
 db_name = data['db_name']
 username = data['username']
 password = data['password']
+
 
 # Connect to the Odoo instance
 common = xmlrpclib.ServerProxy('{}/xmlrpc/2/common'.format(url))
@@ -451,7 +451,7 @@ if __name__ == "__main__":
     # print(r)
     main()
 
-# depurar_no_rep()
+#depurar_no_rep()
 
 # r  = telegram_norep('t1','l1')
 # r2  = telegram_norep('t5','l5')

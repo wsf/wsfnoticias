@@ -10,7 +10,6 @@ import feedparser as fp
 import newspaper
 from newspaper import Article
 
-
 from tools.tools_xmlrpc import *
 
 data = xmlrpc_config()
