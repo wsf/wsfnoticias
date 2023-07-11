@@ -469,5 +469,5 @@ def scrap_noticias(importancia="todos", tipo="", pagina=""):
         print(e)
         pass
 
-
-#scrap_noticias('cat2')
+if __name__ == "__main__":
+    scrap_noticias('cat2')
