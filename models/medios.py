@@ -60,9 +60,7 @@ def xmlrpc22():
 def _log(dato):
 
 
-    if not "xxx" in dato:
-        return
-
+    return
     nombre = os.path.dirname(__file__) + '/medio.log'
     log = open(nombre, 'a')
     dato = "- Log: " + str(datetime.datetime.now(IST)) + " ---> " + dato
@@ -77,8 +75,7 @@ norepe2 = []
 class Secuencia(models.Model):
     _name = "wsf_noticias_secuencia"
     _description = "lleva el secuencia de ejecucion"
-    ult_id = fields.Integer("Ult ID")
-    importancia = fields.Char("Importancia")
+    ult_id = fields.Integer()
 
 
 class Medios(models.Model):
@@ -91,7 +88,7 @@ class Medios(models.Model):
     pagina_web = fields.Char('Pagina Web:' , tracking=True)
     pagina_rss = fields.Char('Pagina rss:', tracking=True)
     regla = fields.Many2one('wsf_noticias_reglas')
-    importancia = fields.Selection([('baja', 'Baja'), ('media', 'Media'), ('alta', 'Alta'),('prueba', 'Prueba'),('nuevo','Nuevo'),('cat1','Categoría #1'),('cat2','Categoría #2'),('cat3','Categoría #3'),('rss','RSS'),('urgente','URGENTE')])
+    importancia = fields.Selection([('baja', 'Baja'), ('media', 'Media'), ('alta', 'Alta'),('prueba', 'Prueba'),('nuevo','Nuevo'),('cat1','Categoría #1'),('cat2','Categoría #2'),('cat3','Categoría #3')])
     pauta = fields.Float('Pauta')
     estado = fields.Selection([('on', 'ON'), ('off', 'OFF')], required=True)
     puntuacion = fields.Char('Puntuacion')
@@ -107,70 +104,45 @@ class Medios(models.Model):
     resultados = []
 
 
-    def segmento(self, records, importancia = "alta"):
-        try:
-            ult_medio = len(records)
-            primer_medio = 0
+    def segmento(self, records):
 
-            condi_secuencia = [('importancia', '=', importancia)]
+        ult_medio = len(records)
+        primer_medio = 0
 
-            ult_id = self.env['wsf_noticias_secuencia'].search(condi_secuencia)
+        ult_id = self.env['wsf_noticias_secuencia'].search([])
 
 
-            desde = 0
-            hasta = 0
+        desde = 0
+        hasta = 0
 
-            DELTA = 7
+        DELTA = 7
 
-            if len(ult_id) > 0:
-                ult_id = ult_id.ult_id
-                u = ult_id
-                u += DELTA
-                if u > ult_medio:
-                    u = primer_medio
-                    hasta = ult_medio
-                    desde = hasta  - DELTA
-                    if desde < 0:
-                        desde = 0
-                    ult_id = desde
+        if len(ult_id) > 0:
+            ult_id = ult_id.ult_id
+            u = ult_id
+            u += DELTA
+            if u > ult_medio:
+                u = primer_medio
+                hasta = ult_medio
+                desde = hasta  - DELTA
+                ult_id = desde
 
-                j = {'ult_id': u}
+            j = {'ult_id': u}
 
-                obj = self.env['wsf_noticias_secuencia'].search(condi_secuencia, limit=1).write(j)
-                verifico = self.env['wsf_noticias_secuencia'].search(condi_secuencia, limit=1).ult_id
+            obj = self.env['wsf_noticias_secuencia'].search([], limit=1).write(j)
 
-                men = f"SSSSS xxx Actualizando secuencia {importancia} - {str(j)} - Verifico valor grabado:  {verifico} "
+            # q = f"update wsf_noticias_secuencia set ult_id = {u} where ult_id = {ult_id}"
+            # request.cr.execute(q)
 
-                _log(men)
+            hasta = desde + DELTA
+        else:
+            j = {'ult_id': primer_medio + DELTA}
+            self.env['wsf_noticias_secuencia'].create(j)
 
-                print(f"SSSSS Actualizando secuencia {importancia} - ")
+            desde = primer_medio
+            hasta = primer_medio + DELTA
 
-                # q = f"update wsf_noticias_secuencia set ult_id = {u} where ult_id = {ult_id}"
-                # request.cr.execute(q)
-
-                hasta = desde + DELTA
-            else:
-
-                # TODO: segun la importancia es el registro que agrego
-
-                j = {'ult_id': primer_medio + DELTA,
-                     'importancia':importancia}
-
-                self.env['wsf_noticias_secuencia'].create(j)
-
-                print(f"SSSSS Creando secuencia - {str(j)} - {importancia}" )
-
-                _log(f"SSSSS xxx  Creando secuencia - {str(j)} - {importancia}")
-
-
-
-                desde = primer_medio
-                hasta = primer_medio + DELTA
-
-            return records[desde:hasta]
-        except Exception as e:
-            print("SSSS Except en secuencia ", str(e))
-            _log(str(e))
+        return records[desde:hasta]
 
     def xmlrpc(self):
         xmlrpc22()
@@ -210,27 +182,10 @@ class Medios(models.Model):
             print(str(e))
 
 
-    def remove_duplicate_record(self):
-            model = self.env['wsf_noticias_resultados']
-            records = model.read_group([],['link'], groupby=['link'])
-            for r in records:
-
-                if r['link_count'] > 1:
-                   condi = [('link','=',r['link'])]
-                   rr = self.env['wsf_noticias_resultados'].search(condi)[1:]
-                   l  = [rrr.id for rrr in rr]
-                   self.env['wsf_noticias_resultados'].search([('id', 'in', l)]).unlink()
-
-
     def grabar_resultados(self):
         try:
             if self.resultados:
                 self.env['wsf_noticias_resultados'].sudo().create(self.resultados)
-
-                _log(f"xxx Grabando resultado:  {self.resultados}")
-
-            self.remove_duplicate_record()
-
         except Exception as e:
             print(str(e))
 
@@ -284,16 +239,9 @@ class Medios(models.Model):
 
         enviar_telegram_estadistica(mensaje)
 
-
-    @api.model
-    def scrap_importancia_urgente(self):
-        self.scrap_noticias('urgente')
-        self.grabar_resultados()
-
     @api.model
     def scrap_importancia_nuevo(self):
         self.scrap_noticias('nuevo')
-        self.grabar_resultados()
 
     @api.model
     def scrap_importancia_cat1(self):
@@ -328,11 +276,6 @@ class Medios(models.Model):
         self.scrap_noticias('media')
         self.grabar_resultados()
 
-    @api.model
-    def scrap_importancia_rss(self):
-        self.scrap_noticias('rss')
-        self.grabar_resultados()
-
 
     @api.model
     def scrap_importancia_todos(self):
@@ -353,18 +296,12 @@ class Medios(models.Model):
         else:
             filtro_importancia = []
 
-        all_records = self.env['wsf_noticias_medios'].search([('estado','=','on'),('importancia','=',importancia)],order="id asc")
-
-        all_records =  self.segmento(all_records,importancia)
+        all_records = self.env['wsf_noticias_medios'].search([('estado','=','on')],order="id asc")
+        all_records =  self.segmento(all_records)
 
         try:
 
             for rec in all_records:
-
-                print("\n\n**********\nTomando el medio: ", rec.medio, "\n****\n" )
-
-                mensaje = f"[xxx] Medio analidazo: {rec.medio.name} [xxx] {rec.importancia}"
-                _log(mensaje)
 
                 if tipo == "prueba":
                     if  rec.pagina_web != pagina and  rec.pagina_rss != pagina:
@@ -465,10 +402,10 @@ class Medios(models.Model):
                                         else:
                                             medio = rec.medio.name
                                             article['medio'] = rec.medio.id
-                                            #article['copete'] = contenido.meta_description.contenido.text.replace('"','').replace("'","")  ##
-                                            article['texto'] = contenido.text.replace('"','').replace("'","")
+                                            article['copete'] = contenido.meta_description.contenido.text.replace('"','').replace("'","")  ##
+                                            article['texto'] = contenido.text.contenido.text.replace('"','').replace("'","")
                                             article['link'] = contenido.url.strip()
-                                            article['tipo'] = sentimiento(contenido.title.replace('"','').replace("'",""))
+                                            article['tipo'] = sentimiento(contenido.title.contenido.text.replace('"','').replace("'",""))
                                             article['departamento'] = rec.departamento
 
                                             try:
@@ -525,7 +462,7 @@ class Medios(models.Model):
                                                 except Exception as e:
                                                     medio += " -" + str(e)
 
-                                                #medio += "\n\n- Reglas: " + article['regla2']
+                                                medio += "\n\n- Reglas: " + article['regla2']
                                                 codigo += 1
                                                 medio += "\n- Código: " + str(codigo)
 
@@ -555,24 +492,15 @@ class Medios(models.Model):
 
                                 # hoja.articles -> obtiene una lista con todos los artículos del portal que está visitando (escrapeando)
                                 codigo = 0
-
-
                                 for contenido in hoja.articles:  # recorre cada uno de los artículos
-
-                                    print("\n\n**********\nContenido: ", str(contenido), "\n****\n")
 
                                     if tipo  == "prueba":
                                         limite = 10
                                     if contador > limite:
-                                        print("Sale - Sale - Sale")
                                         break
                                     try:
                                         contenido.download()
                                         contenido.parse()
-
-                                        print("\n\n------------\nContenido download title: ", contenido.title, "\n-----\n")
-
-
 
                                     except Exception as e:
                                         _log(f"Exception:  {str(e)}")
@@ -615,8 +543,6 @@ class Medios(models.Model):
                                             ['|',('link', '=', contenido.url),('titulo','=',article['titulo'])])
 
                                         if encontrado and tipo !="prueba":
-                                            print("XXXXXXXX Descartada por EXISTIR")
-
                                             _log(f"*** Noticia ya guadada {str(encontrado)}")
                                             continue
 
@@ -640,9 +566,6 @@ class Medios(models.Model):
 
 
                                             if not condi:
-
-                                                print("XXXXXXXX Descartada por REGLA")
-
                                                 continue
 
                                             try:
@@ -657,7 +580,6 @@ class Medios(models.Model):
 
                                                 # si la fecha del articulo tiene mas de 3 días no lo tomo
                                                 if not fecha_art.strftime('%Y/%m/%d') >=  fecha_hoy.strftime('%Y/%m/%d') and tipo != "prueba":
-                                                    print("XXXXXXXX Descartada por fecha")
                                                     continue
                                             except Exception as e:
                                                 try:
@@ -700,7 +622,7 @@ class Medios(models.Model):
                                                 except Exception as e:
                                                     medio += " -" + str(e)
 
-                                                #medio += "\n\n- Reglas: " + article['regla2']
+                                                medio += "\n\n- Reglas: " + article['regla2']
                                                 codigo += 1
                                                 medio += "\n- Código: " + str(codigo)
 
@@ -740,8 +662,3 @@ class Medios(models.Model):
                 enviar_telegram(article, medio)
         else:
             pass
-
-
-
-
-
