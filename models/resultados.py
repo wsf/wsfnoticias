@@ -105,10 +105,13 @@ class Resultados(models.Model):
     @api.depends('fecha_hora')
     def compute_fecha_registro(self):
         for rec in self:
-            fecha = (datetime.now(IST) + datetime.timedelta(hours=3)).strftime('%Y/%m/%d %H:%M:%S')
+            try:
+                pass
+                #fecha = (datetime.now(IST) + datetime.timedelta(hours=3)).strftime('%Y/%m/%d %H:%M:%S')
 
-            rec.fecha_registro = datetime.strptime(fecha, '%Y/%m/%d %H:%M:%S')
-
+                #rec.fecha_registro = datetime.strptime(fecha, '%Y/%m/%d %H:%M:%S')
+            except Exception as e:
+                print(e)
 
 
 

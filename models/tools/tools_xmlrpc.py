@@ -14,9 +14,9 @@ import xmlrpc.client as xmlrpclib
 import json
 
 def xmlrpc_config():
-    with open('xmlrpc_credenciales.json', 'r') as f:
-
+    with open('/opt/odoo16/odoo-16.0/custom_addons/wsfnoticias/models/tools/xmlrpc_credenciales.json', 'r') as f:
         data = json.load(f)
+
     return data
 
 data = xmlrpc_config()
@@ -164,6 +164,7 @@ def aplica_regla(titulo, cuerpo, copete, reglas):
 
         # terminos and  -------------------------------------------
 
+        terminos = []
         if r['terminos_and'].__len__() != 0:
             terminos = models.execute_kw(db_name, uid, password,
                                          'wsf_noticias_reglas', 'read', [r['terminos_and']])
@@ -182,7 +183,7 @@ def aplica_regla(titulo, cuerpo, copete, reglas):
                 # cualquiera que no cumpla el and
                 log += f"\n -- no cumple en and  {t['name'].upper()}"
                 cumple_and = False
-                break
+
 
         if cumple_and and terminos:
             # regla_nombre.add(r.nombre_regla)
@@ -194,12 +195,12 @@ def aplica_regla(titulo, cuerpo, copete, reglas):
             cumple_and = True
 
         # terminos not  -------------------------------------------
+        terminos = []
         if r['terminos_not'].__len__() != 0:
             terminos = models.execute_kw(db_name, uid, password,
                                          'wsf_noticias_reglas', 'read', [r['terminos_not']])
 
         lista_condicionales = []
-        cumple_not = True
         for t in terminos:
 
             condi_titulo = t['name'].upper() not in titulo.upper()

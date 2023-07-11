@@ -149,7 +149,7 @@ def scrap_noticias(importancia="todos", tipo="", pagina=""):
                                     # reglas = self.env['wsf_noticias_reglas'].search([('estado', '=', 'on')])
                                     reglas_ids = models.execute_kw(db_name, uid, password,
                                                                    'wsf_noticias_reglas', 'search',
-                                                                   [[('estado', '=', 'on'), ('id', '=', rec['regla'][0])]])
+                                                                   [[('estado', '=', 'on')]])
 
                                     reglas = models.execute_kw(db_name, uid, password,
                                                                'wsf_noticias_reglas', 'read', [reglas_ids])
@@ -308,7 +308,7 @@ def scrap_noticias(importancia="todos", tipo="", pagina=""):
 
                                 reglas_ids = models.execute_kw(db_name, uid, password,
                                                                'wsf_noticias_reglas', 'search',
-                                                               [[('estado', '=', 'on'), ('id', '=', rec['regla'][0])]])
+                                                               [[('estado', '=', 'on')]])
 
                                 reglas = models.execute_kw(db_name, uid, password,
                                                            'wsf_noticias_reglas', 'read', [reglas_ids])
@@ -381,10 +381,12 @@ def scrap_noticias(importancia="todos", tipo="", pagina=""):
 
                                             continue
 
+                                        article['fecha_registro'] = datetime.datetime.now().strftime('%Y-%m-%d')
                                         try:
-                                            fecha2 = contenido.publish_date.strftime('%Y/%m/%d %H:%M:%S')
+                                            fecha2 = contenido.publish_date.strftime('%Y/%m/%d')
                                             article['fecha_hora'] = datetime.datetime.strptime(fecha2,
-                                                                                               '%Y/%m/%d %H:%M:%S')
+                                                                                               '%Y/%m/%d')
+
 
                                             # sila fecha del artículo es antigua (3 dias) lo descarta
                                             fecha_art = contenido.publish_date
@@ -470,4 +472,6 @@ def scrap_noticias(importancia="todos", tipo="", pagina=""):
         pass
 
 
-#scrap_noticias('cat2')
+scrap_noticias('cat2')
+# if __name__ == "__main__":
+#     scrap_noticias('cat2')
