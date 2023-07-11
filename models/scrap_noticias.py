@@ -10,14 +10,17 @@ import feedparser as fp
 import newspaper
 from newspaper import Article
 
-from tools.tools import *
+from tools.tools_xmlrpc import *
+
+data = xmlrpc_config()
+
 # URL of the Odoo instance
-url = 'http://localhost:8069'
+url = data['url']
 
 # Database name, username, and password
-db_name = 'wsfnoticias16'
-username = 'admin'
-password = 'admin'
+db_name = data['db_name']
+username = data['username']
+password = data['password']
 
 # Connect to the Odoo instance
 common = xmlrpclib.ServerProxy('{}/xmlrpc/2/common'.format(url))
@@ -467,4 +470,4 @@ def scrap_noticias(importancia="todos", tipo="", pagina=""):
         pass
 
 
-scrap_noticias('cat2')
+#scrap_noticias('cat2')

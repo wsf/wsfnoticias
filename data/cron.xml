@@ -7,7 +7,7 @@
             <field name="type">ir.actions.server</field>
             <field name="state">code</field>
             <field name="code">model.scrap_importancia_cat1()</field>
-            <field name="interval_number">8</field>
+            <field name="interval_number">80</field>
             <field name='interval_type'>minutes</field>
             <field name="numbercall">-1</field>
             <field name="priority">1</field>
