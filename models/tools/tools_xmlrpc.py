@@ -12,30 +12,38 @@ import xmlrpc.client as xmlrpclib
 ## Todo Ale: leo un archivo de configuración
 # Open the JSON file in read mode.
 import json
+import os
 
 def xmlrpc_config():
-    with open('/opt/odoo16/odoo-16.0/custom_addons/wsfnoticias/models/tools/xmlrpc_credenciales.json', 'r') as f:
+    nombre = os.path.dirname(__file__) + '/xmlrpc_credenciales.json'
+    #log = open(nombre, 'a')
+    with open(nombre) as f:
         data = json.load(f)
+
 
     return data
 
-data = xmlrpc_config()
 
-# URL of the Odoo instance
-url = data['url']
+def conectar_xmlrpc():
+    data = xmlrpc_config()
 
-# Database name, username, and password
-db_name = data['db_name']
-username = data['username']
-password = data['password']
+    # URL of the Odoo instance
+    url = data['url']
+
+    # Database name, username, and password
+    db_name = data['db_name']
+    username = data['username']
+    password = data['password']
 
 
-# Connect to the Odoo instance
-common = xmlrpclib.ServerProxy('{}/xmlrpc/2/common'.format(url))
-uid = common.authenticate(db_name, username, password, {})
+    # Connect to the Odoo instance
+    common = xmlrpclib.ServerProxy('{}/xmlrpc/2/common'.format(url))
+    uid = common.authenticate(db_name, username, password, {})
 
-# Create a new XML-RPC client instance
-models = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(url))
+    # Create a new XML-RPC client instance
+    models = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(url))
+
+    return models
 
 
 def limpiar_texto(texto):
@@ -120,7 +128,7 @@ def enviar_telegram_estadistica(message, chat_id='-900652227',
         print(str(e))
 
 
-def aplica_regla(titulo, cuerpo, copete, reglas):
+def aplica_regla(titulo, cuerpo, copete, reglas,models,db_name, uid, password):
     regla_nombre = set()
     telegram = []
     lista_condicionales = []
@@ -132,7 +140,9 @@ def aplica_regla(titulo, cuerpo, copete, reglas):
         cumple_or, cumple_and, cumple_not = False, False, False
 
         # terminos or -------------------------------------------
+
         if r['terminos_or'].__len__() != 0:
+
             terminos = models.execute_kw(db_name, uid, password,
                                          'wsf_noticias_terminos', 'read', [r['terminos_or']])
 
@@ -143,6 +153,8 @@ def aplica_regla(titulo, cuerpo, copete, reglas):
                f"----------------------------------------------------------" \
                f"\n** Aplicando la regla: {r['nombre_regla'].upper()} para el artículo con título: {titulo.upper()}:\n"
         for t in terminos:
+
+
 
             condi_titulo = t['name'].upper() in titulo.upper()
             condi_cuerpo = t['name'].upper() in cuerpo.upper()
@@ -167,7 +179,7 @@ def aplica_regla(titulo, cuerpo, copete, reglas):
         terminos = []
         if r['terminos_and'].__len__() != 0:
             terminos = models.execute_kw(db_name, uid, password,
-                                         'wsf_noticias_reglas', 'read', [r['terminos_and']])
+                                         'wsf_noticias_terminos', 'read', [r['terminos_and']])
 
         cumple_and = True
         for t in terminos:
@@ -198,7 +210,7 @@ def aplica_regla(titulo, cuerpo, copete, reglas):
         terminos = []
         if r['terminos_not'].__len__() != 0:
             terminos = models.execute_kw(db_name, uid, password,
-                                         'wsf_noticias_reglas', 'read', [r['terminos_not']])
+                                         'wsf_noticias_terminos', 'read', [r['terminos_not']])
 
         lista_condicionales = []
         for t in terminos:

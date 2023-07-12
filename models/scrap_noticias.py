@@ -12,22 +12,27 @@ from newspaper import Article
 
 from tools.tools_xmlrpc import *
 
-data = xmlrpc_config()
 
-# URL of the Odoo instance
-url = data['url']
+def conectar_xmlrpc():
+    data = xmlrpc_config()
 
-# Database name, username, and password
-db_name = data['db_name']
-username = data['username']
-password = data['password']
+    # URL of the Odoo instance
+    url = data['url']
 
-# Connect to the Odoo instance
-common = xmlrpclib.ServerProxy('{}/xmlrpc/2/common'.format(url))
-uid = common.authenticate(db_name, username, password, {})
+    # Database name, username, and password
+    db_name = data['db_name']
+    username = data['username']
+    password = data['password']
 
-# Create a new XML-RPC client instance
-models = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(url))
+    # Connect to the Odoo instance
+    common = xmlrpclib.ServerProxy('{}/xmlrpc/2/common'.format(url))
+    uid = common.authenticate(db_name, username, password, {})
+
+    # Create a new XML-RPC client instance
+    models = xmlrpclib.ServerProxy('{}/xmlrpc/2/object'.format(url))
+
+    return models,db_name,uid,password
+
 
 
 def _log(dato):
@@ -42,6 +47,9 @@ def _log(dato):
 
 
 def scrap_noticias(importancia="todos", tipo="", pagina=""):
+
+    models,db_name,uid,password = conectar_xmlrpc()
+
     telegram = ""
 
     filtro_importancia = []
@@ -63,11 +71,24 @@ def scrap_noticias(importancia="todos", tipo="", pagina=""):
 
     # all_records = self.segmento(all_records, importancia)
 
+    # reglas = self.env['wsf_noticias_reglas'].search([('estado', '=', 'on')])
+    reglas_ids = models.execute_kw(db_name, uid, password,
+                                   'wsf_noticias_reglas', 'search',
+                                   [[('estado', '=', 'on')]])
+
+    reglas = models.execute_kw(db_name, uid, password,
+                               'wsf_noticias_reglas', 'read', [reglas_ids])
+
     try:
 
+        contador22 = 0
         for rec in medios:
 
-            print("\n\n**********\nTomando el medio: ", rec['medio'][0], "\n****\n")
+
+            print("\n\n**********\nTomando el medio: ", rec['medio'][1], " ",rec['importancia'],  "\n****\n")
+
+            contador22 += 1
+            print(contador22)
 
             mensaje = f"[xxx] Medio analidazo: {rec['medio'][1]} [xxx] {rec['importancia']}"
             _log(mensaje)
@@ -147,12 +168,15 @@ def scrap_noticias(importancia="todos", tipo="", pagina=""):
                                 try:
 
                                     # reglas = self.env['wsf_noticias_reglas'].search([('estado', '=', 'on')])
+
+                                    """
                                     reglas_ids = models.execute_kw(db_name, uid, password,
                                                                    'wsf_noticias_reglas', 'search',
                                                                    [[('estado', '=', 'on')]])
 
                                     reglas = models.execute_kw(db_name, uid, password,
                                                                'wsf_noticias_reglas', 'read', [reglas_ids])
+                                    """
 
                                     r = aplica_regla(contenido.title, contenido.text,
                                                      contenido.meta_description, reglas)
@@ -198,7 +222,7 @@ def scrap_noticias(importancia="todos", tipo="", pagina=""):
                                         try:
 
                                             fecha2 = contenido.publish_date.strftime('%Y/%m/%d %H:%M:%S')
-                                            # article['fecha_hora'] = datetime.datetime.strptime(fecha2,'%Y/%m/%d %H:%M:%S')
+                                            article['fecha_hora'] = datetime.datetime.strptime(fecha2,'%Y/%m/%d %H:%M:%S')
 
                                             # sila fecha del artículo es antigua (3 dias) lo descarta
                                             fecha_art = contenido.publish_date
@@ -306,14 +330,16 @@ def scrap_noticias(importancia="todos", tipo="", pagina=""):
                                 if tipo == "prueba":
                                     rec['prueba'] += f" \n -- Bajando artículo:  {str(contenido.url)} \n"
 
+                                """
                                 reglas_ids = models.execute_kw(db_name, uid, password,
                                                                'wsf_noticias_reglas', 'search',
                                                                [[('estado', '=', 'on')]])
 
                                 reglas = models.execute_kw(db_name, uid, password,
                                                            'wsf_noticias_reglas', 'read', [reglas_ids])
+                                """
 
-                                r = aplica_regla(contenido.title, contenido.text, contenido.meta_description, reglas)
+                                r = aplica_regla(contenido.title, contenido.text, contenido.meta_description, reglas,models, db_name, uid, password)
 
                                 lista_reglas = r[0]
                                 telegram = r[2]
@@ -381,11 +407,12 @@ def scrap_noticias(importancia="todos", tipo="", pagina=""):
 
                                             continue
 
-                                        article['fecha_registro'] = datetime.datetime.now().strftime('%Y-%m-%d')
+                                        article['fecha_registro'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                         try:
-                                            fecha2 = contenido.publish_date.strftime('%Y/%m/%d')
-                                            article['fecha_hora'] = datetime.datetime.strptime(fecha2,
-                                                                                               '%Y/%m/%d')
+                                            fecha2 = contenido.publish_date.strftime("%Y-%m-%d")
+
+                                            article['fecha_hora'] = str(datetime.datetime.strptime(fecha2,"%Y-%m-%d"))
+
 
 
                                             # sila fecha del artículo es antigua (3 dias) lo descarta
@@ -471,7 +498,21 @@ def scrap_noticias(importancia="todos", tipo="", pagina=""):
         print(e)
         pass
 
-
+"""
+scrap_noticias('media')
+scrap_noticias('alta')
+scrap_noticias('media')
+scrap_noticias('baja')
+scrap_noticias('urgente')
+scrap_noticias('cat1')
 scrap_noticias('cat2')
-# if __name__ == "__main__":
-#     scrap_noticias('cat2')
+scrap_noticias('cat3')
+scrap_noticias('nuevo')
+scrap_noticias('rss')
+"""
+
+
+import sys
+if __name__ == "__main__":
+    arg = sys.argv[1]
+    scrap_noticias(arg)

@@ -1,0 +1,1 @@
+/media/asartorio/disco2/dev/odoo_15/odoo/odoo-server/venv/bin/python scrap_noticias.py baja

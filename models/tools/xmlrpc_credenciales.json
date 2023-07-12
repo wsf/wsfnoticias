@@ -1,6 +1,4 @@
-{
-  "url": "http://localhost:8069",
-  "username": "admin",
-  "password": "admin",
-  "db_name": "wsfnoticias16"
-}
+{"url": "http://localhost:8069",
+  "username": "alejandro.sartorio@gmail.com",
+  "password": "123",
+  "db_name": "odoo_15"}

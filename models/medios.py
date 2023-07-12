@@ -250,6 +250,8 @@ class Medios(models.Model):
     def scrap_importancia_prueba(self):
         self.scrap_noticias('prueba')
 
+
+
     @api.model
     def estadisticas_diaria(self):
 
@@ -283,6 +285,9 @@ class Medios(models.Model):
             mensaje += f"- 📰 [{r['medio'][1]}] brindo noticias: [{r['medio_count']}] veces \n"
 
         enviar_telegram_estadistica(mensaje)
+
+
+
 
 
     @api.model
@@ -471,6 +476,11 @@ class Medios(models.Model):
                                             article['tipo'] = sentimiento(contenido.title.replace('"','').replace("'",""))
                                             article['departamento'] = rec.departamento
 
+                                            fecha_hoy = datetime.datetime.now(IST) + datetime.timedelta(hours=3)
+                                            article['fecha_registro'] = fecha_hoy.strftime("'%Y/%m/%d %H:%M:%S'")
+
+
+
                                             try:
                                                 article['nube'] = nube(contenido.text )[0:300]
                                                 article['entidades'] = entidades(contenido.text )
@@ -488,6 +498,8 @@ class Medios(models.Model):
 
                                                 # Le resto 3 días a la fecha de hoy
                                                 fecha_hoy = datetime.datetime.now(IST) - datetime.timedelta(days=3)
+
+
 
                                                 # si la fecha del articulo tiene mas de 3 días no lo tomo
                                                 if not fecha_art.strftime('%Y/%m/%d') >=  fecha_hoy.strftime('%Y/%m/%d') and tipo != "prueba":
@@ -674,6 +686,9 @@ class Medios(models.Model):
 
                                             article['tipo'] = sentimiento(contenido.title)
                                             article['departamento'] = rec.departamento
+
+                                            fecha_hoy = datetime.datetime.now(IST) + datetime.timedelta(hours=3)
+                                            article['fecha_registro'] = fecha_hoy
 
                                             try:
                                                 article['nube'] = nube(contenido.text )[0:300]
