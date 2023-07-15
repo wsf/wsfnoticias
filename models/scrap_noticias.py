@@ -217,39 +217,32 @@ def scrap_noticias(importancia="todos", tipo="", pagina=""):
                                         fecha_hoy = datetime.datetime.now(IST) + datetime.timedelta(hours=3)
                                         article['fecha_registro'] = fecha_hoy.strftime("'%Y/%m/%d %H:%M:%S'")
 
+                                        article['fecha_registro'] = datetime.datetime.now().strftime(
+                                            "%Y-%m-%d %H:%M:%S")
                                         try:
-                                            article['nube'] = nube(contenido.text)[0:300]
-                                            article['entidades'] = entidades(contenido.text)
-                                        except Exception as e:
-                                            _log(f"Exception:  {str(e)}")
-
-                                        try:
-
-                                            fecha2 = contenido.publish_date.strftime('%Y/%m/%d %H:%M:%S')
-                                            article['fecha_hora'] = datetime.datetime.strptime(fecha2,'%Y/%m/%d %H:%M:%S')
+                                            fecha2 = contenido.publish_date.strftime("%Y-%m-%d")
+                                            article['fecha_hora'] = str(datetime.datetime.strptime(fecha2, "%Y-%m-%d"))
 
                                             # sila fecha del artículo es antigua (3 dias) lo descarta
                                             fecha_art = contenido.publish_date
 
-                                            # Le resto 3 días a la fecha de hoy
                                             fecha_hoy = datetime.datetime.now(IST) - datetime.timedelta(days=3)
 
                                             # si la fecha del articulo tiene mas de 3 días no lo tomo
                                             if not fecha_art.strftime('%Y/%m/%d') >= fecha_hoy.strftime(
                                                     '%Y/%m/%d') and tipo != "prueba":
+                                                print("XXXXXXXX Descartada por fecha")
                                                 continue
-
                                         except Exception as e:
                                             try:
-                                                if fecha2:
-                                                    article['fecha_hora'] = datetime.datetime.strptime(fecha2,
-                                                                                                       '%Y/%m/%d %H:%M:%S')
-                                                    article['fecha_hora'] = datetime.datetime.now()
-                                            except Exception as e:
-                                                fecha3 = datetime.datetime.now(IST)
-                                                article['fecha_hora'] = datetime.datetime.strftime(fecha3,'%Y/%m/%d %H:%M:%S')
-                                                _log(f"Exception: 208  {str(e)}")
                                                 print(str(e))
+                                                pass
+                                                # article['fecha_hora'] = datetime.datetime.strptime(fecha2,'%Y/%m/%d %H:%M:%S')
+                                            except Exception as ee:
+                                                _log(f"Exception 287:  {str(ee)}")
+                                                pass
+                                            print(str(e))
+                                            pass
 
                                         article['regla2'] = lista_reglas.replace("'set()'", "").replace("{",
                                                                                                         "").replace(
