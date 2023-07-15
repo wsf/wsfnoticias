@@ -3,6 +3,9 @@
     <record id='wsf_noticias_resultados_action' model='ir.actions.act_window'>
         <field name="name">Resultados</field>
         <field name="res_model">wsf_noticias_resultados</field>
+
+        <field name="context">{'search_default_filter_archivar': 1}</field>
+
         <field name="view_mode">tree,form,graph,pivot</field>
     </record>
 
@@ -101,9 +104,13 @@
         <field name="model">wsf_noticias_resultados</field>
         <field name="arch" type="xml">
             <search>
+
                 <filter string="Positivas" name="tipo" domain="[('tipo','=','positiva')]"/>
                 <filter string="Negativas" name="tipo" domain="[('tipo','=','negativa')]"/>
+                <filter string="No_Archivas" name="filter_archivar" domain="[('valorar','!=','archivar')]"/>
+
                 <filter string="Neutra" name="tipo" domain="[('tipo','=','neutra')]"/>
+
 <!--                <filter string="Días" name="dias" domain="[('dias','=',datetime.now())]"/>-->
                 <filter string="Dia" name="fecha_hora" domain="[('fecha_hora','&lt;',time.strftime('%%Y-%%m-%%d 23:59:59')),('fecha_hora','>=',(datetime.date.today()).strftime('%%Y-%%m-%%d 00:00:00'))]"/>
                 <filter string="Semana" name="fecha_hora" domain="[('fecha_hora','&lt;',time.strftime('%%Y-%%m-%%d 23:59:59')),('fecha_hora','>=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d 00:00:00'))]"/>

@@ -90,7 +90,7 @@ def scrap_noticias(importancia="todos", tipo="", pagina=""):
             contador22 += 1
             print(contador22)
 
-            mensaje = f"[xxx] Medio analidazo: {rec['medio'][1]} [xxx] {rec['importancia']}"
+            mensaje = f"[xxx] Medio analidazo: {rec['medio'][1]} [xxx] {rec['importancia']} - Contador: {contador22}"
             _log(mensaje)
 
             if tipo == "prueba":
@@ -178,8 +178,9 @@ def scrap_noticias(importancia="todos", tipo="", pagina=""):
                                                                'wsf_noticias_reglas', 'read', [reglas_ids])
                                     """
 
-                                    r = aplica_regla(contenido.title, contenido.text,
-                                                     contenido.meta_description, reglas)
+                                    r = aplica_regla(contenido.title, contenido.text, contenido.meta_description,
+                                                     reglas, models, db_name, uid, password)
+
                                     lista_reglas = r[0]
 
                                     telegram = r[2]
@@ -212,6 +213,9 @@ def scrap_noticias(importancia="todos", tipo="", pagina=""):
                                         article['link'] = contenido.url.strip()
                                         article['tipo'] = sentimiento(contenido.title.replace('"', '').replace("'", ""))
                                         article['departamento'] = rec['departamento']
+
+                                        fecha_hoy = datetime.datetime.now(IST) + datetime.timedelta(hours=3)
+                                        article['fecha_registro'] = fecha_hoy.strftime("'%Y/%m/%d %H:%M:%S'")
 
                                         try:
                                             article['nube'] = nube(contenido.text)[0:300]
@@ -410,10 +414,7 @@ def scrap_noticias(importancia="todos", tipo="", pagina=""):
                                         article['fecha_registro'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                                         try:
                                             fecha2 = contenido.publish_date.strftime("%Y-%m-%d")
-
                                             article['fecha_hora'] = str(datetime.datetime.strptime(fecha2,"%Y-%m-%d"))
-
-
 
                                             # sila fecha del artículo es antigua (3 dias) lo descarta
                                             fecha_art = contenido.publish_date
@@ -510,7 +511,7 @@ scrap_noticias('cat3')
 scrap_noticias('nuevo')
 scrap_noticias('rss')
 """
-
+scrap_noticias('rss')
 
 import sys
 if __name__ == "__main__":
