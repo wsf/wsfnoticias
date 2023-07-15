@@ -255,36 +255,40 @@ class Medios(models.Model):
     @api.model
     def estadisticas_diaria(self):
 
-        # filtar las noticias del día
+        try:
+
+            # filtar las noticias del día
 
 
-        condi = [('fecha_registro', '>=', datetime.datetime.now(IST).strftime('%Y-%m-%d 00:00:00')),
-                  ('fecha_registro', '<=', datetime.datetime.now(IST).strftime('%Y-%m-%d 23:59:59'))]
+            condi = [('fecha_registro', '>=', datetime.datetime.now(IST).strftime('%Y-%m-%d 00:00:00')),
+                      ('fecha_registro', '<=', datetime.datetime.now(IST).strftime('%Y-%m-%d 23:59:59'))]
 
-        #rec = self.env['wsf_noticias_resultados'].search(condi)
+            #rec = self.env['wsf_noticias_resultados'].search(condi)
 
-        rec = self.env['wsf_noticias_resultados'].read_group(condi,
-                                                                  ['regla2', 'id:count_distinct'],
-                                                                  ['regla2'])
-        mensaje = "\n📈 Estadística diaria 📈 \n"
+            rec = self.env['wsf_noticias_resultados'].read_group(condi,
+                                                                      ['regla2', 'id:count_distinct'],
+                                                                      ['regla2'])
+            mensaje = "\n📈 Estadística diaria 📈 \n"
 
-        mensaje += "\n\n**Aplicación de reglas hoy**\n\n"
+            mensaje += "\n\n**Aplicación de reglas hoy**\n\n"
 
-        for r in sorted(rec,key=lambda r:r['regla2_count'],reverse=True):
+            for r in sorted(rec,key=lambda r:r['regla2_count'],reverse=True):
 
-            mensaje += f"- 📏 [{r['regla2']}] se aplicó: [{r['regla2_count']}] veces \n"
+                mensaje += f"- 📏 [{r['regla2']}] se aplicó: [{r['regla2_count']}] veces \n"
 
 
-        rec = self.env['wsf_noticias_resultados'].read_group(condi,
-                                                                  ['medio', 'id:count_distinct'],
-                                                                  ['medio'])
+            rec = self.env['wsf_noticias_resultados'].read_group(condi,
+                                                                      ['medio', 'id:count_distinct'],
+                                                                      ['medio'])
 
-        mensaje += "\n\n**Medios alcanzados hoy**\n\n"
-        for r in sorted(rec,key=lambda r:r['medio_count'],reverse=True):
+            mensaje += "\n\n**Medios alcanzados hoy**\n\n"
+            for r in sorted(rec,key=lambda r:r['medio_count'],reverse=True):
 
-            mensaje += f"- 📰 [{r['medio'][1]}] brindo noticias: [{r['medio_count']}] veces \n"
+                mensaje += f"- 📰 [{r['medio'][1]}] brindo noticias: [{r['medio_count']}] veces \n"
 
-        enviar_telegram_estadistica(mensaje)
+            enviar_telegram_estadistica(mensaje)
+        except Exception as e:
+            _log(f" 291 Excelpt xxx Enviar estadística error: {str(e)}")
 
 
 
