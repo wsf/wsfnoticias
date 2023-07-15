@@ -504,7 +504,6 @@ scrap_noticias('cat3')
 scrap_noticias('nuevo')
 scrap_noticias('rss')
 """
-scrap_noticias('rss')
 
 import sys
 if __name__ == "__main__":
