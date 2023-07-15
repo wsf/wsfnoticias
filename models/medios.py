@@ -286,6 +286,7 @@ class Medios(models.Model):
 
                 mensaje += f"- 📰 [{r['medio'][1]}] brindo noticias: [{r['medio_count']}] veces \n"
 
+            _log(f" Envieando estadística a telegram  {str(mensaje)}")
             enviar_telegram_estadistica(mensaje)
         except Exception as e:
             _log(f" 291 Excelpt xxx Enviar estadística error: {str(e)}")

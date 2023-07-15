@@ -105,6 +105,8 @@ def enviar_telegram(article, medio="Medio", chat_id='-918982585',
     except Exception as e:
         print(str(e))
 
+pass
+
 
 def enviar_telegram_estadistica(message, chat_id='-900652227',
                                 bot_token='6197272098:AAFfoTbrGSXwXm20KFPB-1B-rb1EHveCYBM'):
