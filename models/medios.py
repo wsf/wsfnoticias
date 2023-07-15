@@ -259,6 +259,8 @@ class Medios(models.Model):
 
             # filtar las noticias del día
 
+            _log(f" Entra a estadistica")
+
 
             condi = [('fecha_registro', '>=', datetime.datetime.now(IST).strftime('%Y-%m-%d 00:00:00')),
                       ('fecha_registro', '<=', datetime.datetime.now(IST).strftime('%Y-%m-%d 23:59:59'))]
