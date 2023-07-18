@@ -14,6 +14,7 @@ access_wsf_noticias_resultados,access.wsf_noticias_resultados,model_wsf_noticias
 access_wsf_noticias_terminos,access.wsf_noticias_terminos,model_wsf_noticias_terminos,noticias_analista,1,1,1,1
 access_wsf_noticias_laboratorio,access.wsf_noticias_laboratorio,model_wsf_noticias_laboratorio,noticias_analista,1,1,1,1
 access_wsf_noticias_secuencia,access.wsf_noticias_secuencia,model_wsf_noticias_secuencia,noticias_analista,1,1,1,1
+access_wsf_noticias_categorias,access.wsf_noticias_categorias,model_wsf_noticias_categorias,noticias_analista,1,1,1,1
 
 
 

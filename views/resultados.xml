@@ -30,6 +30,7 @@
                             <field name="medio"/>
                             <field name="link"/>
                             <field name="titulo"/>
+                            <field name="categorias" widget="many2many_tags"/>
                             <field name="fecha_hora" string="Publicado"/>
                             <field name="copete"/>
                             <field name="valorar"/>
@@ -78,11 +79,13 @@
 
                 </header>
                 <field name="valorar" widget="badge" decoration-danger ="valorar =='negativa'" decoration-success ="valorar =='Verificada'"  decoration-primary="valorar =='valorar'" decoration-warning="valorar =='archivar'"/>
+
                 <field name="nube" invisible="1"/>
                 <field name="fecha_registro" string="Fecha de Registro"/>
                 <field name="medio"/>
                 <field name="fecha_hora" string="Publicado"/>
                 <field name="titulo"/>
+                <field name="categorias" string="Categorizar" widget="many2many_tags" />
                 <field name="link" widget="url"/>
                 <field name="copete"/>
                 <field name="texto" invisible="1"/>

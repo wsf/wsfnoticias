@@ -48,6 +48,9 @@ class Resultados(models.Model):
     nube = fields.Char('Nube')
     clasificacion = fields.Char('Clasificacion')
     entidades = fields.Char('Entidades')
+    categorias = fields.Many2many('wsf_noticias_categorias')
+
+
     _sql_constraints = [
             ('link_uniq', 'UNIQUE (link)', 'Un solo link!'),
         ]
