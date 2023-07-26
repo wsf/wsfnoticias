@@ -150,8 +150,8 @@
 
  <field name="arch" type="xml">
  <graph string="Analisis">
- <field name="fecha_hora" interval="day"/>
- <field name="fecha_hora"/>
+ <field name="fecha_registro" interval="day"/>
+ <field name="fecha_registro"/>
  <field name="medio" type="measure"/>
 </graph>
 </field>
