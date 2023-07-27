@@ -88,7 +88,7 @@
                 <field name="categorias" string="Categorizar" widget="many2many_tags" />
                 <field name="link" widget="url"/>
                 <field name="copete"  optional="show"  />
-                <field name="texto"  optional="show"  invisible="1"/>
+                <field name="texto"  optional="show" />
                 <field name="tipo" string="IA" widget="badge" decoration-danger ="tipo =='negativa'" decoration-success ="tipo =='positiva'"  decoration-warning="tipo =='neutra'"/>
                 <field name="regla2"  string="Reglas Aplicadas"/>
                 <field name="departamento"/>
