@@ -275,7 +275,7 @@ def scrap_noticias(importancia="todos", tipo="", pagina=""):
                                             codigo += 1
                                             medio += "\n- Código: " + str(codigo)
 
-                                            # self.fun_enviar_telegrama(telegram, medio, article)
+                                            enviar_telegram(article,medio,telegram)
 
                                             _log(f"****** Guardando \n {medio} \n {str(article)} ")
 
@@ -469,9 +469,9 @@ def scrap_noticias(importancia="todos", tipo="", pagina=""):
                                             codigo += 1
                                             medio += "\n- Código: " + str(codigo)
 
-                                            if 'fecha_hora' in article.keys():
-                                                # self.fun_enviar_telegrama(telegram, medio, article)
-                                                pass
+
+                                            enviar_telegram(article,medio,telegram)
+
 
                                             _log(f"****** Guardando \n {medio} \n {str(article)} ")
 
@@ -493,7 +493,7 @@ def scrap_noticias(importancia="todos", tipo="", pagina=""):
         pass
 
 """
-scrap_noticias('media')
+
 scrap_noticias('alta')
 scrap_noticias('media')
 scrap_noticias('baja')
@@ -504,6 +504,8 @@ scrap_noticias('cat3')
 scrap_noticias('nuevo')
 scrap_noticias('rss')
 """
+
+scrap_noticias('alta')
 
 import sys
 if __name__ == "__main__":

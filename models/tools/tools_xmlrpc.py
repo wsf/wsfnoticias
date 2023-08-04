@@ -59,7 +59,7 @@ def enviar_telegram(article, medio="Medio", chat_id='-918982585',
 
         # message += str(article['medio'])
         message += "\n-- 🗞️ -- \n"
-        message += medio
+        message += str(medio)
         message += "\n-- \n"
         message += article['titulo'].upper()
         message += "\n--\n"
