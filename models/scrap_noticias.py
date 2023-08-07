@@ -13,14 +13,19 @@ from newspaper import Article
 from tools.tools_xmlrpc import *
 
 
-def conectar_xmlrpc():
+def conectar_xmlrpc(base):
     data = xmlrpc_config()
 
     # URL of the Odoo instance
     url = data['url']
 
     # Database name, username, and password
-    db_name = data['db_name']
+
+    if base=="":
+        db_name = data['db_name']
+    else:
+        db_name = base
+
     username = data['username']
     password = data['password']
 
@@ -34,7 +39,6 @@ def conectar_xmlrpc():
     return models,db_name,uid,password
 
 
-
 def _log(dato):
     if not "xxx" in dato:
         return
@@ -46,9 +50,9 @@ def _log(dato):
     log.close()
 
 
-def scrap_noticias(importancia="todos", tipo="", pagina=""):
+def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
 
-    models,db_name,uid,password = conectar_xmlrpc()
+    models,db_name,uid,password = conectar_xmlrpc(base)
 
     telegram = ""
 
@@ -505,9 +509,14 @@ scrap_noticias('nuevo')
 scrap_noticias('rss')
 """
 
-scrap_noticias('alta')
+scrap_noticias('alta',"")
 
 import sys
 if __name__ == "__main__":
     arg = sys.argv[1]
-    scrap_noticias(arg)
+    try:
+        base = sys.argv[2]
+    except:
+        base = ""
+
+    scrap_noticias(arg,base)
