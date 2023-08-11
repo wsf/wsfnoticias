@@ -29,3 +29,11 @@ class Reglas(models.Model):
 
         if self.text_file:
             self.html_field = ll
+
+
+
+class Mapa(models.Model):
+    _name = "wsf_noticias_mapa"
+    _description = "mapa"
+
+    mapa = fields.Html(string='Mapa')

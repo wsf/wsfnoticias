@@ -33,7 +33,6 @@ class Resultados(models.Model):
             fecha = datetime.now(IST).strftime('%Y/%m/%d %H:%M:%S')
             rec.fecha_registro = datetime.strptime(fecha, '%Y/%m/%d %H:%M:%S')
 
-
     def fun_ac(self,noti,a_c):
         # obtener la clase
         clase = "c1"

@@ -23,6 +23,7 @@
         'views/norep.xml',
         'views/secuencia.xml',
         'views/categorias.xml',
+        'views/mapa.xml',
         'security/noticias_security.xml',
         'security/ir.model.access.csv'
 
