@@ -66,6 +66,8 @@
                 <header>
 
                     <button name="set_valorar" string="Valorar" class="btn btn-primary ml4" type="object"/>
+                    <button name="set_monteverde" string="Monteverde" class="btn btn-success ml4" type="object"/>
+
                     <button name="set_alertar" string="Alertar" class="btn btn-danger ml4" type="object"/>
 
                     <button name="set_positiva" string="Posiviva" class="btn btn-success ml4" type="object"/>

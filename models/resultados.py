@@ -78,6 +78,14 @@ class Resultados(models.Model):
 
                 enviar_telegram(article2, medio2, '-926479407')
 
+           if record.valorar == 'moteverde':
+               article2['titulo'] = record.titulo
+               article2['link'] = record.link
+               article2['tipo'] = record.tipo
+               medio2 = record.medio.name
+
+               enviar_telegram(article2, medio2, '-901477040')
+
 
     def remove_duplicate_record(self):
             model = self.env['wsf_noticias_resultados']
@@ -131,6 +139,10 @@ class Resultados(models.Model):
     def set_positiva(self):
         for rec in self:
             rec.valorar = "positiva"
+
+    def set_monteverde(self):
+        for rec in self:
+            rec.valorar = "moteverde"
 
     def set_valorar(self):
         for rec in self:
