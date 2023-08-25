@@ -142,7 +142,7 @@ class Resultados(models.Model):
 
     def set_monteverde(self):
         for rec in self:
-            rec.valorar = "moteverde"
+            rec.valorar = "monteverde"
 
     def set_valorar(self):
         for rec in self:
