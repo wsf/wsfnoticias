@@ -78,7 +78,7 @@ class Resultados(models.Model):
 
                 enviar_telegram(article2, medio2, '-926479407')
 
-           if record.valorar == 'moteverde':
+           if record.valorar == 'monteverde':
                article2['titulo'] = record.titulo
                article2['link'] = record.link
                article2['tipo'] = record.tipo
