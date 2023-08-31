@@ -61,7 +61,7 @@
         <field name="name">Resultados</field>
         <field name="model">wsf_noticias_resultados</field>
         <field name="arch" type="xml">
-            <tree multi_edit="1">
+            <tree multi_edit="1" decoration-danger="valorar=='Revisar'">
 
                 <header>
 
@@ -80,7 +80,7 @@
                     -->
 
                 </header>
-                <field name="valorar" widget="badge" decoration-danger ="valorar =='negativa'" decoration-success ="valorar =='Verificada'"  decoration-primary="valorar =='valorar'" decoration-warning="valorar =='archivar'"/>
+                <field name="valorar" widget="badge" decoration-danger ="valorar =='Revisar'" decoration-success ="valorar =='OK'"  decoration-primary="valorar =='valorar'" decoration-warning="valorar =='archivar'"/>
 
                 <field name="nube" optional="hide"/>
                 <field name="fecha_registro" string="Fecha de Registro"/>
