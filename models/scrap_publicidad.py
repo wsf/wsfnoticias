@@ -79,6 +79,7 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
     reglas_ids = models.execute_kw(db_name, uid, password,
                                    'wsf_noticias_reglas', 'search',
                                    [[('estado', '=', 'on')]])
+    print(82)
 
     reglas = models.execute_kw(db_name, uid, password,
                                'wsf_noticias_reglas', 'read', [reglas_ids])
@@ -87,6 +88,9 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
         search_ids = models.execute_kw(db_name, uid, password, 'wsf_noticias_resultados', 'search', [[]])
         models.execute_kw(db_name, uid, password,
                           'wsf_noticias_resultados', 'unlink', [search_ids])
+
+        print(92)
+
     except Exception as e:
         print(e)
 
@@ -416,4 +420,5 @@ if __name__ == "__main__":
     except:
         base = ""
 
+    print(arg, base)
     scrap_noticias(arg,base)
