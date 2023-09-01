@@ -414,7 +414,7 @@ scrap_noticias('nuevo')
 scrap_noticias('rss')
 """
 
-#scrap_noticias('alta',"")
+scrap_noticias('alta',"")
 
 import sys
 if __name__ == "__main__":
