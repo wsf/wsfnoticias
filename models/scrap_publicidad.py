@@ -171,7 +171,7 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
 
                             for contenido in hoja.articles:  # recorre cada uno de los artículos
 
-                                print("\n\n**********\nContenido: ", str(contenido), "\n****\n")
+                                #print("\n\n**********\nContenido: ", str(contenido), "\n****\n")
 
                                 if tipo == "prueba":
                                     limite = 10
@@ -183,9 +183,7 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
                                     contenido.parse()
 
 
-
-
-                                    print("\n\n------------\nContenido download title: ", contenido.title, "\n-----\n")
+                                    #print("\n\n------------\nContenido download title: ", contenido.title, "\n")
 
 
                                 except Exception as e:
@@ -285,7 +283,7 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
                                         condi = filtra_url(article['link'], url_medio2, url_medio)
 
                                         if not condi:
-                                            print("XXXXXXXX Descartada por REGLA")
+                                            #print("XXXXXXXX Descartada por REGLA")
 
                                             continue
 
@@ -350,7 +348,7 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
                                                 # self.resultados.append(article)
                                                 models.execute_kw(db_name, uid, password,
                                                                   'wsf_noticias_resultados', 'create', [article])
-                                                print("\n\n\n*** guardando ", str(article), "\n\n")
+                                                #print("\n\n\n*** guardando ", str(article), "\n\n")
                                                 # **********************************************************
                                             except Exception as e:
                                                 medio += " -" + str(e)
@@ -419,10 +417,12 @@ scrap_noticias('rss')
 import sys
 if __name__ == "__main__":
     arg = sys.argv[1]
+
     try:
         base = sys.argv[2]
     except:
         base = ""
+
 
     print(arg, base)
     scrap_noticias(arg,base)
