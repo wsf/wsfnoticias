@@ -84,6 +84,14 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
                                'wsf_noticias_reglas', 'read', [reglas_ids])
 
     try:
+        search_ids = models.execute_kw(db_name, uid, password, 'wsf_noticias_resultados', 'search', [[]])
+        models.execute_kw(db_name, uid, password,
+                          'wsf_noticias_resultados', 'unlink', [search_ids])
+    except Exception as e:
+        print(e)
+
+
+    try:
 
         contador22 = 0
         for rec in medios:
@@ -170,6 +178,9 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
                                     contenido.download()
                                     contenido.parse()
 
+
+
+
                                     print("\n\n------------\nContenido download title: ", contenido.title, "\n-----\n")
 
 
@@ -181,9 +192,16 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
                                 if tipo == "prueba":
                                     rec['prueba'] += f" \n -- Bajando artículo:  {str(contenido.url)} \n"
 
+                                # en el lugar de texto, voy a pasar el uri de todos los links que tienen el key images y imgs
 
-                                r = aplica_regla(contenido.title, contenido.text, contenido.meta_description, reglas,models, db_name, uid, password)
+                                texto = tomar_literales_url(contenido)
 
+                                texto += contenido.text
+
+
+                                #r = aplica_regla(contenido.title, contenido.text, contenido.meta_description, reglas,models, db_name, uid, password)
+                                r = aplica_regla(contenido.title, texto, contenido.meta_description, reglas,
+                                                 models, db_name, uid, password)
                                 lista_reglas = r[0]
                                 telegram = r[2]
 
@@ -221,16 +239,21 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
 
                                     encontrado = models.execute_kw(db_name, uid, password,
                                                                    'wsf_noticias_resultados', 'search',
-                                                                   [[('link', '=', contenido.url),
-                                                                     ('titulo', '=', article['titulo'])]])
+                                                                   [[('link', '=', url_medio)]])
 
 
                                     # le pongo un false para que pase
-                                    if encontrado and tipo != "prueba" and False:
-                                        print("XXXXXXXX Descartada por EXISTIR")
+                                    if encontrado and tipo != "prueba":
 
-                                        _log(f"*** Noticia ya guadada {str(encontrado)}")
-                                        continue
+                                        if valorar == "OK":
+                                            # lo borra
+
+                                            models.execute_kw(db_name, uid, password,
+                                                              'wsf_noticias_resultados', 'unlink',
+                                                              [encontrado])
+                                        else:
+
+                                            continue
 
                                     else:
                                         # !!!!!! No está grabada
@@ -243,7 +266,9 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
                                                                                                                     "")
 
                                         try:
-                                            article['link'] = contenido.url.strip()
+                                            #article['link'] = contenido.url.strip()
+                                            #p ponga la ur del medio en lugar de la url de la noticia
+                                            article['link'] = url_medio
 
                                         except Exception as e:
                                             _log(f"Exception 261:  {str(e)}")
@@ -351,6 +376,22 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
     except Exception as e:
         print(e)
         pass
+
+def tomar_literales_url(contenido):
+    images = contenido.images
+
+    texto = ""
+
+    for i in images:
+        texto += i +  " "
+        print(i)
+
+    images = contenido.imgs
+    for i in images:
+        texto += i + " "
+        print(i)
+
+    return texto
 
 """
 
