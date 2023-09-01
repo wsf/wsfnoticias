@@ -230,8 +230,9 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
                                 # noticia concreta
                                 article = {}
 
-                                article['titulo'] = contenido.title.replace('“', "").replace("'", "").replace('"',
-                                                                                                              "").strip()
+                                #article['titulo'] = contenido.title.replace('“', "").replace("'", "").replace('"',
+                                #                                                                              "").strip()
+
                                 article['regla2'] = lista_reglas.replace("'set()'", "").replace("{", "").replace("}",
                                                                                                                  "").replace(
                                     "'", "").replace(",,", "")
@@ -263,9 +264,11 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
                                         # !!!!!! No está grabada
                                         article['medio'] = rec['medio'][0]
                                         medio = rec['medio'][1]
-                                        article['copete'] = contenido.meta_description.replace('"', '').replace("'",
-                                                                                                                "").replace(
-                                            '“', "")
+
+                                        #article['copete'] = contenido.meta_description.replace('"', '').replace("'",
+                                        #                                                                       "").replace(
+                                        #   '“', "")
+
                                         article['texto'] = contenido.text.replace('"', '').replace("'", "").replace('“',
                                                                                                                     "")
 
@@ -315,17 +318,18 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
                                             print(str(e))
                                             pass
 
-                                        article['titulo'] = contenido.title.replace('"', '').replace("'", "").replace(
-                                            '“',
-                                            "").strip()
+                                        #article['titulo'] = contenido.title.replace('"', '').replace("'", "").replace(
+                                        #    '“',
+                                        #    "").strip()
 
-                                        article['tipo'] = sentimiento(contenido.title)
+                                        #article['tipo'] = sentimiento(contenido.title)
                                         article['departamento'] = rec['departamento']
                                         article['valorar'] = valorar
 
                                         try:
-                                            article['nube'] = nube(contenido.text)[0:300]
-                                            article['entidades'] = entidades(contenido.text)
+                                            pass
+                                            # article['nube'] = nube(contenido.text)[0:300]
+                                            # article['entidades'] = entidades(contenido.text)
 
                                         except Exception as e:
                                             _log(f"Exception 302:  {str(e)}")
@@ -410,7 +414,7 @@ scrap_noticias('nuevo')
 scrap_noticias('rss')
 """
 
-#scrap_noticias('alta',"")
+scrap_noticias('alta',"")
 
 import sys
 if __name__ == "__main__":
