@@ -392,12 +392,12 @@ def tomar_literales_url(contenido):
 
     for i in images:
         texto += i +  " "
-        print(i)
+        #print(i)
 
     images = contenido.imgs
     for i in images:
         texto += i + " "
-        print(i)
+        #print(i)
 
     return texto
 
