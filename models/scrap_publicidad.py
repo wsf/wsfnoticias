@@ -283,7 +283,7 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
                                         condi = filtra_url(article['link'], url_medio2, url_medio)
 
                                         if not condi:
-                                            #print("XXXXXXXX Descartada por REGLA")
+                                            #print("XXXXXXXX Descartada por estar mal la ulr")
 
                                             continue
 
@@ -302,8 +302,10 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
                                             # si la fecha del articulo tiene mas de 3 días no lo tomo
                                             if not fecha_art.strftime('%Y/%m/%d') >= fecha_hoy.strftime(
                                                     '%Y/%m/%d') and tipo != "prueba":
-                                                print("XXXXXXXX Descartada por fecha")
-                                                continue
+                                                #print("XXXXXXXX Descartada por fecha")
+
+                                                #continue
+                                                pass
 
                                         except Exception as e:
                                             try:
