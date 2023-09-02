@@ -386,6 +386,7 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
         pass
 
 def tomar_literales_url(contenido):
+    """
     images = contenido.images
 
     texto = ""
@@ -398,6 +399,8 @@ def tomar_literales_url(contenido):
     for i in images:
         texto += i + " "
         #print(i)
+    """
+    texto = contenido.html
 
     return texto
 
