@@ -154,6 +154,8 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
                                 url_medio = "https://" + url_medio
 
 
+                            #url_medio = "https://www.lapopusancristobal.com.ar/"
+
                             hoja = newspaper.build(url_medio, memoize_articles=False)
 
                             newsPaper = {
@@ -386,21 +388,41 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
         pass
 
 def tomar_literales_url(contenido):
-    """
+    from bs4 import BeautifulSoup
+
     images = contenido.images
 
     texto = ""
 
     for i in images:
-        texto += i +  " "
+        texto += i +  "\n "
         #print(i)
 
     images = contenido.imgs
     for i in images:
-        texto += i + " "
+        texto += i + "\n "
         #print(i)
-    """
-    texto = contenido.html
+
+    texto = texto + contenido.html
+
+    soup = BeautifulSoup(texto, 'html.parser')
+
+    # Get all the href links
+
+    href_links = soup.find_all('a', attrs={'href': True})
+    # Print the href links
+    for href_link in href_links:
+        print(href_link['href'])
+
+        texto +=  href_link['href'] + "\n "
+
+    href_links = soup.find_all('a', attrs={'src': True})
+    # Print the href links
+    for href_link in href_links:
+        print(href_link['src'])
+
+        texto +=  href_link['src'] + "\n "
+
 
     return texto
 
