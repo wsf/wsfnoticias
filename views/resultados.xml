@@ -37,13 +37,14 @@
                             <field name="nube"/>
                         </group>
                         <group>
-                            <field name="regla"/>
+                            <field name="regla2" string="Reglas Aplicadas"/>
                             <field name="tipo"/>
                             <field name="localidad"/>
                             <field name="departamento"/>
                             <field name="latitud"/>
                             <field name="longitud"/>
                             <field name="fecha_registro"/>
+
                         </group>
                         <h5>Texto</h5>
                         <field name="texto" style="max-width: 100%; width: 100%; max-height: 30em; height: 30em; overflow:auto"/>
