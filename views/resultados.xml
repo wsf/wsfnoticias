@@ -27,6 +27,7 @@
                 <sheet>
                     <group>
                         <group>
+                            <field name="fecha_registro" string="Fecha de Registro"/>
                             <field name="medio"/>
                             <field name="link"/>
                             <field name="titulo"/>
