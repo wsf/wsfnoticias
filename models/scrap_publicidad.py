@@ -154,7 +154,7 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
                                 url_medio = "https://" + url_medio
 
 
-                            #url_medio = "https://www.lapopusancristobal.com.ar/"
+                            #url_medio = "https://www.sl24.com.ar/"
 
                             hoja = newspaper.build(url_medio, memoize_articles=False)
 
@@ -176,7 +176,7 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
                                 #print("\n\n**********\nContenido: ", str(contenido), "\n****\n")
 
                                 if tipo == "prueba":
-                                    limite = 10
+                                    limite = 1
                                 if contador > limite:
                                     print("Sale - Sale - Sale")
                                     break
@@ -200,7 +200,7 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
 
                                 texto = tomar_literales_url(contenido)
 
-                                texto += contenido.text
+                                #texto += contenido.text
 
 
                                 #r = aplica_regla(contenido.title, contenido.text, contenido.meta_description, reglas,models, db_name, uid, password)
@@ -424,6 +424,21 @@ def tomar_literales_url(contenido):
         texto +=  href_link['src'] + "\n "
 
 
+    href_links = soup.find_all('div', attrs={'data-apsa-link': True})
+    # Print the href links
+    for href_link in href_links:
+        print(href_link['data-apsa-link'])
+
+        texto +=  href_link['data-apsa-link'] + "\n "
+
+    response = requests.get(contenido.source_url)
+
+    # Create a BeautifulSoup object
+    soup = BeautifulSoup(response.content, 'html.parser')
+
+    # Get all the HTML
+    texto = soup.prettify()
+
     return texto
 
 """
@@ -439,7 +454,7 @@ scrap_noticias('nuevo')
 scrap_noticias('rss')
 """
 
-scrap_noticias('alta',"")
+#scrap_noticias('alta',"")
 
 import sys
 if __name__ == "__main__":
