@@ -154,7 +154,7 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
                                 url_medio = "https://" + url_medio
 
 
-                            #url_medio = "https://www.sl24.com.ar/"
+                            url_medio = "https://sinmordaza.com/"
 
                             hoja = newspaper.build(url_medio, memoize_articles=False)
 
@@ -431,6 +431,8 @@ def tomar_literales_url(contenido):
 
         texto +=  href_link['data-apsa-link'] + "\n "
 
+    texto2 = texto
+
     response = requests.get(contenido.source_url)
 
     # Create a BeautifulSoup object
@@ -438,6 +440,9 @@ def tomar_literales_url(contenido):
 
     # Get all the HTML
     texto = soup.prettify()
+
+    if texto == "":
+        texto = texto2
 
     return texto
 
@@ -454,7 +459,7 @@ scrap_noticias('nuevo')
 scrap_noticias('rss')
 """
 
-#scrap_noticias('alta',"")
+scrap_noticias('alta',"")
 
 import sys
 if __name__ == "__main__":
