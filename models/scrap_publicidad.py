@@ -460,7 +460,10 @@ def tomar_literales_url(contenido):
     from selenium import webdriver
 
     options = webdriver.ChromeOptions()
-    options.headless = True
+
+    options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
 
     driver = webdriver.Chrome(options=options)
     url = contenido.source_url
