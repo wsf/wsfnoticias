@@ -1,6 +1,10 @@
 from selenium import webdriver
 
-driver = webdriver.Chrome()
+options = webdriver.ChromeOptions()
+options.headless = True
+
+driver = webdriver.Chrome(options=options)
+
 url = "https://www.lapopusancristobal.com.ar/"
 driver.get(url)
 
