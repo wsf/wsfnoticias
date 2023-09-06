@@ -154,7 +154,7 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
                                 url_medio = "https://" + url_medio
 
 
-                            url_medio = "https://sinmordaza.com/"
+                            #url_medio = "https://sinmordaza.com/"
 
                             hoja = newspaper.build(url_medio, memoize_articles=False)
 
@@ -459,7 +459,7 @@ scrap_noticias('nuevo')
 scrap_noticias('rss')
 """
 
-scrap_noticias('alta',"")
+#scrap_noticias('alta',"")
 
 import sys
 if __name__ == "__main__":
