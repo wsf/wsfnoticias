@@ -85,8 +85,10 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
                                'wsf_noticias_reglas', 'read', [reglas_ids])
 
     try:
-        search_ids = models.execute_kw(db_name, uid, password, 'wsf_noticias_resultados', 'search', [[]])
-        models.execute_kw(db_name, uid, password,
+
+        if not "noticias.devman" in db_name:
+            search_ids = models.execute_kw(db_name, uid, password, 'wsf_noticias_resultados', 'search', [[]])
+            models.execute_kw(db_name, uid, password,
                           'wsf_noticias_resultados', 'unlink', [search_ids])
 
         print(92)
@@ -253,7 +255,8 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
                                         if valorar == "OK":
                                             # lo borra
 
-                                            models.execute_kw(db_name, uid, password,
+                                            if not "noticias.devman" in db_name:
+                                                models.execute_kw(db_name, uid, password,
                                                               'wsf_noticias_resultados', 'unlink',
                                                               [encontrado])
                                         else:
