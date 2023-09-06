@@ -154,7 +154,7 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
                                 url_medio = "https://" + url_medio
 
 
-                            #url_medio = "https://sinmordaza.com/"
+                            #url_medio = "https://lavozdelaregionweb.com.ar/"
 
                             hoja = newspaper.build(url_medio, memoize_articles=False)
 
@@ -431,6 +431,13 @@ def tomar_literales_url(contenido):
 
         texto +=  href_link['data-apsa-link'] + "\n "
 
+    href_links = soup.find_all('img', attrs={'alt': True})
+    # Print the href links
+    for href_link in href_links:
+        print(href_link['alt'])
+
+        texto += href_link['alt'] + "\n "
+
     texto2 = texto
 
     response = requests.get(contenido.source_url)
@@ -441,10 +448,8 @@ def tomar_literales_url(contenido):
     # Get all the HTML
     texto = soup.prettify()
 
-    if texto == "":
-        texto = texto2
 
-    return texto
+    return texto + texto2
 
 """
 
