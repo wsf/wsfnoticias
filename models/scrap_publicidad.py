@@ -156,7 +156,7 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
                                 url_medio = "https://" + url_medio
 
 
-                            #url_medio = "https://lavozdelaregionweb.com.ar/"
+                            #url_medio = "https://www.lapopusancristobal.com.ar/"
 
                             hoja = newspaper.build(url_medio, memoize_articles=False)
 
@@ -177,6 +177,7 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
 
                                 #print("\n\n**********\nContenido: ", str(contenido), "\n****\n")
 
+                                limite = 1
                                 if tipo == "prueba":
                                     limite = 1
                                 if contador > limite:
