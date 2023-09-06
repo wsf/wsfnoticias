@@ -391,7 +391,7 @@ def scrap_noticias(importancia="todos", base="",  tipo="", pagina=""):
         print(e)
         pass
 
-def tomar_literales_url(contenido):
+def tomar_literales_url2(contenido):
     from bs4 import BeautifulSoup
 
     images = contenido.images
@@ -455,6 +455,21 @@ def tomar_literales_url(contenido):
 
     return texto + texto2
 
+
+def tomar_literales_url(contenido):
+    from selenium import webdriver
+
+    options = webdriver.ChromeOptions()
+    options.headless = True
+
+    driver = webdriver.Chrome(options=options)
+    url = contenido.source_url
+    driver.get(url)
+    html = driver.page_source
+    print(html)
+    driver.quit()
+    return html
+
 """
 
 scrap_noticias('alta')
@@ -468,7 +483,7 @@ scrap_noticias('nuevo')
 scrap_noticias('rss')
 """
 
-#scrap_noticias('alta',"")
+scrap_noticias('alta',"")
 
 import sys
 if __name__ == "__main__":
