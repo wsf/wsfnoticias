@@ -486,7 +486,10 @@ scrap_noticias('nuevo')
 scrap_noticias('rss')
 """
 
-scrap_noticias('alta',"")
+#respuesta = input("Cuiudado !!!!!!! quiere siguir ?")
+#if respuesta == "si":
+    #scrap_noticias('alta',"")
+
 
 import sys
 if __name__ == "__main__":
