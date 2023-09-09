@@ -1,4 +1,5 @@
 from selenium import webdriver
+import time
 
 options = webdriver.ChromeOptions()
 
@@ -15,6 +16,7 @@ driver.get(url)
 
 for a in range(10):
     print(11111)
+    driver = webdriver.Chrome(options=options)
     html = driver.page_source
     print(2222)
 
@@ -25,5 +27,7 @@ for a in range(10):
         print("2- no")
     driver.quit()
     print("....")
+    time.sleep(1)
+
 
 print("fin")
