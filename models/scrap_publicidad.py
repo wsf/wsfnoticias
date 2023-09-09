@@ -456,7 +456,7 @@ def tomar_literales_url2(contenido):
     return texto + texto2
 
 
-def tomar_literales_url(contenido):
+def tomar_literales_url3(contenido):
     from selenium import webdriver
 
     options = webdriver.ChromeOptions()
@@ -473,6 +473,16 @@ def tomar_literales_url(contenido):
     driver.quit()
     return html
 
+def tomar_literales_url(contenido):
+    import urllib.request
+    url = contenido.source_url
+    with urllib.request.urlopen(url) as response:
+        html_completo = response.read().decode('utf-8')
+
+    # seguir con bs4 analizando html_completo
+
+    return html_completo
+
 """
 
 scrap_noticias('alta')
@@ -486,9 +496,9 @@ scrap_noticias('nuevo')
 scrap_noticias('rss')
 """
 
-#respuesta = input("Cuiudado !!!!!!! quiere siguir ?")
-#if respuesta == "si":
-    #scrap_noticias('alta',"")
+respuesta = input("Cuiudado !!!!!!! quiere siguir ?")
+if respuesta == "si":
+    scrap_noticias('alta',"")
 
 
 import sys

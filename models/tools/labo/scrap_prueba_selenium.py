@@ -9,10 +9,21 @@ options.add_argument('--disable-dev-shm-usage')
 driver = webdriver.Chrome(options=options)
 
 url = "https://www.lapopusancristobal.com.ar/"
+url = "https://www.rosario3.com/"
+
 driver.get(url)
 
-html = driver.page_source
+for a in range(10):
+    print(11111)
+    html = driver.page_source
+    print(2222)
 
-print(html)
+    if "santafe" in html:
+        print("1- está")
+        print(html)
+    else:
+        print("2- no")
+    driver.quit()
+    print("....")
 
-driver.quit()
+print("fin")
