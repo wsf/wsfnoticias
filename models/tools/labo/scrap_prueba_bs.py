@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-url = "https://www.lapopusancristobal.com.ar/"
+url = "https://www.rosario3.com/"
 
 response = requests.get(url)
 
