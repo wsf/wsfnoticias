@@ -8,7 +8,7 @@ def tomar_literales_url():
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
 
-    #driver = webdriver.Chrome(options=options)
+    driver = webdriver.Chrome(options=options)
     url = "https://www.lapopusancristobal.com.ar/"
     url = "https://www.rosario3.com/"
     #driver.get(url)
@@ -20,14 +20,10 @@ def tomar_literales_url():
 
     for a in range(10):
 
-        print(a)
-
-        driver = webdriver.Chrome(options=options)
+        #driver = webdriver.Chrome(options=options)
         driver.get(url)
 
         html_cantidato = driver.page_source
-
-        print(html_cantidato)
 
         for e in htmlset:
             if html_cantidato == e:
@@ -41,16 +37,5 @@ def tomar_literales_url():
 
     return html
 
-
-"""
-    if "santafe" in html:
-        print("1- está")
-        print(html)
-    else:
-        print("2- no")
-    driver.quit()
-    print("....")
-    time.sleep(1)
-"""
 tomar_literales_url()
 print("fin")
